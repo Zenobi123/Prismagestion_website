@@ -117,34 +117,119 @@ export const DEFAULT_BLOG_POSTS: BlogPost[] = [
 
   {
     id: -10,
-    title: "Veille impots.cm : dernières publications fiscales",
-    excerpt: "Consultez rapidement les derniers documents, actualités et notes publiés sur impots.cm.",
+    title: "Veille impots.cm : commande publique, déclaration des particuliers et publications fiscales",
+    excerpt: "Synthèse priorisée des actualités visibles sur impots.cm, avec liens officiels et documents utiles pour les contribuables.",
     content: `
-      <h2>Dernières parutions de impots.cm</h2>
+      <h2>Veille impots.cm — point au 16 juin 2026</h2>
       <p>
-        Cet article de veille vous permet d'accéder directement aux informations les plus récentes publiées
-        par la Direction Générale des Impôts du Cameroun.
+        Cette veille regroupe les sujets fiscaux à suivre en priorité sur le portail officiel de la Direction
+        Générale des Impôts du Cameroun. Elle met l'accent sur les nouveautés et rappels opérationnels utiles
+        aux entreprises, particuliers, cabinets comptables, directions financières et responsables administratifs.
       </p>
-      <div class="bg-gray-50">
-        <h3>Accès rapide</h3>
-        <ul>
-          <li><a href="https://www.impots.cm/" target="_blank" rel="noopener noreferrer">Page d'accueil impots.cm</a></li>
-          <li><a href="https://www.impots.cm/fr/actualites" target="_blank" rel="noopener noreferrer">Rubrique actualités</a></li>
-          <li><a href="https://www.impots.cm/fr/documentations" target="_blank" rel="noopener noreferrer">Rubrique documents</a></li>
-        </ul>
-      </div>
+
+      <h3>1. Nouvelle plateforme d'enregistrement de la commande publique</h3>
       <p>
-        Astuce: ouvrez les rubriques ci-dessus pour identifier immédiatement la dernière publication.
+        La DGI met en avant l'<strong>Enregistrement de la commande publique</strong> comme nouveau service numérique.
+        Ce sujet concerne directement les entreprises titulaires de marchés publics, les prestataires de l'État,
+        les administrations contractantes et les équipes chargées du suivi fiscal des marchés, bons de commande
+        et lettres-commandes.
       </p>
+      <ul>
+        <li><strong>Angle d'article recommandé :</strong> ce que la digitalisation de l'enregistrement change pour les marchés publics.</li>
+        <li><strong>Points à traiter :</strong> accès à la plateforme, pièces à préparer, traçabilité, preuves d'enregistrement et risques en cas d'omission.</li>
+        <li><strong>Liens d'appui :</strong> <a href="https://www.impots.cm/fr" target="_blank" rel="noopener noreferrer">page d'accueil impots.cm</a> et <a href="https://registrations.dgi.cm" target="_blank" rel="noopener noreferrer">plateforme Commande publique</a>.</li>
+      </ul>
+
+      <h3>2. Rappel : déclaration annuelle des revenus des particuliers</h3>
+      <p>
+        L'accès rapide <strong>Déclaration des particuliers</strong> est visible parmi les e-services de la DGI. Un article
+        dédié doit rappeler que la conformité fiscale ne concerne pas uniquement les entreprises : les particuliers
+        doivent vérifier leurs obligations déclaratives, notamment lorsqu'ils disposent de revenus salariaux,
+        fonciers, mobiliers, professionnels ou d'activités indépendantes.
+      </p>
+      <ul>
+        <li><strong>Angle d'article recommandé :</strong> qui doit déclarer, quels revenus déclarer et comment utiliser le service en ligne.</li>
+        <li><strong>Points à traiter :</strong> NIU, télédéclaration, justificatifs, cohérence des revenus et conséquences d'une omission.</li>
+        <li><strong>Lien d'appui :</strong> <a href="https://teledeclaration-dgi.cm" target="_blank" rel="noopener noreferrer">service de télédéclaration DGI</a>.</li>
+      </ul>
+
+      <h3>3. DSF en ligne : guide de transmission et paiement des soldes d'impôts</h3>
+      <p>
+        Le guide de soumission de la DSF en ligne reste un document de référence pour les contribuables concernés.
+        Il mérite un article pratique détaillant les prérequis, le dépôt des fichiers, le téléversement des annexes
+        et les modes de paiement.
+      </p>
+      <ul>
+        <li><a href="https://www.impots.cm/fr/actualites/guide-de-soumission-de-la-dsf-en-ligne" target="_blank" rel="noopener noreferrer">Guide de soumission de la DSF en ligne</a></li>
+        <li><a href="https://impots.cm/sites/default/files/documents/GUIDE%20DE%20TRANSMISSION%20E%CC%81LECTRONIQUE%20DES%20DSF.pdf" target="_blank" rel="noopener noreferrer">Document PDF officiel DSF</a></li>
+      </ul>
+
+      <h3>4. Circulaire LF 2026 : analyse pratique pour les entreprises</h3>
+      <p>
+        La circulaire d'application de la Loi de finances 2026 doit être traitée comme un contenu d'analyse : mesures
+        nouvelles, obligations déclaratives, impacts sectoriels et points de vigilance pour les contribuables.
+      </p>
+      <ul>
+        <li><a href="https://www.impots.cm/fr/actualites/circulaire-lf-2026" target="_blank" rel="noopener noreferrer">Circulaire LF 2026</a></li>
+      </ul>
+
+      <h3>5. Contribution des patentes : établissements privés d'enseignement et de santé</h3>
+      <p>
+        La lettre circulaire relative au régime de la contribution des patentes applicable aux établissements laïcs
+        d'enseignement et de santé appelle un article sectoriel à destination des écoles privées, cliniques,
+        centres de santé et gestionnaires d'établissements concernés.
+      </p>
+      <ul>
+        <li><a href="https://www.impots.cm/fr" target="_blank" rel="noopener noreferrer">Actualité mise en avant sur impots.cm</a></li>
+      </ul>
+
+      <h3>6. Liste des contribuables inactifs : vérifier et régulariser sa situation</h3>
+      <p>
+        La publication de la liste des contribuables inactifs doit être accompagnée d'un article d'alerte conformité :
+        conséquences possibles, vérification de la situation fiscale et démarches de régularisation auprès du centre
+        des impôts compétent.
+      </p>
+      <ul>
+        <li><a href="https://www.impots.cm/fr/actualites/liste-des-contribuables-inactifs" target="_blank" rel="noopener noreferrer">Liste des contribuables inactifs</a></li>
+      </ul>
+
+      <h3>7. Charte du contribuable au 1er janvier 2026 : droits en cas de contrôle fiscal</h3>
+      <p>
+        La Charte du contribuable est un support pédagogique essentiel pour expliquer les droits, garanties,
+        obligations et voies de recours du contribuable, notamment pendant un contrôle fiscal.
+      </p>
+      <ul>
+        <li><a href="https://www.impots.cm/fr/actualites/charte-du-controbuable-au-1er-janvier-2026" target="_blank" rel="noopener noreferrer">Charte du contribuable au 1er janvier 2026</a></li>
+        <li><a href="https://impots.cm/sites/default/files/documents/CHARTE%20DU%20CONTRIBUABLE%20MAJ%20au%2001%20janvier%202026.pdf" target="_blank" rel="noopener noreferrer">Document PDF officiel de la Charte</a></li>
+      </ul>
+
+      <h3>8. Taxe foncière : rappel de l'échéance du 30 juin</h3>
+      <p>
+        La taxe sur la propriété foncière doit faire l'objet d'un article de rappel avant l'échéance de fin juin :
+        contribuables concernés, base d'imposition, taux, paiement spontané et sanctions en cas de retard.
+      </p>
+      <ul>
+        <li><a href="https://www.impots.cm/fr/taxe-fonciere" target="_blank" rel="noopener noreferrer">Taxe foncière</a></li>
+        <li><a href="https://www.impots.cm/fr/calendrier-fiscal" target="_blank" rel="noopener noreferrer">Calendrier fiscal</a></li>
+      </ul>
+
+      <h3>Priorité de publication recommandée</h3>
+      <ol>
+        <li>Nouvelle plateforme d'enregistrement de la commande publique.</li>
+        <li>Déclaration annuelle des revenus des particuliers.</li>
+        <li>Taxe foncière : rappel avant le 30 juin.</li>
+        <li>DSF en ligne : guide de transmission et paiement.</li>
+        <li>Charte du contribuable, contribuables inactifs, circulaire LF 2026 et patentes sectorielles.</li>
+      </ol>
     `,
     author: "PRISMA GESTION",
-    publishDate: "2026-04-10",
+    publishDate: "2026-06-16",
     status: "Publié",
     image: "/blog-images/veille-impots.jpg",
-    slug: "veille-impots-cm-dernieres-publications",
-    tags: ["Veille réglementaire", "Fiscalité"],
-    seoTitle: "Veille impots.cm : dernières publications fiscales",
-    seoDescription: "Suivez les dernières publications, actualités et documents publiés sur impots.cm."
+    slug: "veille-impots-cm-commande-publique-declaration-particuliers",
+    tags: ["Veille réglementaire", "Fiscalité", "Commande publique", "IRPP"],
+    seoTitle: "Veille impots.cm : commande publique et déclaration des particuliers",
+    seoDescription: "Suivez les nouveautés impots.cm : commande publique, déclaration annuelle des particuliers, DSF, taxe foncière et documents fiscaux officiels."
   },
   {
     id: -11,
