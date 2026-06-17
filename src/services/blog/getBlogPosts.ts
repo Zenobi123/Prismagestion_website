@@ -583,21 +583,32 @@ async function seedDefaultBlogPosts(existingSlugs: string[]) {
   }
 }
 
-async function ensureDefaultBlogPostsSeeded(): Promise<void> {
-  const { data: slugRows, error } = await supabase
-    .from("blog_posts")
-    .select("slug");
+let defaultBlogPostsSeedPromise: Promise<void> | null = null;
 
-  if (error) {
-    console.error("Impossible de vérifier les articles par défaut:", error);
-    return;
+async function ensureDefaultBlogPostsSeeded(): Promise<void> {
+  if (!defaultBlogPostsSeedPromise) {
+    defaultBlogPostsSeedPromise = (async () => {
+      const { data: slugRows, error } = await supabase
+        .from("blog_posts")
+        .select("slug");
+
+      if (error) {
+        console.error("Impossible de vérifier les articles par défaut:", error);
+        return;
+      }
+
+      const existingSlugs = (slugRows || [])
+        .map((row) => row.slug)
+        .filter((slug): slug is string => typeof slug === "string");
+
+      await seedDefaultBlogPosts(existingSlugs);
+    })().catch((error) => {
+      defaultBlogPostsSeedPromise = null;
+      throw error;
+    });
   }
 
-  const existingSlugs = (slugRows || [])
-    .map((row) => row.slug)
-    .filter((slug): slug is string => typeof slug === "string");
-
-  await seedDefaultBlogPosts(existingSlugs);
+  return defaultBlogPostsSeedPromise;
 }
 
 export const getBlogPosts = async (): Promise<BlogPost[]> => {
@@ -655,7 +666,6 @@ export const getBlogPosts = async (): Promise<BlogPost[]> => {
 
 export const getPublishedBlogPosts = async (): Promise<BlogPost[]> => {
   try {
-    await ensureDefaultBlogPostsSeeded();
     const { data, error } = await supabase
       .from('blog_posts')
       .select('*')
@@ -667,12 +677,12 @@ export const getPublishedBlogPosts = async (): Promise<BlogPost[]> => {
         return DEFAULT_BLOG_POSTS.filter(p => p.status === 'Publié');
       }
       console.error('Erreur lors de la récupération des articles publiés:', error);
-      return [];
+      return DEFAULT_BLOG_POSTS.filter(p => p.status === 'Publié');
     }
 
     if (!data || data.length === 0) {
-      console.log('Aucun article publié trouvé dans Supabase.');
-      return [];
+      console.log('Aucun article publié trouvé dans Supabase, utilisation des articles par défaut.');
+      return DEFAULT_BLOG_POSTS.filter(p => p.status === 'Publié');
     }
 
     return data.map(post => {
