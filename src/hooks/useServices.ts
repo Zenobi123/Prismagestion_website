@@ -31,7 +31,7 @@ export const useServices = () => {
   // Référence pour stocker les écouteurs
   const channelRef = useRef<any>(null);
   // Référence pour suivre le dernier temps de rafraîchissement
-  const lastRefreshRef = useRef<number>(Date.now());
+  const lastRefreshRef = useRef<number>(0);
 
   const fetchServices = async (forceRefresh = false) => {
     if (!isMounted.current) return;
@@ -39,7 +39,7 @@ export const useServices = () => {
     // Éviter les rafraîchissements trop fréquents (moins de 2 secondes d'intervalle)
     // sauf si forceRefresh est vrai
     const now = Date.now();
-    if (!forceRefresh && now - lastRefreshRef.current < 2000) {
+    if (!forceRefresh && lastRefreshRef.current > 0 && now - lastRefreshRef.current < 2000) {
       console.log('Skipping refresh - too soon since last refresh');
       return;
     }
