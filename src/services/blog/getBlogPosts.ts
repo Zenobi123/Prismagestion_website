@@ -117,119 +117,150 @@ export const DEFAULT_BLOG_POSTS: BlogPost[] = [
 
   {
     id: -10,
-    title: "Veille impots.cm : commande publique, déclaration des particuliers et publications fiscales",
-    excerpt: "Synthèse priorisée des actualités visibles sur impots.cm, avec liens officiels et documents utiles pour les contribuables.",
+    title: "Veille impots.cm : les actualités fiscales des 30 derniers jours (juin 2026)",
+    excerpt: "Sélection d'articles de qualité sur les dernières publications de la DGI (guide OTP, DSF de la DGE, nominations, taxe foncière, plan stratégique), avec liens officiels et documents à télécharger.",
     content: `
-      <h2>Veille impots.cm — point au 16 juin 2026</h2>
+      <h2>Veille impots.cm — actualités fiscales du 1er au 30 juin 2026</h2>
       <p>
-        Cette veille regroupe les sujets fiscaux à suivre en priorité sur le portail officiel de la Direction
-        Générale des Impôts du Cameroun. Elle met l'accent sur les nouveautés et rappels opérationnels utiles
-        aux entreprises, particuliers, cabinets comptables, directions financières et responsables administratifs.
+        Point de veille arrêté au 1er juillet 2026. Cette édition rassemble les publications les plus récentes
+        du portail officiel de la Direction Générale des Impôts du Cameroun (DGI) parues au cours des 30 derniers
+        jours, sous forme d'articles de synthèse. Chaque sujet est resitué dans son contexte, expliqué pour les
+        entreprises, particuliers, cabinets comptables et directions financières, puis accompagné des liens
+        officiels et des documents à télécharger.
       </p>
 
-      <h3>1. Nouvelle plateforme d'enregistrement de la commande publique</h3>
+      <h3>1. Guide OTP : payer ses impôts par ou pour un tiers (1er juillet 2026)</h3>
       <p>
-        La DGI met en avant l'<strong>Enregistrement de la commande publique</strong> comme nouveau service numérique.
-        Ce sujet concerne directement les entreprises titulaires de marchés publics, les prestataires de l'État,
-        les administrations contractantes et les équipes chargées du suivi fiscal des marchés, bons de commande
-        et lettres-commandes.
+        La DGI publie un guide dédié au module OTP (Online Tax Payment) de sa plateforme de télépaiement. L'OTP
+        permet de régler impôts et taxes en ligne par virement bancaire ; le nouveau guide détaille précisément
+        le cas du paiement « par autrui » ou « pour autrui ». Il s'adresse aux mandataires (experts-comptables,
+        conseils fiscaux, sociétés mères réglant pour une filiale) comme aux contribuables souhaitant faire régler
+        leur dette fiscale par un tiers.
       </p>
-      <ul>
-        <li><strong>Angle d'article recommandé :</strong> ce que la digitalisation de l'enregistrement change pour les marchés publics.</li>
-        <li><strong>Points à traiter :</strong> accès à la plateforme, pièces à préparer, traçabilité, preuves d'enregistrement et risques en cas d'omission.</li>
-        <li><strong>Liens d'appui :</strong> <a href="https://www.impots.cm/fr" target="_blank" rel="noopener noreferrer">page d'accueil impots.cm</a> et <a href="https://registrations.dgi.cm" target="_blank" rel="noopener noreferrer">plateforme Commande publique</a>.</li>
-      </ul>
-
-      <h3>2. Rappel : déclaration annuelle des revenus des particuliers</h3>
       <p>
-        L'accès rapide <strong>Déclaration des particuliers</strong> est visible parmi les e-services de la DGI. Un article
-        dédié doit rappeler que la conformité fiscale ne concerne pas uniquement les entreprises : les particuliers
-        doivent vérifier leurs obligations déclaratives, notamment lorsqu'ils disposent de revenus salariaux,
-        fonciers, mobiliers, professionnels ou d'activités indépendantes.
+        Le document déroule tout le circuit : mise en place d'une convention de paiement par/pour un tiers,
+        initiation et soumission de la convention, acceptation et signature électronique, émission d'une demande
+        de paiement, puis traitement des demandes reçues. Pour les groupes et les cabinets, c'est un outil de
+        sécurisation et de traçabilité des règlements effectués au nom des clients.
       </p>
       <ul>
-        <li><strong>Angle d'article recommandé :</strong> qui doit déclarer, quels revenus déclarer et comment utiliser le service en ligne.</li>
-        <li><strong>Points à traiter :</strong> NIU, télédéclaration, justificatifs, cohérence des revenus et conséquences d'une omission.</li>
-        <li><strong>Lien d'appui :</strong> <a href="https://teledeclaration-dgi.cm" target="_blank" rel="noopener noreferrer">service de télédéclaration DGI</a>.</li>
+        <li><strong>À retenir :</strong> formaliser une convention avant tout paiement pour autrui, et rattacher la preuve de règlement au bon contribuable.</li>
+        <li><a href="https://impots.cm/fr/actualites/guide-otp-pour-le-paiement-des-impots-et-taxes-parpour-un-tiers" target="_blank" rel="noopener noreferrer">Actualité : Guide OTP pour le paiement des impôts et taxes par/pour un tiers</a></li>
+        <li><a href="https://impots.cm/sites/default/files/documents/guide_otp_paiement_pour_autrui_01032023%20.pdf" target="_blank" rel="noopener noreferrer">Document PDF : Guide OTP – paiement pour autrui</a></li>
       </ul>
 
-      <h3>3. DSF en ligne : guide de transmission et paiement des soldes d'impôts</h3>
+      <h3>2. DSF des contribuables de la DGE et nouveaux formats en ligne (28 juin 2026)</h3>
       <p>
-        Le guide de soumission de la DSF en ligne reste un document de référence pour les contribuables concernés.
-        Il mérite un article pratique détaillant les prérequis, le dépôt des fichiers, le téléversement des annexes
-        et les modes de paiement.
+        La DGI rappelle aux contribuables relevant de la Direction des Grandes Entreprises (DGE) que la Déclaration
+        Statistique et Fiscale (DSF) se transmet exclusivement par voie électronique, via le système d'information
+        accessible sur impots.cm. Cette communication s'accompagne de la mise à disposition des formats normalisés
+        de la DSF en ligne.
+      </p>
+      <p>
+        Quatre gabarits Excel verrouillés sont désormais imposés selon le secteur et la taille de l'entreprise :
+        DSF Normal, DSF SMT (système minimal de trésorerie), DSF Banque et DSF Assurance. Utiliser le bon format
+        conditionne l'acceptation de la déclaration : un dépôt réalisé sur un modèle inadapté est source de rejet
+        et de retard, avec un risque de pénalités.
       </p>
       <ul>
-        <li><a href="https://www.impots.cm/fr/actualites/guide-de-soumission-de-la-dsf-en-ligne" target="_blank" rel="noopener noreferrer">Guide de soumission de la DSF en ligne</a></li>
-        <li><a href="https://impots.cm/sites/default/files/documents/GUIDE%20DE%20TRANSMISSION%20E%CC%81LECTRONIQUE%20DES%20DSF.pdf" target="_blank" rel="noopener noreferrer">Document PDF officiel DSF</a></li>
+        <li><strong>À retenir :</strong> télécharger le format correspondant à son activité, respecter le calendrier de dépôt (15 mars pour la DGE) et conserver l'accusé de télétransmission.</li>
+        <li><a href="https://www.impots.cm/fr/actualites/dsf-contribuables-dge" target="_blank" rel="noopener noreferrer">Actualité : DSF des contribuables de la DGE</a></li>
+        <li><a href="https://www.impots.cm/fr/actualites/formats-de-la-dsf-en-ligne" target="_blank" rel="noopener noreferrer">Actualité : Formats de la DSF en ligne (Normal, SMT, Banque, Assurance)</a></li>
+        <li><a href="https://www.impots.cm/sites/default/files/documents/GUIDE%20UTILISATEUR%20DSF%202025%20DU%2003-03-2025.pdf" target="_blank" rel="noopener noreferrer">Document PDF : Guide utilisateur DSF</a></li>
+        <li><a href="https://impots.cm/sites/default/files/documents/Tutoriel%20de%20t%C3%A9l%C3%A9d%C3%A9claration%20de%20la%20DSF.pdf" target="_blank" rel="noopener noreferrer">Document PDF : Tutoriel de télédéclaration de la DSF</a></li>
       </ul>
 
-      <h3>4. Circulaire LF 2026 : analyse pratique pour les entreprises</h3>
+      <h3>3. Nomination de responsables à la DGI (27 juin 2026)</h3>
       <p>
-        La circulaire d'application de la Loi de finances 2026 doit être traitée comme un contenu d'analyse : mesures
-        nouvelles, obligations déclaratives, impacts sectoriels et points de vigilance pour les contribuables.
+        Un arrêté du Ministre des Finances portant nomination de responsables à la Direction Générale des Impôts
+        a été publié. Ces mouvements concernent l'encadrement des structures centrales et opérationnelles (DGE,
+        CIME, CDI, centres spécialisés).
+      </p>
+      <p>
+        Pour les contribuables, l'enjeu est pratique : identifier ses interlocuteurs et vérifier la continuité du
+        suivi de ses dossiers (relances, demandes de renseignements, contentieux en cours) auprès du centre de
+        rattachement.
       </p>
       <ul>
-        <li><a href="https://www.impots.cm/fr/actualites/circulaire-lf-2026" target="_blank" rel="noopener noreferrer">Circulaire LF 2026</a></li>
+        <li><a href="https://www.impots.cm/fr/actualites/nomination-des-responsables-la-dgi" target="_blank" rel="noopener noreferrer">Actualité : Nomination des responsables à la DGI</a></li>
       </ul>
 
-      <h3>5. Contribution des patentes : établissements privés d'enseignement et de santé</h3>
+      <h3>4. Taxe foncière 2026 : échéance de paiement du 30 juin</h3>
       <p>
-        La lettre circulaire relative au régime de la contribution des patentes applicable aux établissements laïcs
-        d'enseignement et de santé appelle un article sectoriel à destination des écoles privées, cliniques,
-        centres de santé et gestionnaires d'établissements concernés.
+        La taxe sur la propriété foncière (TPF) est due au 1er janvier de l'exercice et se règle par paiement
+        spontané, au plus tard le 30 juin, sur la base de la déclaration du propriétaire. La Loi de finances 2026
+        a fait évoluer son régime, la cotisation étant assise sur la valeur de la propriété.
+      </p>
+      <p>
+        L'échéance du 30 juin étant désormais dépassée, les propriétaires n'ayant pas encore réglé doivent
+        régulariser sans délai auprès de leur centre des impôts afin de limiter les pénalités et majorations de
+        retard. Un rappel utile pour les détenteurs de terrains bâtis et non bâtis, immeubles et locaux
+        professionnels.
       </p>
       <ul>
-        <li><a href="https://www.impots.cm/fr" target="_blank" rel="noopener noreferrer">Actualité mise en avant sur impots.cm</a></li>
+        <li><a href="https://impots.cm/fr/taxe-fonciere" target="_blank" rel="noopener noreferrer">Page : Taxe foncière</a></li>
+        <li><a href="https://www.impots.cm/fr/calendrier-fiscal" target="_blank" rel="noopener noreferrer">Page : Calendrier fiscal</a></li>
       </ul>
 
-      <h3>6. Liste des contribuables inactifs : vérifier et régulariser sa situation</h3>
+      <h3>5. Plan stratégique de la DGI 2026-2028 : le cap de la digitalisation</h3>
       <p>
-        La publication de la liste des contribuables inactifs doit être accompagnée d'un article d'alerte conformité :
-        conséquences possibles, vérification de la situation fiscale et démarches de régularisation auprès du centre
-        des impôts compétent.
+        La DGI diffuse son Plan stratégique 2026-2028, feuille de route qui structure la modernisation de
+        l'administration fiscale : dématérialisation des procédures (plus de 80 % des démarches réalisables en
+        ligne), déploiement du système Harmony DGI, élargissement de l'assiette et promotion du civisme fiscal.
+      </p>
+      <p>
+        Ce document aide les entreprises à anticiper l'évolution de leurs obligations déclaratives et de paiement,
+        et à intégrer la trajectoire « tout en ligne » dans leur organisation administrative et comptable.
       </p>
       <ul>
-        <li><a href="https://www.impots.cm/fr/actualites/liste-des-contribuables-inactifs" target="_blank" rel="noopener noreferrer">Liste des contribuables inactifs</a></li>
+        <li><a href="https://impots.cm/fr/document/plan-strategique-de-la-dgi-2026-2028" target="_blank" rel="noopener noreferrer">Document : Plan stratégique de la DGI 2026-2028</a></li>
+        <li><a href="https://www.impots.cm/sites/default/files/documents/PLAN%20STRAGTEGIQUE%20AU%2026%20De%CC%81c%202026.pdf" target="_blank" rel="noopener noreferrer">Document PDF : Plan stratégique de la DGI 2026-2028</a></li>
       </ul>
 
-      <h3>7. Charte du contribuable au 1er janvier 2026 : droits en cas de contrôle fiscal</h3>
+      <h3>6. Rappel de référence : circulaire d'application de la Loi de finances 2026</h3>
       <p>
-        La Charte du contribuable est un support pédagogique essentiel pour expliquer les droits, garanties,
-        obligations et voies de recours du contribuable, notamment pendant un contrôle fiscal.
+        La circulaire précisant les modalités d'application de la Loi de finances 2026 reste le texte de référence
+        pour l'interprétation des mesures nouvelles (régimes d'imposition, obligations déclaratives, dispositifs
+        incitatifs). Publiée fin mai, elle demeure incontournable pour sécuriser l'application des règles durant
+        tout l'exercice.
       </p>
       <ul>
-        <li><a href="https://www.impots.cm/fr/actualites/charte-du-controbuable-au-1er-janvier-2026" target="_blank" rel="noopener noreferrer">Charte du contribuable au 1er janvier 2026</a></li>
-        <li><a href="https://impots.cm/sites/default/files/documents/CHARTE%20DU%20CONTRIBUABLE%20MAJ%20au%2001%20janvier%202026.pdf" target="_blank" rel="noopener noreferrer">Document PDF officiel de la Charte</a></li>
+        <li><a href="https://www.impots.cm/fr/actualites/circulaire-lf-2026" target="_blank" rel="noopener noreferrer">Actualité : Circulaire d'application de la LF 2026</a></li>
       </ul>
 
-      <h3>8. Taxe foncière : rappel de l'échéance du 30 juin</h3>
-      <p>
-        La taxe sur la propriété foncière doit faire l'objet d'un article de rappel avant l'échéance de fin juin :
-        contribuables concernés, base d'imposition, taux, paiement spontané et sanctions en cas de retard.
-      </p>
+      <h3>Documents de référence à télécharger</h3>
       <ul>
-        <li><a href="https://www.impots.cm/fr/taxe-fonciere" target="_blank" rel="noopener noreferrer">Taxe foncière</a></li>
-        <li><a href="https://www.impots.cm/fr/calendrier-fiscal" target="_blank" rel="noopener noreferrer">Calendrier fiscal</a></li>
+        <li><a href="https://impots.cm/sites/default/files/documents/guide_otp_paiement_pour_autrui_01032023%20.pdf" target="_blank" rel="noopener noreferrer">Guide OTP – paiement des impôts pour autrui (PDF)</a></li>
+        <li><a href="https://www.impots.cm/sites/default/files/documents/GUIDE%20UTILISATEUR%20DSF%202025%20DU%2003-03-2025.pdf" target="_blank" rel="noopener noreferrer">Guide utilisateur DSF (PDF)</a></li>
+        <li><a href="https://impots.cm/sites/default/files/documents/Tutoriel%20de%20t%C3%A9l%C3%A9d%C3%A9claration%20de%20la%20DSF.pdf" target="_blank" rel="noopener noreferrer">Tutoriel de télédéclaration de la DSF (PDF)</a></li>
+        <li><a href="https://www.impots.cm/sites/default/files/documents/PLAN%20STRAGTEGIQUE%20AU%2026%20De%CC%81c%202026.pdf" target="_blank" rel="noopener noreferrer">Plan stratégique de la DGI 2026-2028 (PDF)</a></li>
       </ul>
 
-      <h3>Priorité de publication recommandée</h3>
+      <h3>Priorités d'action pour les contribuables</h3>
       <ol>
-        <li>Nouvelle plateforme d'enregistrement de la commande publique.</li>
-        <li>Déclaration annuelle des revenus des particuliers.</li>
-        <li>Taxe foncière : rappel avant le 30 juin.</li>
-        <li>DSF en ligne : guide de transmission et paiement.</li>
-        <li>Charte du contribuable, contribuables inactifs, circulaire LF 2026 et patentes sectorielles.</li>
+        <li>Régulariser la taxe foncière si le paiement du 30 juin n'a pas été effectué.</li>
+        <li>Vérifier le format DSF applicable (DGE, secteur bancaire ou assurance) avant tout dépôt.</li>
+        <li>Mettre en place une convention OTP pour les paiements réalisés par ou pour un tiers.</li>
+        <li>Actualiser ses interlocuteurs à la DGI après les nouvelles nominations.</li>
+        <li>Relire la circulaire LF 2026 et le plan stratégique pour anticiper les prochaines échéances.</li>
       </ol>
+
+      <p>
+        <em>Sources : publications officielles du portail impots.cm (rubriques Actualités et Documents),
+        pour la période du 1er au 30 juin 2026. Les liens renvoient aux pages et fichiers de la Direction
+        Générale des Impôts. Cette veille est fournie à titre d'information et ne se substitue pas à un conseil
+        personnalisé ; les équipes de Prisma Gestion restent disponibles pour l'accompagnement de vos
+        démarches.</em>
+      </p>
     `,
     author: "PRISMA GESTION",
-    publishDate: "2026-06-16",
+    publishDate: "2026-07-01",
     status: "Publié",
     image: "/blog-images/veille-impots.jpg",
     slug: "veille-impots-cm-commande-publique-declaration-particuliers",
-    tags: ["Veille réglementaire", "Fiscalité", "Commande publique", "IRPP"],
-    seoTitle: "Veille impots.cm : commande publique et déclaration des particuliers",
-    seoDescription: "Suivez les nouveautés impots.cm : commande publique, déclaration annuelle des particuliers, DSF, taxe foncière et documents fiscaux officiels."
+    tags: ["Veille réglementaire", "Fiscalité", "DSF", "OTP", "Taxe foncière", "DGI"],
+    seoTitle: "Veille impots.cm : actualités fiscales de juin 2026",
+    seoDescription: "Les dernières actualités de la DGI (impots.cm) sur 30 jours : guide OTP, DSF de la DGE, formats DSF, nominations, taxe foncière et plan stratégique, avec liens et documents officiels."
   },
   {
     id: -11,
