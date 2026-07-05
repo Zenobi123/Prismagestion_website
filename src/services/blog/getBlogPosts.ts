@@ -117,119 +117,133 @@ export const DEFAULT_BLOG_POSTS: BlogPost[] = [
 
   {
     id: -10,
-    title: "Veille impots.cm : commande publique, déclaration des particuliers et publications fiscales",
-    excerpt: "Synthèse priorisée des actualités visibles sur impots.cm, avec liens officiels et documents utiles pour les contribuables.",
+    title: "Veille impots.cm : huit articles complets sur les actualités fiscales de la DGI",
+    excerpt: "Huit articles complets issus de la veille impots.cm : commande publique, déclaration des particuliers, DSF en ligne, circulaire LF 2026, patentes, contribuables inactifs, charte du contribuable et taxe foncière.",
     content: `
-      <h2>Veille impots.cm — point au 16 juin 2026</h2>
+      <h2>Veille impots.cm — articles complets au 5 juillet 2026</h2>
       <p>
-        Cette veille regroupe les sujets fiscaux à suivre en priorité sur le portail officiel de la Direction
-        Générale des Impôts du Cameroun. Elle met l'accent sur les nouveautés et rappels opérationnels utiles
-        aux entreprises, particuliers, cabinets comptables, directions financières et responsables administratifs.
+        Cette veille regroupe les huit articles complets rédigés à partir des actualités du portail officiel
+        de la Direction Générale des Impôts du Cameroun. Chaque article est prêt à consulter : contexte,
+        démarches pratiques, liens officiels et recommandation PRISMA GESTION.
       </p>
 
-      <h3>1. Nouvelle plateforme d'enregistrement de la commande publique</h3>
-      <p>
-        La DGI met en avant l'<strong>Enregistrement de la commande publique</strong> comme nouveau service numérique.
-        Ce sujet concerne directement les entreprises titulaires de marchés publics, les prestataires de l'État,
-        les administrations contractantes et les équipes chargées du suivi fiscal des marchés, bons de commande
-        et lettres-commandes.
-      </p>
+      <h3>1. Nouvelle plateforme d'enregistrement de la commande publique : ce que les entreprises doivent savoir</h3>
+      <p>La Direction Générale des Impôts du Cameroun poursuit la digitalisation des démarches fiscales avec la mise en avant d'une plateforme dédiée à l'enregistrement de la commande publique. Cette évolution intéresse particulièrement les entreprises qui travaillent avec l'État, les collectivités territoriales, les établissements publics et les administrations contractantes.</p>
+      <p>L'enregistrement de la commande publique concerne les actes liés aux marchés publics, lettres-commandes, bons de commande et autres engagements contractuels relevant de la dépense publique. Pour les entreprises attributaires, cette formalité n'est pas un simple détail administratif : elle conditionne la régularité fiscale de l'opération et peut être demandée dans le cadre du suivi d'exécution, du paiement ou du contrôle.</p>
+      <p>La plateforme numérique vise à simplifier et sécuriser cette procédure. Elle permet de centraliser les informations, d'améliorer la traçabilité et de réduire les déplacements physiques. Les entreprises doivent toutefois préparer soigneusement leurs dossiers avant toute saisie : identification fiscale, références du marché ou de la commande, pièces contractuelles, informations sur l'administration contractante et justificatifs nécessaires.</p>
+      <p>Cette digitalisation ne supprime pas l'exigence de conformité. Au contraire, elle rend les opérations plus traçables. Une erreur dans les informations saisies, une omission ou un défaut d'enregistrement peut entraîner des retards dans le traitement du dossier, des difficultés de paiement ou des observations lors d'un contrôle fiscal.</p>
+      <p>Les entreprises concernées doivent donc mettre en place une procédure interne claire. Avant tout enregistrement, il est recommandé de vérifier la cohérence entre le contrat, les informations fiscales de l'entreprise, le montant de la commande et les pièces justificatives. Après l'opération, les preuves d'enregistrement et de paiement doivent être conservées dans le dossier fiscal et comptable du marché.</p>
+      <p>Pour les directions administratives et financières, cette nouvelle plateforme constitue aussi une opportunité : elle permet de mieux organiser les dossiers de marchés publics, de suivre les formalités en temps réel et de limiter les risques de perte de documents. Les cabinets comptables et conseils fiscaux peuvent accompagner leurs clients dans la préparation, la vérification et l'archivage des dossiers.</p>
+      <p>En pratique, toute entreprise engagée dans la commande publique devrait intégrer ce nouveau réflexe : consulter la plateforme dédiée, préparer les pièces avant la saisie, contrôler les informations transmises et conserver les preuves. La conformité fiscale devient ainsi un élément de bonne gestion du marché public, au même titre que le respect des délais, des clauses contractuelles et des obligations comptables.</p>
       <ul>
-        <li><strong>Angle d'article recommandé :</strong> ce que la digitalisation de l'enregistrement change pour les marchés publics.</li>
-        <li><strong>Points à traiter :</strong> accès à la plateforme, pièces à préparer, traçabilité, preuves d'enregistrement et risques en cas d'omission.</li>
-        <li><strong>Liens d'appui :</strong> <a href="https://www.impots.cm/fr" target="_blank" rel="noopener noreferrer">page d'accueil impots.cm</a> et <a href="https://registrations.dgi.cm" target="_blank" rel="noopener noreferrer">plateforme Commande publique</a>.</li>
+        <li><a href="https://www.impots.cm/fr" target="_blank" rel="noopener noreferrer">Page officielle DGI</a></li>
+        <li><a href="https://registrations.dgi.cm" target="_blank" rel="noopener noreferrer">Plateforme Commande publique</a></li>
       </ul>
+      <p><strong>Recommandation PRISMA GESTION :</strong> créer une checklist d'enregistrement de la commande publique et désigner un responsable interne du suivi fiscal des marchés. Cette organisation réduit les retards, sécurise les paiements et renforce la crédibilité de l'entreprise auprès des administrations.</p>
 
-      <h3>2. Rappel : déclaration annuelle des revenus des particuliers</h3>
-      <p>
-        L'accès rapide <strong>Déclaration des particuliers</strong> est visible parmi les e-services de la DGI. Un article
-        dédié doit rappeler que la conformité fiscale ne concerne pas uniquement les entreprises : les particuliers
-        doivent vérifier leurs obligations déclaratives, notamment lorsqu'ils disposent de revenus salariaux,
-        fonciers, mobiliers, professionnels ou d'activités indépendantes.
-      </p>
+      <h3>2. Déclaration annuelle des revenus des particuliers : rappel des obligations et démarches à effectuer</h3>
+      <p>La déclaration annuelle des revenus des particuliers est une obligation fiscale importante. Elle permet à l'administration fiscale de disposer d'une vision complète des revenus perçus par le contribuable au cours de l'année et de vérifier la cohérence de sa situation fiscale.</p>
+      <p>Contrairement à une idée répandue, cette déclaration ne concerne pas uniquement les entreprises. Les particuliers peuvent être tenus de déclarer leurs revenus lorsqu'ils perçoivent des salaires, pensions, revenus fonciers, revenus de capitaux mobiliers, bénéfices professionnels, revenus d'activités indépendantes ou plusieurs catégories de revenus à la fois.</p>
+      <p>La retenue à la source opérée sur certains revenus ne dispense pas toujours le contribuable de vérifier ses obligations déclaratives. Un salarié qui dispose également de loyers, d'une activité indépendante ou de revenus financiers doit s'assurer que l'ensemble de sa situation est correctement déclaré. Cette vérification est d'autant plus importante lorsque le contribuable sollicite une Attestation de Conformité Fiscale, un financement bancaire, un visa, un dossier administratif ou une participation à un appel d'offres.</p>
+      <p>La première étape consiste à disposer d'un Numéro d'Identifiant Unique à jour et d'un accès au service de télédéclaration. Le contribuable doit ensuite réunir les justificatifs utiles : bulletins de paie, attestations de retenue, contrats de bail, relevés de revenus, informations bancaires, documents professionnels et tout élément permettant d'expliquer l'origine des revenus déclarés.</p>
+      <p>L'objectif n'est pas seulement de remplir un formulaire. Il s'agit de présenter une situation cohérente, documentée et conforme. Une omission, une erreur de catégorie ou une incohérence entre les revenus déclarés et les documents disponibles peut entraîner des demandes de clarification ou des difficultés ultérieures.</p>
+      <p>Les particuliers doivent donc adopter une démarche proactive. Avant la déclaration, il faut recenser toutes les sources de revenus. Pendant la déclaration, il faut vérifier l'exactitude des informations saisies. Après la déclaration, il faut conserver l'accusé, les justificatifs et les éventuelles preuves de paiement.</p>
+      <p>Cette obligation est aussi une opportunité de mieux organiser sa situation fiscale personnelle. Une déclaration correctement préparée facilite les démarches administratives, réduit les risques de contentieux et contribue à une meilleure visibilité financière.</p>
       <ul>
-        <li><strong>Angle d'article recommandé :</strong> qui doit déclarer, quels revenus déclarer et comment utiliser le service en ligne.</li>
-        <li><strong>Points à traiter :</strong> NIU, télédéclaration, justificatifs, cohérence des revenus et conséquences d'une omission.</li>
-        <li><strong>Lien d'appui :</strong> <a href="https://teledeclaration-dgi.cm" target="_blank" rel="noopener noreferrer">service de télédéclaration DGI</a>.</li>
+        <li><a href="https://teledeclaration-dgi.cm" target="_blank" rel="noopener noreferrer">Service de télédéclaration DGI</a></li>
+        <li><a href="https://www.impots.cm/fr" target="_blank" rel="noopener noreferrer">Page officielle DGI</a></li>
       </ul>
+      <p><strong>Recommandation PRISMA GESTION :</strong> pour les particuliers disposant de revenus multiples, réaliser un mini-audit fiscal personnel avant toute déclaration annuelle. Cette revue permet d'identifier les revenus oubliés, les justificatifs manquants et les incohérences à corriger avant transmission.</p>
 
-      <h3>3. DSF en ligne : guide de transmission et paiement des soldes d'impôts</h3>
-      <p>
-        Le guide de soumission de la DSF en ligne reste un document de référence pour les contribuables concernés.
-        Il mérite un article pratique détaillant les prérequis, le dépôt des fichiers, le téléversement des annexes
-        et les modes de paiement.
-      </p>
+      <h3>3. DSF en ligne : comment transmettre sa Déclaration Statistique et Fiscale et payer les soldes d'impôts</h3>
+      <p>La Déclaration Statistique et Fiscale, plus connue sous le sigle DSF, constitue l'une des obligations annuelles majeures des contribuables professionnels. Elle permet de transmettre à l'administration fiscale les informations comptables, financières et fiscales de l'exercice écoulé.</p>
+      <p>La transmission en ligne de la DSF s'inscrit dans la modernisation des procédures fiscales. Elle réduit les manipulations physiques, améliore la traçabilité et permet un traitement plus structuré des informations déclarées. Pour les entreprises, cette digitalisation impose cependant une préparation rigoureuse.</p>
+      <p>Avant toute soumission, le contribuable doit vérifier ses prérequis : identification fiscale, régime d'imposition, accès à la plateforme, fichiers conformes, annexes disponibles et moyens de paiement opérationnels. Les équipes comptables doivent également s'assurer que les états financiers sont cohérents avec les déclarations mensuelles, les paiements déjà effectués et les soldes restant dus.</p>
+      <p>La procédure de dépôt comprend généralement la connexion à la plateforme, le choix du type de DSF, l'importation des fichiers, le contrôle des informations et le téléversement des annexes requises. Cette étape doit être effectuée avec prudence, car une erreur de fichier ou une annexe manquante peut retarder la validation du dossier.</p>
+      <p>Le paiement des soldes d'impôts constitue un autre point sensible. Selon les modalités disponibles, le contribuable peut recourir aux moyens prévus par l'administration, notamment les paiements bancaires ou les solutions électroniques. L'entreprise doit conserver les preuves de dépôt et de paiement, puis les classer avec le dossier fiscal annuel.</p>
+      <p>Les erreurs les plus fréquentes concernent les fichiers non conformes, les discordances entre la DSF et les déclarations mensuelles, l'oubli d'annexes, la mauvaise catégorisation du contribuable ou le paiement tardif du solde. Pour les éviter, il est recommandé de procéder à une revue finale avant transmission.</p>
+      <p>La DSF ne doit pas être considérée comme une simple formalité de fin d'exercice. Elle synthétise la situation fiscale de l'entreprise et peut servir de base à des analyses, contrôles ou demandes de clarification. Une DSF fiable renforce la conformité et la crédibilité de l'entreprise.</p>
       <ul>
         <li><a href="https://www.impots.cm/fr/actualites/guide-de-soumission-de-la-dsf-en-ligne" target="_blank" rel="noopener noreferrer">Guide de soumission de la DSF en ligne</a></li>
         <li><a href="https://impots.cm/sites/default/files/documents/GUIDE%20DE%20TRANSMISSION%20E%CC%81LECTRONIQUE%20DES%20DSF.pdf" target="_blank" rel="noopener noreferrer">Document PDF officiel DSF</a></li>
       </ul>
+      <p><strong>Recommandation PRISMA GESTION :</strong> préparer la DSF plusieurs semaines avant l'échéance, rapprocher les déclarations mensuelles avec les états financiers et créer un dossier numérique contenant les fichiers transmis, les annexes et les preuves de paiement.</p>
 
-      <h3>4. Circulaire LF 2026 : analyse pratique pour les entreprises</h3>
-      <p>
-        La circulaire d'application de la Loi de finances 2026 doit être traitée comme un contenu d'analyse : mesures
-        nouvelles, obligations déclaratives, impacts sectoriels et points de vigilance pour les contribuables.
-      </p>
+      <h3>4. Circulaire LF 2026 : ce que les entreprises doivent retenir pour leur conformité fiscale</h3>
+      <p>La circulaire d'application de la Loi de finances 2026 est un document essentiel pour comprendre la manière dont l'administration fiscale entend appliquer les nouvelles dispositions budgétaires et fiscales. Pour les entreprises, elle constitue un outil de lecture opérationnelle de la loi.</p>
+      <p>Une loi de finances fixe des règles. La circulaire précise souvent leur portée, leur mise en œuvre et les attentes de l'administration. Elle permet aux contribuables, cabinets comptables et directions financières d'anticiper les changements qui peuvent affecter les déclarations, les paiements, les contrôles et la gestion fiscale quotidienne.</p>
+      <p>Les entreprises doivent lire la circulaire avec une approche pratique. La première question à se poser est : quelles mesures concernent directement notre activité ? Certaines dispositions peuvent toucher le régime d'imposition, les taux applicables, les obligations déclaratives, les délais, les avantages fiscaux ou les modalités de contrôle.</p>
+      <p>La deuxième question porte sur les processus internes. Une nouvelle règle fiscale peut nécessiter l'adaptation du logiciel comptable, la mise à jour du plan de comptes, la modification des procédures de facturation, la revue des contrats ou la formation des équipes. Une mesure mal comprise peut créer des erreurs répétées sur plusieurs déclarations.</p>
+      <p>La troisième question concerne les risques. Les entreprises doivent identifier les points de vigilance : échéances nouvelles, conditions d'éligibilité à un avantage, obligations documentaires, justificatifs à conserver et conséquences en cas de non-respect. Cette cartographie des risques permet d'agir avant l'apparition d'un litige.</p>
+      <p>La circulaire doit aussi être partagée entre les services. La fiscalité n'est pas seulement l'affaire du comptable. Les directions commerciales, achats, ressources humaines, juridiques et financières peuvent être concernées par certaines mesures. Une communication interne évite les décisions opérationnelles prises sans tenir compte des effets fiscaux.</p>
+      <p>Pour les PME, l'enjeu principal est de transformer un document technique en actions concrètes. Il peut s'agir de vérifier son régime fiscal, mettre à jour les taux, contrôler les obligations mensuelles, revoir les contrats ou ajuster la documentation justificative.</p>
       <ul>
         <li><a href="https://www.impots.cm/fr/actualites/circulaire-lf-2026" target="_blank" rel="noopener noreferrer">Circulaire LF 2026</a></li>
       </ul>
+      <p><strong>Recommandation PRISMA GESTION :</strong> produire une note interne de synthèse après lecture de la circulaire LF 2026. Cette note doit lister les mesures applicables, les actions à mener, les responsables désignés et les échéances de mise en conformité.</p>
 
-      <h3>5. Contribution des patentes : établissements privés d'enseignement et de santé</h3>
-      <p>
-        La lettre circulaire relative au régime de la contribution des patentes applicable aux établissements laïcs
-        d'enseignement et de santé appelle un article sectoriel à destination des écoles privées, cliniques,
-        centres de santé et gestionnaires d'établissements concernés.
-      </p>
+      <h3>5. Contribution des patentes : clarification pour les établissements privés d'enseignement et de santé</h3>
+      <p>La contribution des patentes est une obligation fiscale liée à l'exercice d'une activité professionnelle, commerciale ou assimilée. La clarification de son régime applicable aux établissements privés d'enseignement et de santé mérite une attention particulière, car ces secteurs combinent souvent mission sociale, activité économique et obligations fiscales.</p>
+      <p>Les établissements laïcs d'enseignement, les écoles privées, les instituts de formation, les cliniques, les cabinets médicaux et certains centres de santé peuvent être concernés selon la nature de leurs activités, leur organisation juridique et leur régime fiscal. La difficulté réside souvent dans la distinction entre activité d'intérêt général et activité soumise à des obligations fiscales ordinaires.</p>
+      <p>Pour les gestionnaires d'établissements, l'enjeu est de déterminer correctement le régime applicable. Une mauvaise interprétation peut conduire à une absence de déclaration, à un paiement insuffisant ou à une contestation lors d'un contrôle. À l'inverse, une application excessive peut créer une charge inutile ou mal évaluée.</p>
+      <p>La première démarche consiste à vérifier l'immatriculation fiscale de l'établissement, sa forme juridique, son régime d'imposition et les activités effectivement exercées. Un établissement peut proposer des services annexes, percevoir des frais, employer du personnel, louer des locaux ou réaliser des opérations qui ont des implications fiscales spécifiques.</p>
+      <p>La deuxième démarche consiste à conserver une documentation claire : autorisations administratives, statuts, documents fiscaux, contrats, comptabilité, informations sur les recettes et justificatifs de paiement. Cette documentation permet de justifier la position adoptée face à l'administration.</p>
+      <p>La troisième démarche consiste à anticiper les échéances. Les établissements privés d'enseignement et de santé doivent intégrer la patente dans leur calendrier fiscal et budgétaire. Le paiement tardif ou l'omission peut entraîner des pénalités et perturber les démarches administratives.</p>
+      <p>Cette clarification est aussi une occasion de renforcer la gouvernance fiscale de ces structures. Beaucoup d'établissements se concentrent sur leur mission pédagogique ou sanitaire, mais la conformité fiscale fait partie de leur pérennité. Une organisation fiscale claire protège l'établissement, ses dirigeants et sa réputation.</p>
       <ul>
-        <li><a href="https://www.impots.cm/fr" target="_blank" rel="noopener noreferrer">Actualité mise en avant sur impots.cm</a></li>
+        <li><a href="https://www.impots.cm/fr" target="_blank" rel="noopener noreferrer">Page officielle DGI</a></li>
       </ul>
+      <p><strong>Recommandation PRISMA GESTION :</strong> pour les établissements privés d'enseignement et de santé, réaliser une revue de leur situation fiscale, notamment sur la patente, l'immatriculation, les déclarations périodiques et les justificatifs disponibles. Cette revue doit être faite avant tout contrôle ou renouvellement administratif sensible.</p>
 
-      <h3>6. Liste des contribuables inactifs : vérifier et régulariser sa situation</h3>
-      <p>
-        La publication de la liste des contribuables inactifs doit être accompagnée d'un article d'alerte conformité :
-        conséquences possibles, vérification de la situation fiscale et démarches de régularisation auprès du centre
-        des impôts compétent.
-      </p>
+      <h3>6. Liste des contribuables inactifs : quels risques et comment régulariser sa situation ?</h3>
+      <p>La publication d'une liste de contribuables inactifs est un signal important pour les entreprises et les particuliers exerçant une activité économique. Être considéré comme inactif par l'administration fiscale peut avoir des conséquences sérieuses sur la vie administrative, commerciale et financière du contribuable.</p>
+      <p>Un contribuable peut être considéré comme inactif lorsque sa situation fiscale ne reflète plus une activité déclarée régulière ou lorsque certaines obligations ne sont pas remplies. Les causes peuvent varier : absence de déclarations, cessation d'activité non formalisée, changement d'adresse non signalé, défaut de paiement ou incohérence dans les informations fiscales.</p>
+      <p>Les conséquences peuvent être importantes. Une entreprise inscrite comme inactive peut rencontrer des difficultés pour obtenir certains documents fiscaux, notamment une Attestation de Conformité Fiscale. Elle peut aussi être fragilisée dans ses relations avec les clients, fournisseurs, banques ou administrations publiques. Dans certains cas, cette situation peut compromettre la participation à un appel d'offres ou le paiement d'une prestation.</p>
+      <p>La première réaction doit être la vérification. Le contribuable doit consulter la publication, contrôler son identification fiscale et rapprocher cette information avec sa situation réelle. Si l'entreprise est effectivement inactive, il faut vérifier si une cessation ou suspension d'activité doit être formalisée. Si l'entreprise est active, il faut identifier l'origine de l'anomalie.</p>
+      <p>La régularisation peut impliquer le dépôt de déclarations manquantes, le paiement d'arriérés, la mise à jour des informations administratives, la demande de réactivation ou la production de justificatifs. Il est recommandé de contacter le centre des impôts compétent et de conserver toutes les preuves de démarche.</p>
+      <p>Pour les dirigeants, cette situation doit être traitée rapidement. Plus elle dure, plus elle peut créer de blocages. Une entreprise active qui reste administrativement inactive prend un risque fiscal et commercial inutile.</p>
+      <p>La prévention repose sur une discipline simple : déclarer régulièrement, payer dans les délais, mettre à jour ses informations, conserver les preuves et vérifier périodiquement sa situation fiscale.</p>
       <ul>
         <li><a href="https://www.impots.cm/fr/actualites/liste-des-contribuables-inactifs" target="_blank" rel="noopener noreferrer">Liste des contribuables inactifs</a></li>
       </ul>
+      <p><strong>Recommandation PRISMA GESTION :</strong> vérifier son statut fiscal au moins une fois par trimestre et avant toute démarche sensible : demande d'ACF, réponse à un appel d'offres, dossier bancaire, renouvellement d'agrément ou signature d'un marché public.</p>
 
-      <h3>7. Charte du contribuable au 1er janvier 2026 : droits en cas de contrôle fiscal</h3>
-      <p>
-        La Charte du contribuable est un support pédagogique essentiel pour expliquer les droits, garanties,
-        obligations et voies de recours du contribuable, notamment pendant un contrôle fiscal.
-      </p>
+      <h3>7. Charte du contribuable : droits et garanties à connaître en cas de contrôle fiscal</h3>
+      <p>La Charte du contribuable est un document essentiel pour comprendre les droits et garanties dont dispose tout contribuable dans ses relations avec l'administration fiscale. Elle est particulièrement importante en cas de contrôle fiscal, moment souvent sensible pour les entreprises et les particuliers.</p>
+      <p>Un contrôle fiscal ne doit pas être abordé dans la panique. Il s'agit d'une procédure encadrée, avec des règles, des délais, des droits et des obligations. Le contribuable doit coopérer avec l'administration, mais il a également le droit d'être informé, de préparer sa défense, de se faire assister et d'utiliser les voies de recours prévues.</p>
+      <p>La première garantie est l'information. Selon la nature du contrôle, le contribuable peut recevoir un avis ou une notification précisant l'objet de la procédure. Cette information lui permet de préparer les documents nécessaires : comptabilité, factures, déclarations, contrats, relevés, justificatifs de paiement et correspondances avec l'administration.</p>
+      <p>La deuxième garantie est l'assistance. Le contribuable peut se faire accompagner par un conseil, un expert-comptable, un fiscaliste ou toute personne compétente. Cette assistance est importante pour répondre correctement aux demandes, éviter les contradictions et présenter une documentation structurée.</p>
+      <p>La troisième garantie concerne le débat contradictoire. Le contribuable doit pouvoir expliquer sa position, produire des justificatifs et répondre aux observations. Une bonne préparation documentaire facilite ce dialogue et limite les risques de redressement infondé ou mal compris.</p>
+      <p>La quatrième garantie concerne les recours. En cas de désaccord, le contribuable peut utiliser les voies prévues pour contester, demander une clarification ou présenter une réclamation. Ces démarches doivent respecter les délais et les formes exigés.</p>
+      <p>Pour les entreprises, la meilleure protection reste l'organisation. Une comptabilité à jour, des déclarations cohérentes, des justificatifs classés et une procédure interne de réponse aux contrôles sont des éléments déterminants. Pour les particuliers, il est tout aussi important de conserver les preuves des revenus déclarés, paiements effectués et démarches administratives.</p>
       <ul>
         <li><a href="https://www.impots.cm/fr/actualites/charte-du-controbuable-au-1er-janvier-2026" target="_blank" rel="noopener noreferrer">Charte du contribuable au 1er janvier 2026</a></li>
         <li><a href="https://impots.cm/sites/default/files/documents/CHARTE%20DU%20CONTRIBUABLE%20MAJ%20au%2001%20janvier%202026.pdf" target="_blank" rel="noopener noreferrer">Document PDF officiel de la Charte</a></li>
       </ul>
+      <p><strong>Recommandation PRISMA GESTION :</strong> constituer un dossier permanent de contrôle fiscal comprenant les statuts, NIU, déclarations, DSF, preuves de paiement, contrats importants, documents sociaux et correspondances fiscales. Ce dossier doit être mis à jour régulièrement.</p>
 
-      <h3>8. Taxe foncière : rappel de l'échéance du 30 juin</h3>
-      <p>
-        La taxe sur la propriété foncière doit faire l'objet d'un article de rappel avant l'échéance de fin juin :
-        contribuables concernés, base d'imposition, taux, paiement spontané et sanctions en cas de retard.
-      </p>
+      <h3>8. Taxe foncière : dernier rappel avant l'échéance du 30 juin</h3>
+      <p>La taxe sur la propriété foncière fait partie des obligations fiscales à surveiller attentivement à l'approche de la fin du mois de juin. Elle concerne les propriétaires de biens immobiliers bâtis ou non bâtis, ainsi que certaines personnes assimilées selon la situation juridique du bien.</p>
+      <p>Cette taxe doit être intégrée dans le calendrier fiscal des particuliers, entreprises, investisseurs immobiliers, promoteurs, SCI et gestionnaires de patrimoine. L'échéance du 30 juin constitue un repère important : attendre les derniers jours augmente le risque d'oubli, d'erreur ou de difficulté de paiement.</p>
+      <p>La première étape consiste à identifier les biens concernés. Il peut s'agir de maisons, immeubles, terrains, locaux professionnels, immeubles locatifs ou autres propriétés imposables. Le contribuable doit vérifier les informations relatives au bien, à son propriétaire, à sa localisation et à sa valeur déclarée.</p>
+      <p>La deuxième étape consiste à vérifier les éventuelles exonérations ou situations particulières. Tous les biens ne sont pas nécessairement traités de la même manière. Une analyse au cas par cas peut être utile, notamment pour les biens nouvellement acquis, les immeubles en construction, les successions ou les propriétés détenues par des personnes morales.</p>
+      <p>La troisième étape concerne le paiement. Le contribuable doit anticiper la démarche, conserver la preuve de paiement et classer les documents dans son dossier fiscal. En cas de retard, des majorations ou pénalités peuvent être appliquées, ce qui augmente inutilement le coût fiscal.</p>
+      <p>Pour les entreprises, la taxe foncière doit être rapprochée de la comptabilité, des immobilisations et des contrats de bail éventuels. Pour les particuliers, elle doit être intégrée dans le budget annuel de gestion du patrimoine.</p>
+      <p>La taxe foncière est souvent négligée parce qu'elle n'est pas mensuelle. Pourtant, son défaut de paiement peut créer des difficultés administratives et financières. Une gestion anticipée permet d'éviter les sanctions et de maintenir une situation fiscale régulière.</p>
       <ul>
         <li><a href="https://www.impots.cm/fr/taxe-fonciere" target="_blank" rel="noopener noreferrer">Taxe foncière</a></li>
         <li><a href="https://www.impots.cm/fr/calendrier-fiscal" target="_blank" rel="noopener noreferrer">Calendrier fiscal</a></li>
       </ul>
-
-      <h3>Priorité de publication recommandée</h3>
-      <ol>
-        <li>Nouvelle plateforme d'enregistrement de la commande publique.</li>
-        <li>Déclaration annuelle des revenus des particuliers.</li>
-        <li>Taxe foncière : rappel avant le 30 juin.</li>
-        <li>DSF en ligne : guide de transmission et paiement.</li>
-        <li>Charte du contribuable, contribuables inactifs, circulaire LF 2026 et patentes sectorielles.</li>
-      </ol>
+      <p><strong>Recommandation PRISMA GESTION :</strong> créer un dossier foncier par bien immobilier : titre ou justificatif, informations cadastrales disponibles, déclarations, preuves de paiement, baux, évaluations et correspondances. Ce dossier facilite les déclarations futures et les éventuels contrôles.</p>
     `,
     author: "PRISMA GESTION",
-    publishDate: "2026-06-16",
+    publishDate: "2026-07-05",
     status: "Publié",
     image: "/blog-images/veille-impots.jpg",
-    slug: "veille-impots-cm-commande-publique-declaration-particuliers",
-    tags: ["Veille réglementaire", "Fiscalité", "Commande publique", "IRPP"],
-    seoTitle: "Veille impots.cm : commande publique et déclaration des particuliers",
-    seoDescription: "Suivez les nouveautés impots.cm : commande publique, déclaration annuelle des particuliers, DSF, taxe foncière et documents fiscaux officiels."
+    slug: "veille-impots-cm-huit-articles-complets",
+    tags: ["Veille réglementaire", "Fiscalité", "Commande publique", "DSF", "Taxe foncière"],
+    seoTitle: "Veille impots.cm : huit articles fiscaux complets",
+    seoDescription: "Consultez les huit articles complets de la veille impots.cm : commande publique, déclaration des particuliers, DSF en ligne, circulaire LF 2026, patentes, contribuables inactifs, charte du contribuable et taxe foncière."
   },
   {
     id: -11,
