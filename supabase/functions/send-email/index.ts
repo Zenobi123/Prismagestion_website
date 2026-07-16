@@ -4,8 +4,18 @@ const corsHeaders = {
 }
 
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
-const FROM_EMAIL = 'PRISMA GESTION <onboarding@resend.dev>'
-const TO_EMAIL = 'obiangtimenathan@gmail.com'
+const FROM_EMAIL = Deno.env.get('FROM_EMAIL') ?? 'PRISMA GESTION <onboarding@resend.dev>'
+const TO_EMAIL = Deno.env.get('NOTIFY_EMAIL') ?? 'obiangtimenathan@gmail.com'
+
+// Échappe le contenu fourni par les visiteurs avant insertion dans le HTML
+// de l'email (protection contre l'injection HTML).
+function esc(value: unknown): string {
+  return String(value ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+}
 
 const SERVICE_LABELS: Record<string, string> = {
   comptabilite: 'Comptabilité',
@@ -43,7 +53,7 @@ async function sendViaResend(subject: string, html: string): Promise<void> {
 
 function buildContactHtml(data: any): { subject: string; html: string } {
   const serviceLabel = SERVICE_LABELS[data.subject] ?? data.subject
-  const fullName = `${data.firstName} ${data.lastName}`
+  const fullName = esc(`${data.firstName} ${data.lastName}`)
   return {
     subject: `Nouveau message – ${serviceLabel} – ${fullName}`,
     html: `
@@ -51,12 +61,12 @@ function buildContactHtml(data: any): { subject: string; html: string } {
         <h2 style="color:#2E1A47">Nouveau message de contact</h2>
         <table style="width:100%;border-collapse:collapse">
           <tr><td style="padding:6px 12px;font-weight:bold;width:140px">Nom</td><td style="padding:6px 12px">${fullName}</td></tr>
-          <tr style="background:#f5f5f5"><td style="padding:6px 12px;font-weight:bold">Email</td><td style="padding:6px 12px">${data.email}</td></tr>
-          <tr><td style="padding:6px 12px;font-weight:bold">WhatsApp</td><td style="padding:6px 12px">${data.whatsapp}</td></tr>
-          <tr style="background:#f5f5f5"><td style="padding:6px 12px;font-weight:bold">Service</td><td style="padding:6px 12px">${serviceLabel}</td></tr>
+          <tr style="background:#f5f5f5"><td style="padding:6px 12px;font-weight:bold">Email</td><td style="padding:6px 12px">${esc(data.email)}</td></tr>
+          <tr><td style="padding:6px 12px;font-weight:bold">WhatsApp</td><td style="padding:6px 12px">${esc(data.whatsapp)}</td></tr>
+          <tr style="background:#f5f5f5"><td style="padding:6px 12px;font-weight:bold">Service</td><td style="padding:6px 12px">${esc(serviceLabel)}</td></tr>
         </table>
         <h3 style="color:#2E1A47;margin-top:24px">Message</h3>
-        <p style="background:#f9f9f9;padding:16px;border-left:4px solid #2E1A47;white-space:pre-line">${data.message}</p>
+        <p style="background:#f9f9f9;padding:16px;border-left:4px solid #2E1A47;white-space:pre-line">${esc(data.message)}</p>
         <hr style="margin-top:32px;border:none;border-top:1px solid #e0e0e0">
         <p style="font-size:12px;color:#999">Envoyé depuis le formulaire de contact · PRISMA GESTION</p>
       </div>`,
@@ -71,13 +81,13 @@ function buildQuoteHtml(data: any): { subject: string; html: string } {
       <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto">
         <h2 style="color:#2E1A47">Nouvelle demande de devis</h2>
         <table style="width:100%;border-collapse:collapse">
-          <tr><td style="padding:6px 12px;font-weight:bold;width:140px">Nom</td><td style="padding:6px 12px">${data.full_name}</td></tr>
-          <tr style="background:#f5f5f5"><td style="padding:6px 12px;font-weight:bold">Email</td><td style="padding:6px 12px">${data.email}</td></tr>
-          <tr><td style="padding:6px 12px;font-weight:bold">Téléphone</td><td style="padding:6px 12px">${data.phone}</td></tr>
-          <tr style="background:#f5f5f5"><td style="padding:6px 12px;font-weight:bold">Service</td><td style="padding:6px 12px">${serviceLabel}</td></tr>
+          <tr><td style="padding:6px 12px;font-weight:bold;width:140px">Nom</td><td style="padding:6px 12px">${esc(data.full_name)}</td></tr>
+          <tr style="background:#f5f5f5"><td style="padding:6px 12px;font-weight:bold">Email</td><td style="padding:6px 12px">${esc(data.email)}</td></tr>
+          <tr><td style="padding:6px 12px;font-weight:bold">Téléphone</td><td style="padding:6px 12px">${esc(data.phone)}</td></tr>
+          <tr style="background:#f5f5f5"><td style="padding:6px 12px;font-weight:bold">Service</td><td style="padding:6px 12px">${esc(serviceLabel)}</td></tr>
         </table>
         <h3 style="color:#2E1A47;margin-top:24px">Détails du projet</h3>
-        <p style="background:#f9f9f9;padding:16px;border-left:4px solid #D6DD00;white-space:pre-line">${data.details}</p>
+        <p style="background:#f9f9f9;padding:16px;border-left:4px solid #D6DD00;white-space:pre-line">${esc(data.details)}</p>
         <hr style="margin-top:32px;border:none;border-top:1px solid #e0e0e0">
         <p style="font-size:12px;color:#999">Envoyé depuis le formulaire de devis · PRISMA GESTION</p>
       </div>`,
@@ -91,13 +101,13 @@ function buildAppointmentHtml(data: any): { subject: string; html: string } {
       <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto">
         <h2 style="color:#2E1A47">Nouvelle demande de rendez-vous</h2>
         <table style="width:100%;border-collapse:collapse">
-          <tr><td style="padding:6px 12px;font-weight:bold;width:140px">Nom</td><td style="padding:6px 12px">${data.fullName}</td></tr>
-          <tr style="background:#f5f5f5"><td style="padding:6px 12px;font-weight:bold">Téléphone</td><td style="padding:6px 12px">${data.phone}</td></tr>
-          <tr><td style="padding:6px 12px;font-weight:bold">Sujet</td><td style="padding:6px 12px">${data.subject}</td></tr>
-          <tr style="background:#f5f5f5"><td style="padding:6px 12px;font-weight:bold">Date</td><td style="padding:6px 12px">${data.date}</td></tr>
-          <tr><td style="padding:6px 12px;font-weight:bold">Heure</td><td style="padding:6px 12px">${data.time}</td></tr>
+          <tr><td style="padding:6px 12px;font-weight:bold;width:140px">Nom</td><td style="padding:6px 12px">${esc(data.fullName)}</td></tr>
+          <tr style="background:#f5f5f5"><td style="padding:6px 12px;font-weight:bold">Téléphone</td><td style="padding:6px 12px">${esc(data.phone)}</td></tr>
+          <tr><td style="padding:6px 12px;font-weight:bold">Sujet</td><td style="padding:6px 12px">${esc(data.subject)}</td></tr>
+          <tr style="background:#f5f5f5"><td style="padding:6px 12px;font-weight:bold">Date</td><td style="padding:6px 12px">${esc(data.date)}</td></tr>
+          <tr><td style="padding:6px 12px;font-weight:bold">Heure</td><td style="padding:6px 12px">${esc(data.time)}</td></tr>
         </table>
-        ${data.message ? `<h3 style="color:#2E1A47;margin-top:24px">Message</h3><p style="background:#f9f9f9;padding:16px;border-left:4px solid #2E1A47;white-space:pre-line">${data.message}</p>` : ''}
+        ${data.message ? `<h3 style="color:#2E1A47;margin-top:24px">Message</h3><p style="background:#f9f9f9;padding:16px;border-left:4px solid #2E1A47;white-space:pre-line">${esc(data.message)}</p>` : ''}
         <hr style="margin-top:32px;border:none;border-top:1px solid #e0e0e0">
         <p style="font-size:12px;color:#999">Envoyé depuis le formulaire de rendez-vous · PRISMA GESTION</p>
       </div>`,
@@ -131,9 +141,19 @@ Deno.serve(async (req) => {
         })
     }
 
+    // Sans clé Resend configurée, on répond sans erreur : les demandes
+    // restent enregistrées en base et visibles dans l'espace admin.
+    if (!RESEND_API_KEY) {
+      console.log(`Notification "${type}" reçue mais RESEND_API_KEY non configurée — envoi ignoré.`)
+      return new Response(JSON.stringify({ success: true, sent: false, reason: 'RESEND_API_KEY non configurée' }), {
+        status: 200,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
+
     await sendViaResend(emailContent.subject, emailContent.html)
 
-    return new Response(JSON.stringify({ success: true }), {
+    return new Response(JSON.stringify({ success: true, sent: true }), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })

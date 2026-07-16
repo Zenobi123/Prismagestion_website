@@ -7,66 +7,51 @@ import { sendContactEmail } from "@/utils/email/sendEmail";
 // Sauvegarder un message de contact
 export const saveContactMessage = async (formData: ContactFormData): Promise<ContactMessage> => {
   try {
-    // Formater les données pour l'insertion dans Supabase
+    // L'identifiant et la date sont générés côté client : avec la RLS, un
+    // visiteur anonyme peut insérer un message mais pas le relire (les
+    // messages ne sont lisibles que par l'admin), donc pas de .select().
+    const id = crypto.randomUUID();
+    const date = new Date().toISOString();
     const messageData = {
+      id,
       first_name: formData.firstName,
       last_name: formData.lastName,
       email: formData.email,
       whatsapp: formData.whatsapp,
       subject: formData.subject,
       message: formData.message,
-      // Les champs date et read sont définis par défaut dans la base de données
+      date,
     };
 
-    console.log('Tentative de sauvegarde du message dans Supabase:', messageData);
-
-    // Insérer dans Supabase
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('contact_messages')
-      .insert(messageData)
-      .select('*')
-      .single();
+      .insert(messageData);
 
     if (error) {
-      // Supabase désactivé : envoi par email directement
-      if ((error as { code?: string }).code === 'SUPABASE_DISABLED') {
-        console.log('Supabase désactivé – envoi du message par email.');
-        await sendContactEmail(formData);
-        return {
-          id: `local-${Date.now()}`,
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          whatsapp: formData.whatsapp,
-          subject: formData.subject,
-          message: formData.message,
-          date: new Date().toISOString(),
-          read: false,
-        };
-      }
       console.error('Erreur lors de la sauvegarde du message dans Supabase:', error);
       throw new Error(error.message);
     }
-    
-    if (!data) {
-      throw new Error('Aucune donnée retournée après l\'insertion');
-    }
-    
-    console.log('Message sauvegardé avec succès dans Supabase:', data);
-    
-    // Convertir le format de données de Supabase au format attendu par l'application
+
+    console.log('Message sauvegardé avec succès');
+
+    // Notification email non bloquante (nécessite la fonction send-email
+    // et une clé RESEND_API_KEY configurée côté Supabase).
+    sendContactEmail(formData).catch((err) =>
+      console.warn('Notification email non envoyée:', err)
+    );
+
     const newMessage: ContactMessage = {
-      id: data.id,
-      firstName: data.first_name,
-      lastName: data.last_name,
-      email: data.email,
-      whatsapp: data.whatsapp,
-      subject: data.subject,
-      message: data.message,
-      date: data.date,
-      read: data.read,
+      id,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      whatsapp: formData.whatsapp,
+      subject: formData.subject,
+      message: formData.message,
+      date,
+      read: false,
     };
-    
+
     return newMessage;
   } catch (error) {
     console.error('Erreur lors de la sauvegarde du message:', error);
