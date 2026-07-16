@@ -257,7 +257,7 @@ export const DEFAULT_BLOG_POSTS: BlogPost[] = [
     publishDate: "2026-07-01",
     status: "Publié",
     image: "/blog-images/veille-impots.jpg",
-    slug: "veille-impots-cm-commande-publique-declaration-particuliers",
+    slug: "veille-impots-cm-actualites-fiscales-juin-2026",
     tags: ["Veille réglementaire", "Fiscalité", "DSF", "OTP", "Taxe foncière", "DGI"],
     seoTitle: "Veille impots.cm : actualités fiscales de juin 2026",
     seoDescription: "Les dernières actualités de la DGI (impots.cm) sur 30 jours : guide OTP, DSF de la DGE, formats DSF, nominations, taxe foncière et plan stratégique, avec liens et documents officiels."

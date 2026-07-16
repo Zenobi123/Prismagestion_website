@@ -1,0 +1,12 @@
+# En-têtes de sécurité HTTP (Netlify / Cloudflare Pages).
+# La Content-Security-Policy complète est injectée en <meta> au build
+# (voir vite.config.ts) ; frame-ancestors ne pouvant pas être défini en
+# meta, il est fourni ici avec les autres en-têtes de durcissement.
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  Content-Security-Policy: frame-ancestors 'none'
+  Cross-Origin-Opener-Policy: same-origin

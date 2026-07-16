@@ -1,7 +1,6 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { User, Session } from '@supabase/supabase-js';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase, User, Session } from '@/integrations/supabase/client';
 import { ErrorService } from '@/services/errorService';
 
 interface AuthContextType {
@@ -40,20 +39,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           async (event, session) => {
             if (!mounted) return;
             
-            console.log('Auth state changed:', event, session?.user?.email);
-            
-            // Gestion sécurisée des événements d'authentification
-            if (event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED') {
+            // Jamais d'email ni de PII dans les logs — uniquement l'événement.
+            console.log('Auth state changed:', event);
+
+            if (event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED' || event === 'SIGNED_IN') {
               setSession(session);
               setUser(session?.user ?? null);
-            } else if (event === 'SIGNED_IN') {
-              setSession(session);
-              setUser(session?.user ?? null);
-              
-              // Log de sécurité pour les connexions
-              if (session?.user) {
-                console.log('User signed in:', session.user.email);
-              }
             }
             
             if (mounted) {
@@ -104,13 +95,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
       
       if (error) {
-        ErrorService.logError(error, { context: 'Sign in attempt', email });
+        ErrorService.logError(error, { context: 'Sign in attempt' });
       }
-      
+
       return { error };
     } catch (error) {
       const authError = error as Error;
-      ErrorService.logError(authError, { context: 'Sign in exception', email });
+      ErrorService.logError(authError, { context: 'Sign in exception' });
       return { error: authError };
     }
   };
@@ -128,13 +119,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
       
       if (error) {
-        ErrorService.logError(error, { context: 'Sign up attempt', email });
+        ErrorService.logError(error, { context: 'Sign up attempt' });
       }
-      
+
       return { error };
     } catch (error) {
       const authError = error as Error;
-      ErrorService.logError(authError, { context: 'Sign up exception', email });
+      ErrorService.logError(authError, { context: 'Sign up exception' });
       return { error: authError };
     }
   };

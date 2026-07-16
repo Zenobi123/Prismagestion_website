@@ -2,6 +2,38 @@
 
 _Date de l'audit : 10 avril 2026_
 
+## Renforcements appliqués le 16 juillet 2026
+
+- **Fonction edge `send-email` durcie** (constat 1/5) : CORS restreint à une
+  liste d'origines autorisées (`ALLOWED_ORIGINS`, défaut : domaines de
+  production + prévisualisations Lovable + localhost), rejet serveur des
+  origines inconnues, validation stricte des entrées (type, champs requis,
+  longueurs maximales, format email), taille de requête plafonnée (20 Ko),
+  limitation de débit par IP (5 req/min, best effort) et neutralisation des
+  sauts de ligne dans les sujets d'email.
+- **Logs PII supprimés** (constat 2) : plus d'email utilisateur ni de payload
+  de message dans la console (AuthContext, formulaires de contact) ; en
+  production, tous les `console.log/info/debug/warn` sont retirés du bundle
+  par la configuration esbuild de Vite (`console.error` conservé).
+- **CSP réellement appliquée** (constat 3) : une Content-Security-Policy est
+  injectée en `<meta>` au build (voir `vite.config.ts`), sans
+  `unsafe-inline` pour les scripts (les scripts inline restants sont
+  autorisés par hash sha256). Le script `cdn.gpteng.co` requis par Lovable
+  est explicitement contraint à cette seule origine.
+- **En-têtes HTTP de durcissement** (constat 3) : `public/_headers`
+  (Netlify/Cloudflare Pages) et `vercel.json` fournissent
+  X-Frame-Options, X-Content-Type-Options, Referrer-Policy,
+  Permissions-Policy, HSTS, `frame-ancestors 'none'` et COOP.
+- **Bornes de longueur côté base** (constat 5, partiel) : migration
+  `website_harden_input_constraints` ajoutant des contraintes CHECK sur les
+  tables `contact_messages`, `quote_requests` et `appointments` (les inserts
+  anonymes ne peuvent plus injecter de payloads volumineux) ; validation
+  client alignée sur ces limites.
+
+Restent à traiter : captcha anti-spam (Turnstile/hCaptcha), rate limiting
+persistant côté plateforme, gouvernance des rôles admin (constat 6) et le
+retrait des pseudo-contrôles de sécurité côté client (constat 4).
+
 ## Méthodologie rapide
 - Revue statique du code front-end React/Vite.
 - Revue des migrations et fonctions Supabase (RLS, rôles, edge functions).

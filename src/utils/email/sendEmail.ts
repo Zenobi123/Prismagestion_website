@@ -1,10 +1,14 @@
+// Notifications email via la fonction edge Supabase "send-email".
+// L'envoi effectif nécessite les secrets RESEND_API_KEY et NOTIFY_EMAIL
+// configurés côté Supabase ; sinon la fonction répond { sent: false } sans
+// erreur. Ces appels sont toujours non bloquants pour les formulaires.
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string;
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string | undefined;
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined;
 
 async function callSendEmail(type: string, data: object): Promise<void> {
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-    console.warn('Supabase non configuré – email non envoyé.');
+    console.info(`[email] Supabase non configuré – notification "${type}" ignorée.`);
     return;
   }
 

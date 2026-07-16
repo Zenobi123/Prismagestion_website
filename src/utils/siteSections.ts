@@ -99,10 +99,11 @@ export async function updateSectionContent(sectionId: string, content: SectionCo
     
     const jsonContent = content as unknown as Json;
     
+    // upsert : crée la ligne si elle n'existe pas encore (un simple update
+    // serait silencieusement sans effet sur une section jamais enregistrée).
     const { data, error } = await supabase
       .from("site_sections")
-      .update({ content: jsonContent })
-      .eq("id", sectionId)
+      .upsert({ id: sectionId, content: jsonContent })
       .select();
     
     if (error) {
