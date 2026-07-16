@@ -83,8 +83,7 @@ export function useContactForm() {
 
     try {
       const savedMessage = await saveContactMessage(formData);
-      console.log("Message sauvegardé avec succès:", savedMessage);
-      
+
       // Réinitialiser le formulaire après succès
       resetForm();
       setSubmitSuccess(true);
