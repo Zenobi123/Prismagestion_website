@@ -11,9 +11,13 @@ export const submitQuote = async (formData: {
   service: string | null;
 }): Promise<{ id?: string; error?: any }> => {
   try {
-    const { data, error } = await supabase
+    // Identifiant généré côté client : avec la RLS, un visiteur anonyme
+    // peut insérer une demande mais pas la relire, donc pas de .select().
+    const id = crypto.randomUUID();
+    const { error } = await supabase
       .from('quote_requests')
       .insert({
+        id,
         full_name: formData.full_name,
         email: formData.email,
         phone: formData.phone,
@@ -21,21 +25,19 @@ export const submitQuote = async (formData: {
         service: formData.service,
         read: false,
         status: 'new'
-      })
-      .select();
+      });
 
     if (error) {
-      // Supabase désactivé : envoi par email directement
-      if ((error as { code?: string }).code === 'SUPABASE_DISABLED') {
-        console.log('Supabase désactivé – envoi de la demande de devis par email.');
-        await sendQuoteEmail(formData);
-        return { id: `quote-${Date.now()}` };
-      }
       console.error('Erreur lors de la soumission de la demande de devis:', error);
       return { error };
     }
 
-    return { id: data?.[0]?.id };
+    // Notification email non bloquante
+    sendQuoteEmail(formData).catch((err) =>
+      console.warn('Notification email non envoyée:', err)
+    );
+
+    return { id };
   } catch (error) {
     console.error('Erreur lors de la soumission de la demande de devis:', error);
     return { error };

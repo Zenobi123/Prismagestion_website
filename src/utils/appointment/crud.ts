@@ -5,7 +5,12 @@ import { sendAppointmentEmail } from '@/utils/email/sendEmail';
 
 export const saveAppointment = async (formData: AppointmentFormData): Promise<Appointment> => {
   try {
+    // Identifiant généré côté client : avec la RLS, un visiteur anonyme
+    // peut insérer un rendez-vous mais pas le relire, donc pas de .select().
+    const id = crypto.randomUUID();
+    const createdAt = new Date().toISOString();
     const appointmentData = {
+      id,
       full_name: formData.fullName,
       phone: formData.phone,
       subject: formData.subject,
@@ -14,50 +19,33 @@ export const saveAppointment = async (formData: AppointmentFormData): Promise<Ap
       message: formData.message,
       status: "pending" as AppointmentStatus,
     };
-    
-    const { data, error } = await supabase
+
+    const { error } = await supabase
       .from('appointments')
-      .insert(appointmentData)
-      .select('*')
-      .single();
-    
+      .insert(appointmentData);
+
     if (error) {
-      // Supabase désactivé : envoi par email directement
-      if ((error as { code?: string }).code === 'SUPABASE_DISABLED') {
-        console.log('Supabase désactivé – envoi du rendez-vous par email.');
-        await sendAppointmentEmail(formData);
-        return {
-          id: `appointment-${Date.now()}`,
-          fullName: formData.fullName,
-          phone: formData.phone,
-          subject: formData.subject,
-          date: formData.date,
-          time: formData.time,
-          message: formData.message,
-          createdAt: new Date().toISOString(),
-          status: 'pending',
-        };
-      }
       console.error('Erreur lors de la sauvegarde du rendez-vous dans Supabase:', error);
       throw new Error(error.message);
     }
-    
-    if (!data) {
-      throw new Error('Aucune donnée retournée après l\'insertion');
-    }
-    
-    console.log('Rendez-vous sauvegardé avec succès dans Supabase:', data);
-    
+
+    console.log('Rendez-vous sauvegardé avec succès');
+
+    // Notification email non bloquante
+    sendAppointmentEmail(formData).catch((err) =>
+      console.warn('Notification email non envoyée:', err)
+    );
+
     return {
-      id: data.id,
-      fullName: data.full_name,
-      phone: data.phone,
-      subject: data.subject,
-      date: data.appointment_date,
-      time: data.appointment_time,
-      message: data.message,
-      createdAt: data.created_at,
-      status: data.status as AppointmentStatus,
+      id,
+      fullName: formData.fullName,
+      phone: formData.phone,
+      subject: formData.subject,
+      date: formData.date,
+      time: formData.time,
+      message: formData.message,
+      createdAt,
+      status: 'pending',
     };
   } catch (error) {
     console.error('Erreur lors de la sauvegarde du rendez-vous:', error);
