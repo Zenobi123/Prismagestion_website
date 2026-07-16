@@ -80,8 +80,6 @@ export const getContactMessages = async (): Promise<ContactMessage[]> => {
       return [];
     }
     
-    console.log('Données brutes récupérées:', data);
-    
     // Convertir le format de données de Supabase au format attendu par l'application
     const messages: ContactMessage[] = data.map(item => ({
       id: item.id,
