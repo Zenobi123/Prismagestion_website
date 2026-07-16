@@ -1,5 +1,36 @@
 # Welcome to your Lovable project
 
+## Fonctionnement sans backend
+
+Le site fonctionne désormais **entièrement sans backend** (Supabase a été retiré) :
+
+- Toutes les données (articles de blog, messages de contact, demandes de devis,
+  rendez-vous, services, contenus des sections, fichiers médias) sont stockées
+  dans le **localStorage du navigateur** via un client local
+  (`src/lib/localBackend/`) qui reproduit l'API de `supabase-js`.
+- Aucune variable d'environnement n'est requise : `npm i && npm run dev` suffit.
+- Les mises à jour "temps réel" entre les onglets ouverts sont assurées par
+  `BroadcastChannel`.
+- Les notifications par email sont désactivées (aucun serveur pour les envoyer) ;
+  les demandes restent consultables dans l'espace admin.
+
+### Espace admin
+
+Un compte administrateur local est créé automatiquement au premier chargement :
+
+- **Email** : `admin@prismagestion.com`
+- **Mot de passe** : `admin123`
+
+Connexion via `/auth`, puis accès à `/admin`. Vous pouvez aussi créer votre
+propre compte depuis la page d'inscription (il reçoit le rôle admin).
+
+> ⚠️ **Limites de ce mode** : sans backend, les données sont propres à chaque
+> navigateur. Les modifications faites dans l'espace admin ne sont visibles que
+> sur l'appareil où elles ont été faites, et l'authentification n'offre aucune
+> sécurité réelle (elle ne protège que les données locales du visiteur). Les
+> contenus par défaut (articles, services, textes des sections) restent servis
+> à tous les visiteurs.
+
 ## Project info
 
 **URL**: https://lovable.dev/projects/340433e9-ca27-4bce-a3f6-02758a95abb6

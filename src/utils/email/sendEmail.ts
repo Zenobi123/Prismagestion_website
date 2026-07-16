@@ -1,26 +1,14 @@
+// Le site fonctionne désormais sans backend : il n'y a plus de fonction
+// serveur pour envoyer des emails de notification. Les demandes (contact,
+// devis, rendez-vous) sont enregistrées localement et consultables dans
+// l'espace admin. Ces fonctions sont conservées pour compatibilité et se
+// contentent de journaliser l'action.
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string;
-
-async function callSendEmail(type: string, data: object): Promise<void> {
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-    console.warn('Supabase non configuré – email non envoyé.');
-    return;
-  }
-
-  const response = await fetch(`${SUPABASE_URL}/functions/v1/send-email`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-    },
-    body: JSON.stringify({ type, data }),
-  });
-
-  if (!response.ok) {
-    const body = await response.json().catch(() => ({}));
-    throw new Error(body.error ?? `Erreur ${response.status}`);
-  }
+function logEmailSkipped(type: string, data: object): void {
+  console.info(
+    `[email désactivé] Notification "${type}" non envoyée (aucun backend). Données:`,
+    data
+  );
 }
 
 export async function sendContactEmail(data: {
@@ -31,7 +19,7 @@ export async function sendContactEmail(data: {
   subject: string;
   message: string;
 }): Promise<void> {
-  await callSendEmail('contact', data);
+  logEmailSkipped('contact', data);
 }
 
 export async function sendQuoteEmail(data: {
@@ -41,7 +29,7 @@ export async function sendQuoteEmail(data: {
   service: string | null;
   details: string;
 }): Promise<void> {
-  await callSendEmail('quote', data);
+  logEmailSkipped('quote', data);
 }
 
 export async function sendAppointmentEmail(data: {
@@ -52,5 +40,5 @@ export async function sendAppointmentEmail(data: {
   time: string;
   message: string;
 }): Promise<void> {
-  await callSendEmail('appointment', data);
+  logEmailSkipped('appointment', data);
 }
