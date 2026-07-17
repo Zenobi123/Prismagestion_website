@@ -16,17 +16,30 @@ interface AdminContentProps {
   activeTab: string;
   activeMessageTab: string;
   setActiveMessageTab: (tab: string) => void;
+  setActiveTab?: (tab: string) => void;
 }
 
-const AdminContentComponent = ({ 
-  activeTab, 
-  activeMessageTab, 
-  setActiveMessageTab 
+const AdminContentComponent = ({
+  activeTab,
+  activeMessageTab,
+  setActiveMessageTab,
+  setActiveTab
 }: AdminContentProps) => {
+  const handleDashboardNavigate = (tab: string, messageTab?: string) => {
+    setActiveTab?.(tab);
+    if (messageTab) {
+      // Laisser le temps au MessagesPanel de se monter avant de cibler son onglet
+      // (même mécanisme que les notifications de l'AdminHeader).
+      setTimeout(() => {
+        document.dispatchEvent(new CustomEvent('message-tab-navigate', { detail: messageTab }));
+      }, 100);
+    }
+  };
+
   const renderContent = () => {
     switch (activeTab) {
       case "dashboard":
-        return <DashboardPanel />;
+        return <DashboardPanel onNavigate={handleDashboardNavigate} />;
       case "messages":
         return <MessagesPanel />;
       case "blog":
@@ -34,6 +47,7 @@ const AdminContentComponent = ({
       case "services":
         return <ServicesPanel />;
       case "home":
+      case "homepage":
         return <HomePanel />;
       case "users":
         return <UsersPanel />;
@@ -48,7 +62,7 @@ const AdminContentComponent = ({
       case "backup":
         return <BackupPanel />;
       default:
-        return <DashboardPanel />;
+        return <DashboardPanel onNavigate={handleDashboardNavigate} />;
     }
   };
 
