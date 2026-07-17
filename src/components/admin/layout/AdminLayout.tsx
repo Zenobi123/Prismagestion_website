@@ -27,11 +27,25 @@ export const AdminLayout = () => {
   // Initialize cache service
   useEffect(() => {
     cacheService.startCleanupInterval();
-    
+
     return () => {
       RealtimeService.unsubscribeAll();
       cacheService.clear();
     };
+  }, []);
+
+  // Navigation entre sections émise par l'en-tête, le tableau de bord ou les
+  // raccourcis des panneaux (événement 'admin-navigate').
+  useEffect(() => {
+    const handleAdminNavigate = (event: Event) => {
+      const detail = (event as CustomEvent).detail;
+      if (typeof detail === 'string' && detail) {
+        setActiveTab(detail);
+      }
+    };
+
+    document.addEventListener('admin-navigate', handleAdminNavigate);
+    return () => document.removeEventListener('admin-navigate', handleAdminNavigate);
   }, []);
 
   const handleLogout = useCallback(() => {
@@ -67,8 +81,9 @@ export const AdminLayout = () => {
   const adminContentProps = useMemo(() => ({
     activeTab,
     activeMessageTab,
-    setActiveMessageTab
-  }), [activeTab, activeMessageTab]);
+    setActiveMessageTab,
+    setActiveTab: handleTabChange
+  }), [activeTab, activeMessageTab, handleTabChange]);
 
   return (
     <ErrorBoundary>
@@ -101,8 +116,8 @@ export const AdminLayout = () => {
               </Suspense>
             </div>
 
-            <main className="flex-1 overflow-hidden bg-gray-50">
-              <div className="h-full p-4 transition-all duration-300">
+            <main className="flex-1 overflow-y-auto bg-gray-50">
+              <div className="min-h-full p-4 transition-all duration-300">
                 <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full h-full">
                   <div className="h-full">
                     <AdminContent {...adminContentProps} />
