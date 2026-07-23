@@ -8,6 +8,7 @@ import TaxCalculator from "@/components/calculateur/TaxCalculator";
 import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SiteBreadcrumb } from "@/components/ui/SiteBreadcrumb";
+import { NewsletterOptIn } from "@/components/shared/NewsletterOptIn";
 
 const CalculateurImpots = () => {
   const navigate = useNavigate();
@@ -57,6 +58,11 @@ const CalculateurImpots = () => {
         <section className="py-16">
           <div className="section max-w-4xl mx-auto">
             <TaxCalculator />
+            <NewsletterOptIn
+              source="calculateur-igs"
+              context="Calculateur d'impôts — page IGS"
+              className="mt-10"
+            />
           </div>
         </section>
       </main>

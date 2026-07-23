@@ -1,10 +1,18 @@
 
-import { Mail, Phone } from "lucide-react";
+import { Mail, Phone, MessageCircle, Facebook, Linkedin, Instagram } from "lucide-react";
 import { Link } from "react-router-dom";
+import { CONTACT, SOCIAL } from "@/config/social";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
-  
+
+  const socialLinks = [
+    { key: "whatsapp", href: SOCIAL.whatsapp, label: "WhatsApp", Icon: MessageCircle },
+    { key: "facebook", href: SOCIAL.facebook, label: "Facebook", Icon: Facebook },
+    { key: "linkedin", href: SOCIAL.linkedin, label: "LinkedIn", Icon: Linkedin },
+    { key: "instagram", href: SOCIAL.instagram, label: "Instagram", Icon: Instagram },
+  ].filter((s) => s.href);
+
   return (
     <footer className="bg-prisma-purple text-white">
       <div className="section py-10 xs:py-12 px-4 sm:px-6">
@@ -18,12 +26,24 @@ const Footer = () => {
               Des solutions sur-mesure pour répondre aux défis de votre entreprise.
             </p>
             <div className="flex space-x-4 mb-4">
-              <a href="mailto:prismagestionsarl@gmail.com" className="bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors">
+              <a href={`mailto:${CONTACT.email}`} aria-label="Nous écrire par email" className="bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors">
                 <Mail className="h-5 w-5" />
               </a>
-              <a href="tel:+237694310554" className="bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors">
+              <a href={`tel:${CONTACT.phone}`} aria-label="Nous appeler" className="bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors">
                 <Phone className="h-5 w-5" />
               </a>
+              {socialLinks.map(({ key, href, label, Icon }) => (
+                <a
+                  key={key}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors"
+                >
+                  <Icon className="h-5 w-5" />
+                </a>
+              ))}
             </div>
             <div>
               <Link to="/outils" className="text-prisma-chartreuse hover:text-white transition-colors">
