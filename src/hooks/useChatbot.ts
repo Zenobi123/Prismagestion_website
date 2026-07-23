@@ -39,7 +39,7 @@ Souhaitez-vous plus d'informations sur un service en particulier ?`,
   contact: `Vous pouvez nous contacter de plusieurs façons :
 
 📧 **Email :** contact@prismagestion.com
-📱 **WhatsApp :** +237 6XX XXX XXX
+📱 **WhatsApp :** +237 694 310 554
 📍 **Adresse :** Yaoundé, Cameroun
 
 🕒 **Horaires :**
@@ -55,7 +55,7 @@ Vous pouvez également utiliser notre formulaire de contact sur le site pour nou
 
 Ou contactez-nous directement :
 📧 contact@prismagestion.com
-📱 WhatsApp : +237 6XX XXX XXX
+📱 WhatsApp : +237 694 310 554
 
 Quel service vous intéresse le plus ?`,
 

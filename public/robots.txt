@@ -12,3 +12,9 @@ Allow: /
 
 User-agent: *
 Allow: /
+
+# L'espace d'administration n'a pas vocation à être indexé.
+Disallow: /admin
+Disallow: /auth
+
+Sitemap: https://prismagestion.com/sitemap.xml
