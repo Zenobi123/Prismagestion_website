@@ -17,7 +17,7 @@ const ServicesSection = () => {
       <div className="container mx-auto px-0 xs:px-2 sm:px-4">
         <div className="text-center max-w-3xl mx-auto mb-8 xs:mb-12 md:mb-16">
           <h2 className="heading-lg mb-4 text-prisma-purple">
-            Nos services <span className="text-gradient">professionnels</span>
+            Nos domaines d'<span className="text-gradient">expertise</span>
           </h2>
           <p className="text-gray-600">
             Découvrez notre gamme complète de services destinés à répondre aux besoins
