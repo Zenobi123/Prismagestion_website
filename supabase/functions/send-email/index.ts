@@ -11,8 +11,8 @@
 // - Taille de requête plafonnée.
 
 const DEFAULT_ALLOWED_ORIGINS = [
-  'https://prismagestion.com',
-  'https://www.prismagestion.com',
+  'https://prismagestion.site',
+  'https://www.prismagestion.site',
 ]
 
 const ALLOWED_ORIGINS = (Deno.env.get('ALLOWED_ORIGINS') ?? '')

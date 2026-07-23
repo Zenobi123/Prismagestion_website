@@ -5,7 +5,7 @@
 // ci-dessous : les composants n'affichent que les liens réellement définis.
 
 export const CONTACT = {
-  email: 'contact@prismagestion.com',
+  email: 'obiangtimenathan@gmail.com',
   phone: '+237656752475',
   whatsapp: '+237694310554',
   addressLine: 'Yaoundé, Cameroun',

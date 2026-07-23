@@ -17,4 +17,4 @@ Allow: /
 Disallow: /admin
 Disallow: /auth
 
-Sitemap: https://prismagestion.com/sitemap.xml
+Sitemap: https://prismagestion.site/sitemap.xml

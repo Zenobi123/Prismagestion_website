@@ -211,7 +211,7 @@ const UsersPanel = () => {
                       <FormLabel>Email</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="email@prisma-gestion.com"
+                          placeholder="email@prismagestion.site"
                           type="email"
                           {...field}
                         />
@@ -414,7 +414,7 @@ const UsersPanel = () => {
                     <FormLabel>Email</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="email@prisma-gestion.com"
+                        placeholder="email@prismagestion.site"
                         type="email"
                         {...field}
                       />
