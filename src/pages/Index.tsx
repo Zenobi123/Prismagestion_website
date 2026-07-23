@@ -4,6 +4,7 @@ import { SEOHead } from '@/components/SEOHead';
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
 import AboutSection from '@/components/AboutSection';
+import OffersSection from '@/components/OffersSection';
 import ServicesSection from '@/components/ServicesSection';
 import BlogSection from '@/components/BlogSection';
 import ContactSection from '@/components/ContactSection';
@@ -69,6 +70,7 @@ const Index = () => {
       <main>
         <HeroSection />
         <AboutSection />
+        <OffersSection />
         <ServicesSection />
         <BlogSection />
         <ContactSection />

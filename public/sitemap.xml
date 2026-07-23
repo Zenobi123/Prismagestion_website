@@ -7,22 +7,22 @@
 -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://prismagestion.com/</loc>
+    <loc>https://prismagestion.site/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://prismagestion.com/blog</loc>
+    <loc>https://prismagestion.site/blog</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://prismagestion.com/outils</loc>
+    <loc>https://prismagestion.site/outils</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://prismagestion.com/outils/calculateur-impots</loc>
+    <loc>https://prismagestion.site/outils/calculateur-impots</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

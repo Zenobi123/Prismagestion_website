@@ -29,6 +29,7 @@ export class MetadataService {
     };
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- forme d'article variable (source blog)
   static generateBlogMetadata(post: any): PageMetadata {
     return this.createPageMetadata({
       title: `${post.seoTitle || post.title} | PRISMA GESTION`,
@@ -79,7 +80,7 @@ export class MetadataService {
       "contactPoint": {
         "@type": "ContactPoint",
         "contactType": "customer service",
-        "email": "contact@prismagestion.com"
+        "email": "obiangtimenathan@gmail.com"
       },
       "sameAs": []
     };

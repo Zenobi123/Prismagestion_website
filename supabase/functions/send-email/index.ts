@@ -11,8 +11,8 @@
 // - Taille de requête plafonnée.
 
 const DEFAULT_ALLOWED_ORIGINS = [
-  'https://prismagestion.com',
-  'https://www.prismagestion.com',
+  'https://prismagestion.site',
+  'https://www.prismagestion.site',
 ]
 
 const ALLOWED_ORIGINS = (Deno.env.get('ALLOWED_ORIGINS') ?? '')
@@ -99,6 +99,11 @@ const FIELD_RULES: Record<string, Record<string, FieldRule>> = {
     time: { maxLength: 20, required: true },
     message: { maxLength: 5000 },
   },
+  newsletter: {
+    email: { maxLength: 320, required: true, email: true },
+    source: { maxLength: 100 },
+    context: { maxLength: 500 },
+  },
 }
 
 // Valide et normalise le payload : seuls les champs déclarés dans les règles
@@ -145,6 +150,7 @@ function esc(value: unknown): string {
 // Neutralise les sauts de ligne/caractères de contrôle dans les sujets
 // d'email (anti header-injection) et borne leur longueur.
 function safeSubject(value: string): string {
+  // eslint-disable-next-line no-control-regex -- regex sur caractères de contrôle volontaire
   return value.replace(/[\u0000-\u001f\u007f]+/g, ' ').slice(0, 200)
 }
 
@@ -245,6 +251,33 @@ function buildAppointmentHtml(data: Record<string, string>): { subject: string; 
   }
 }
 
+const LEAD_SOURCE_LABELS: Record<string, string> = {
+  'calculateur-igs': 'Calculateur IGS',
+  'guide-creation': 'Guide création d’entreprise',
+  footer: 'Pied de page',
+  site: 'Site',
+}
+
+function buildNewsletterHtml(data: Record<string, string>): { subject: string; html: string } {
+  const sourceLabel = data.source ? (LEAD_SOURCE_LABELS[data.source] ?? data.source) : 'Site'
+  return {
+    subject: `Nouveau lead – ${sourceLabel} – ${data.email}`,
+    html: `
+      <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto">
+        <h2 style="color:#2E1A47">Nouveau lead capté sur le site</h2>
+        <p style="color:#555">Un visiteur a laissé son email pour être recontacté.</p>
+        <table style="width:100%;border-collapse:collapse">
+          <tr><td style="padding:6px 12px;font-weight:bold;width:140px">Email</td><td style="padding:6px 12px"><a href="mailto:${esc(data.email)}">${esc(data.email)}</a></td></tr>
+          <tr style="background:#f5f5f5"><td style="padding:6px 12px;font-weight:bold">Origine</td><td style="padding:6px 12px">${esc(sourceLabel)}</td></tr>
+          ${data.context ? `<tr><td style="padding:6px 12px;font-weight:bold">Contexte</td><td style="padding:6px 12px">${esc(data.context)}</td></tr>` : ''}
+        </table>
+        <p style="margin-top:20px">Retrouvez ce lead dans l’espace admin, onglet <b>Abonnés &amp; Leads</b>.</p>
+        <hr style="margin-top:32px;border:none;border-top:1px solid #e0e0e0">
+        <p style="font-size:12px;color:#999">Capté via un aimant à leads (calculateur / outil) · PRISMA GESTION</p>
+      </div>`,
+  }
+}
+
 function jsonResponse(body: unknown, status: number, headers: Record<string, string>): Response {
   return new Response(JSON.stringify(body), {
     status,
@@ -308,6 +341,9 @@ Deno.serve(async (req) => {
         break
       case 'quote':
         emailContent = buildQuoteHtml(data)
+        break
+      case 'newsletter':
+        emailContent = buildNewsletterHtml(data)
         break
       default:
         emailContent = buildAppointmentHtml(data)

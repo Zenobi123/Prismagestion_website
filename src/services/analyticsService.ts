@@ -23,7 +23,7 @@ export class AnalyticsService {
    * `VITE_GA_ID=G-XXXXXXXXXX` dans l'environnement de build.
    *
    * Alternative respectueuse de la vie privée : définir `VITE_PLAUSIBLE_DOMAIN`
-   * (ex. `prismagestion.com`) pour charger Plausible au lieu de GA4.
+   * (ex. `prismagestion.site`) pour charger Plausible au lieu de GA4.
    */
   static initialize(trackingId?: string): void {
     if (this.isInitialized || typeof document === 'undefined') return;

@@ -9,7 +9,7 @@ const defaultData = {
   title: "Contactez-nous",
   description: "Prenez contact avec notre équipe pour discuter de vos besoins et objectifs.",
   address: "Yaoundé, Cameroun",
-  email: "contact@prismagestion.com",
+  email: "obiangtimenathan@gmail.com",
   phone: "+237 656 752 475",
   whatsapp: "+237 694 310 554",
   formTitle: "Envoyez-nous un message",

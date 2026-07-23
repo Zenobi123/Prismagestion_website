@@ -11,7 +11,8 @@ import {
   Globe,
   Shield,
   BarChart3,
-  HardDrive
+  HardDrive,
+  UserPlus
 } from "lucide-react";
 import {
   Sidebar,
@@ -39,6 +40,7 @@ const AdminAppSidebar = ({ activeTab, setActiveTab, onLogout }: AdminAppSidebarP
     { id: "services", label: "Services", icon: Briefcase },
     { id: "media", label: "Médias", icon: Image },
     { id: "messages", label: "Messages", icon: MessageSquare },
+    { id: "leads", label: "Abonnés & Leads", icon: UserPlus },
     { id: "security", label: "Sécurité", icon: Shield },
     { id: "analytics", label: "Analytics", icon: BarChart3 },
     { id: "backup", label: "Sauvegarde", icon: HardDrive },

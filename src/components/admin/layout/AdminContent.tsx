@@ -2,6 +2,7 @@
 import { memo } from 'react';
 import DashboardPanel from '../DashboardPanel';
 import MessagesPanel from '../MessagesPanel';
+import SubscribersPanel from '../SubscribersPanel';
 import BlogPanel from '../BlogPanel';
 import ServicesPanel from '../ServicesPanel';
 import HomePanel from '../HomePanel';
@@ -42,6 +43,8 @@ const AdminContentComponent = ({
         return <DashboardPanel onNavigate={handleDashboardNavigate} />;
       case "messages":
         return <MessagesPanel />;
+      case "leads":
+        return <SubscribersPanel />;
       case "blog":
         return <BlogPanel />;
       case "services":

@@ -1,4 +1,5 @@
 import { supabase } from '@/integrations/supabase/client';
+import { sendNewsletterEmail } from '@/utils/email/sendEmail';
 
 export interface SubscribeInput {
   email: string;
@@ -37,12 +38,18 @@ export const subscribe = async (
   });
 
   if (error) {
-    // Doublon (index unique) → déjà inscrit : on considère l'opération réussie.
+    // Doublon (index unique) → déjà inscrit : on considère l'opération réussie,
+    // mais on n'envoie pas de notification (le lead est déjà connu).
     const code = (error as { code?: string }).code;
     if (code === '23505') return { ok: true };
     console.error('Inscription newsletter échouée:', error);
     return { ok: false, error: "L'inscription n'a pas pu être enregistrée." };
   }
+
+  // Notification email non bloquante : n'affecte jamais l'expérience visiteur.
+  sendNewsletterEmail({ email, source: input.source, context: input.context }).catch((err) =>
+    console.warn('Notification lead non envoyée:', err),
+  );
 
   return { ok: true };
 };

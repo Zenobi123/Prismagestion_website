@@ -58,3 +58,11 @@ export async function sendAppointmentEmail(data: {
 }): Promise<void> {
   await callSendEmail('appointment', data);
 }
+
+export async function sendNewsletterEmail(data: {
+  email: string;
+  source: string;
+  context?: string;
+}): Promise<void> {
+  await callSendEmail('newsletter', data);
+}
