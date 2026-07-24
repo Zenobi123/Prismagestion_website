@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,10 +16,15 @@ const AuthPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { user, signIn, signUp } = useAuth();
   const { toast } = useToast();
+  const location = useLocation();
+
+  // Après connexion, on revient à la page initialement demandée
+  // (mémorisée par ProtectedRoute), ou à la console admin par défaut.
+  const from = (location.state as { from?: { pathname?: string } } | null)?.from?.pathname || '/admin';
 
   // Redirect if already authenticated
   if (user) {
-    return <Navigate to="/" replace />;
+    return <Navigate to={from} replace />;
   }
 
   const handleSubmit = async (e: React.FormEvent) => {

@@ -1,6 +1,6 @@
 
 import { ReactNode } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUserRole } from '@/hooks/useUserRole';
 import { Loader2, AlertTriangle } from 'lucide-react';
@@ -14,6 +14,7 @@ interface ProtectedRouteProps {
 const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRouteProps) => {
   const { user, loading: authLoading } = useAuth();
   const { isAdmin, loading: roleLoading, error } = useUserRole();
+  const location = useLocation();
 
   if (authLoading || roleLoading) {
     return (
@@ -29,7 +30,8 @@ const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRouteProps)
   }
 
   if (!user) {
-    return <Navigate to="/auth" replace />;
+    // On mémorise la page demandée pour y revenir après connexion.
+    return <Navigate to="/auth" state={{ from: location }} replace />;
   }
 
   if (requireAdmin) {
@@ -47,7 +49,10 @@ const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRouteProps)
     }
 
     if (!isAdmin) {
-      return <Navigate to="/auth" replace />;
+      // Utilisateur connecté mais sans droits admin : on le renvoie à
+      // l'accueil (et non vers /auth, ce qui provoquerait une boucle de
+      // redirection puisqu'il est déjà authentifié).
+      return <Navigate to="/" replace />;
     }
   }
 
