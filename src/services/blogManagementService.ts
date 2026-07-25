@@ -13,13 +13,13 @@ export class BlogManagementService {
       // Fix IGS article image
       await updateBlogPostImage(
         'Impôt Général Synthétique', 
-        "/lovable-uploads/a9b4950e-4e9a-4b2d-89ed-55266f59fd49.png"
+        "/blog-images/impot-general-synthetique.jpg"
       );
       
       // Update fiscal norms 2025 image
       await updateBlogPostImage(
         'Les nouvelles normes fiscales et comptables pour 2025',
-        "/lovable-uploads/4d9dc424-4eb4-4aca-aba9-e462d333f67c.png"
+        "/blog-images/normes-fiscales-2025.jpg"
       );
 
       // Enforce image consistency
@@ -45,7 +45,7 @@ export class BlogManagementService {
           author: "Nathan OBIANG TIME",
           publishDate: "2025-04-22",
           status: "Publié",
-          image: "/lovable-uploads/4d9dc424-4eb4-4aca-aba9-e462d333f67c.png",
+          image: "/blog-images/normes-fiscales-2025.jpg",
           slug: "nouvelles-normes-fiscales-2025",
           tags: ["Fiscalité"],
           seoTitle: "",
@@ -57,7 +57,7 @@ export class BlogManagementService {
         console.log("L'article existe déjà");
         await updateBlogPostImage(
           'Les nouvelles normes fiscales et comptables pour 2025',
-          "/lovable-uploads/4d9dc424-4eb4-4aca-aba9-e462d333f67c.png"
+          "/blog-images/normes-fiscales-2025.jpg"
         );
         return false;
       }

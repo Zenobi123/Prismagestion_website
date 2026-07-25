@@ -5,6 +5,7 @@ import { ArrowRight } from 'lucide-react';
 import { getPublishedBlogPosts } from '@/services/blog/getBlogPosts';
 import { BlogPost } from '@/types/blog';
 import { supabase } from '@/integrations/supabase/client';
+import { getBlogImageForTitle } from '@/constants/blogImages';
 
 const BlogSection = () => {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
@@ -76,26 +77,6 @@ const BlogSection = () => {
     };
   }, []);
 
-  // Fonction de secours pour les images
-  const getDefaultImage = (title: string): string => {
-    if (title.includes("Impôt Général Synthétique")) {
-      return "/lovable-uploads/a9b4950e-4e9a-4b2d-89ed-55266f59fd49.png";
-    } else if (title.includes("Les nouvelles normes fiscales")) {
-      return "/lovable-uploads/4d9dc424-4eb4-4aca-aba9-e462d333f67c.png";
-    } else if (title.includes("Les avantages de la comptabilité")) {
-      return "/lovable-uploads/85999c6b-953e-4905-b204-fec3dfc4e72f.png";
-    } else if (title.toLowerCase().includes("veille") && title.toLowerCase().includes("impot")) {
-      return "/blog-images/veille-impots.jpg";
-    } else if (title.toLowerCase().includes("veille") && title.toLowerCase().includes("cnps")) {
-      return "/blog-images/veille-cnps.jpg";
-    } else if (title.toLowerCase().includes("veille") && title.toLowerCase().includes("legecam")) {
-      return "/blog-images/veille-legecam.jpg";
-    } else if (title.toLowerCase().includes("veille") && title.toLowerCase().includes("dgicam")) {
-      return "/blog-images/veille-dgicam.jpg";
-    }
-    return "/placeholder.svg";
-  };
-
   return (
     <section id="blog" className="section py-12 xs:py-16 md:py-20 bg-gray-50">
       <div className="container">
@@ -122,7 +103,7 @@ const BlogSection = () => {
                       const target = e.target as HTMLImageElement;
                       console.log(`Image non chargée pour ${post.title}, utilisation de l'image par défaut`);
                       target.onerror = null;
-                      target.src = getDefaultImage(post.title);
+                      target.src = getBlogImageForTitle(post.title);
                     }}
                   />
                 </div>
