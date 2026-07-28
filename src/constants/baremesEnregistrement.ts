@@ -21,6 +21,16 @@ export const TAUX_CAC = 0.05;
  */
 export const SEUIL_DROIT_PROPORTIONNEL = 5_000_000;
 
+/**
+ * Délai d'enregistrement, décompté à partir de la date de signature du bon de
+ * commande. Au-delà, une pénalité de retard de 100 % de la part fiscale est due.
+ */
+export const DELAI_ENREGISTREMENT_JOURS = 30;
+export const TAUX_PENALITE_RETARD = 1;
+
+/** En deçà de ce reliquat, l'échéance des 30 jours est signalée comme imminente. */
+export const MARGE_ALERTE_DELAI_JOURS = 5;
+
 /** En deçà de cet écart au seuil, le montant est signalé comme « proche du seuil ». */
 export const MARGE_ALERTE_SEUIL = 500_000;
 

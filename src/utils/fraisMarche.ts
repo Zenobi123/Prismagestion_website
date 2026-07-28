@@ -3,6 +3,9 @@ import {
   TAUX_CAC,
   SEUIL_DROIT_PROPORTIONNEL,
   MARGE_ALERTE_SEUIL,
+  DELAI_ENREGISTREMENT_JOURS,
+  TAUX_PENALITE_RETARD,
+  MARGE_ALERTE_DELAI_JOURS,
   TIMBRE_PAR_PAGE,
   FRAIS_MERCURIALE,
   FRAIS_ATTESTATIONS_DGI,
@@ -26,8 +29,13 @@ export interface FraisMarcheInput {
   montantHT: number;
   /** Nombre de pages à timbrer (3 exemplaires originaux exigés par défaut). */
   nbPagesTimbrees: number;
-  /** Date de signature du bon de commande (ISO `AAAA-MM-JJ`) : elle détermine le barème CNE. */
+  /**
+   * Date de signature du bon de commande (ISO `AAAA-MM-JJ`) : elle détermine le
+   * barème CNE applicable et fait courir le délai d'enregistrement.
+   */
   dateSignature: string;
+  /** Date de dépôt à l'enregistrement (ISO `AAAA-MM-JJ`), qui arrête le décompte du délai. */
+  dateEnregistrement: string;
   /** Forfait TRESORPAY retenu, dans la fourchette documentée. */
   fraisTresorpay: number;
   inclureCne: boolean;
@@ -59,6 +67,10 @@ export interface FraisMarcheResult {
   avertissements: string[];
   trancheCne: TrancheCne | null;
   baremeCneAnterieur: boolean;
+  /** Jours écoulés entre la signature et le dépôt ; `null` si une date manque. */
+  joursEcoules: number | null;
+  /** Vrai lorsque le dépôt intervient au-delà du délai d'enregistrement. */
+  horsDelai: boolean;
 }
 
 /**
@@ -80,11 +92,21 @@ const sommer = (lignes: LigneLiquidation[]): number =>
 const estComplet = (lignes: LigneLiquidation[]): boolean =>
   lignes.every((l) => l.montant !== null);
 
+/** Nombre de jours calendaires entre deux dates ISO ; `null` si une date manque ou est invalide. */
+const joursEntre = (debut: string, fin: string): number | null => {
+  if (!debut || !fin) return null;
+  const depart = Date.parse(`${debut}T00:00:00Z`);
+  const arrivee = Date.parse(`${fin}T00:00:00Z`);
+  if (Number.isNaN(depart) || Number.isNaN(arrivee)) return null;
+  return Math.round((arrivee - depart) / 86_400_000);
+};
+
 export const calculerFraisMarche = (input: FraisMarcheInput): FraisMarcheResult => {
   const {
     montantHT,
     nbPagesTimbrees,
     dateSignature,
+    dateEnregistrement,
     fraisTresorpay,
     inclureCne,
     inclureMercuriale,
@@ -139,6 +161,50 @@ export const calculerFraisMarche = (input: FraisMarcheInput): FraisMarcheResult 
       montant: nbPagesTimbrees * TIMBRE_PAR_PAGE,
     },
   ];
+
+  // ── Pénalité de retard d'enregistrement ─────────────────────────────────
+  // Au-delà du délai décompté depuis la signature, la part fiscale est majorée
+  // de 100 % : l'assiette est donc le total des lignes fiscales ci-dessus.
+  const joursEcoules = joursEntre(dateSignature, dateEnregistrement);
+  const datesIncoherentes = joursEcoules !== null && joursEcoules < 0;
+  const horsDelai =
+    joursEcoules !== null && !datesIncoherentes && joursEcoules > DELAI_ENREGISTREMENT_JOURS;
+
+  if (datesIncoherentes) {
+    avertissements.push(
+      "La date d'enregistrement est antérieure à la date de signature : le délai ne peut pas " +
+        'être décompté. Vérifiez les dates saisies.'
+    );
+  }
+
+  if (horsDelai) {
+    const assiettePenalite = sommer(lignesFiscales);
+    const assietteComplete = estComplet(lignesFiscales);
+
+    avertissements.push(
+      `Dépôt à ${joursEcoules} jours de la signature, au-delà du délai de ` +
+        `${DELAI_ENREGISTREMENT_JOURS} jours : une pénalité de 100 % de la part fiscale est due.`
+    );
+
+    lignesFiscales.push({
+      id: 'penalite-retard',
+      libelle: "Pénalité de retard d'enregistrement",
+      formule: assietteComplete
+        ? `${formatFcfa(assiettePenalite)} × 100 % (dépôt à J+${joursEcoules})`
+        : `100 % de la part fiscale, elle-même incomplète (dépôt à J+${joursEcoules})`,
+      montant: assietteComplete ? Math.round(assiettePenalite * TAUX_PENALITE_RETARD) : null,
+    });
+  } else if (
+    joursEcoules !== null &&
+    !datesIncoherentes &&
+    joursEcoules > DELAI_ENREGISTREMENT_JOURS - MARGE_ALERTE_DELAI_JOURS
+  ) {
+    const reste = DELAI_ENREGISTREMENT_JOURS - joursEcoules;
+    avertissements.push(
+      `Délai d'enregistrement bientôt expiré : il reste ${reste} jour(s) avant que la pénalité ` +
+        'de 100 % de la part fiscale ne soit due.'
+    );
+  }
 
   // ── Frais annexes ───────────────────────────────────────────────────────
   const lignesAnnexes: LigneLiquidation[] = [];
@@ -233,5 +299,7 @@ export const calculerFraisMarche = (input: FraisMarcheInput): FraisMarcheResult 
     avertissements,
     trancheCne,
     baremeCneAnterieur,
+    joursEcoules,
+    horsDelai,
   };
 };

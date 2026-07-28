@@ -7,7 +7,11 @@ import { Button } from '@/components/ui/button';
 import { SiteBreadcrumb } from '@/components/ui/SiteBreadcrumb';
 import { NewsletterOptIn } from '@/components/shared/NewsletterOptIn';
 import FraisMarcheCalculator from '@/components/calculateur/FraisMarcheCalculator';
-import { GRILLE_CNE, BAREMES_DATE_ETAT } from '@/constants/baremesEnregistrement';
+import {
+  GRILLE_CNE,
+  BAREMES_DATE_ETAT,
+  DELAI_ENREGISTREMENT_JOURS,
+} from '@/constants/baremesEnregistrement';
 import { formatFcfa } from '@/utils/fraisMarche';
 
 const CalculateurFraisMarche = () => {
@@ -19,7 +23,7 @@ const CalculateurFraisMarche = () => {
         <title>Calculateur des frais sur marché public - PRISMA GESTION</title>
         <meta
           name="description"
-          content="Estimez le coût d'enregistrement d'un bon de commande administratif au Cameroun : droit proportionnel, CAC, timbres, mercuriale, TRESORPAY et certificat de non exclusion (CNE-ARMP)."
+          content="Estimez le coût d'enregistrement d'un bon de commande administratif au Cameroun : droit proportionnel, CAC, timbre de dimension, pénalité de retard, mercuriale, TRESORPAY et certificat de non exclusion (CNE-ARMP)."
         />
       </Helmet>
 
@@ -48,8 +52,8 @@ const CalculateurFraisMarche = () => {
             <h1 className="heading-lg mb-4">Calculateur des frais sur marché</h1>
             <p className="max-w-2xl text-lg opacity-90">
               Estimez le coût complet de l'enregistrement d'un bon de commande administratif :
-              droit proportionnel, centimes additionnels communaux, timbres, mercuriale, frais de
-              télépaiement et certificat de non exclusion.
+              droit proportionnel, centimes additionnels communaux, timbre de dimension, pénalité
+              de retard, mercuriale, frais de télépaiement et certificat de non exclusion.
             </p>
           </div>
         </section>
@@ -73,6 +77,11 @@ const CalculateurFraisMarche = () => {
                     centimes additionnels communaux de <strong>5 %</strong> du droit, et du
                     <strong> timbre de dimension</strong> par page. Au-delà du seuil, le taux ne
                     s'extrapole pas : il doit être revérifié dans le CGI.
+                  </p>
+                  <p className="mt-3">
+                    Passé le délai de <strong>{DELAI_ENREGISTREMENT_JOURS} jours</strong> décompté
+                    depuis la signature, une <strong>pénalité de retard de 100 %</strong> de la
+                    part fiscale s'ajoute à la liquidation.
                   </p>
                 </div>
                 <div className="rounded-lg border border-gray-200 p-5">
@@ -126,6 +135,7 @@ const CalculateurFraisMarche = () => {
               <h2 className="heading-sm text-prisma-purple mb-4">À vérifier avant de conclure</h2>
               <ul className="space-y-2.5 text-sm text-gray-700">
                 {[
+                  `Le délai d'enregistrement de ${DELAI_ENREGISTREMENT_JOURS} jours à compter de la signature : au-delà, la part fiscale est doublée par la pénalité de retard.`,
                   "Le seuil de 5 000 000 F CFA : un avenant fait basculer à la fois le taux de liquidation et la tranche du CNE.",
                   "La cohérence entre l'objet du bon de commande, l'imputation budgétaire et les désignations — une discordance expose à un refus de visa ou à un redressement.",
                   'Les références mercuriales de chaque ligne, qui conditionnent la recevabilité du dossier.',
