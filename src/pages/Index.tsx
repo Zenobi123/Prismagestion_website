@@ -5,6 +5,7 @@ import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
 import AboutSection from '@/components/AboutSection';
 import OffersSection from '@/components/OffersSection';
+import DigitalExpertiseSection from '@/components/DigitalExpertiseSection';
 import ServicesSection from '@/components/ServicesSection';
 import BlogSection from '@/components/BlogSection';
 import ContactSection from '@/components/ContactSection';
@@ -21,8 +22,8 @@ const Index = () => {
 
   usePageMetadata({
     title: "PRISMA GESTION | Cabinet de services professionnels",
-    description: "PRISMA GESTION offre des services d'expertise comptable, fiscale et de conseil financier pour entreprises et indépendants. Consultez nos services personnalisés.",
-    keywords: ["expertise comptable", "fiscalité", "conseil financier", "PRISMA", "services professionnels"],
+    description: "PRISMA GESTION accompagne entreprises et indépendants en comptabilité, fiscalité et finance, et pilote leurs projets de génie logiciel et d'intelligence artificielle : conseil, développement sur mesure, choix et paramétrage des modèles d'IA.",
+    keywords: ["expertise comptable", "fiscalité", "conseil financier", "génie logiciel", "intelligence artificielle", "PRISMA", "services professionnels"],
     canonicalUrl: window.location.origin + "/"
   });
 
@@ -61,8 +62,8 @@ const Index = () => {
       <SEOHead
         config={{
           title: "PRISMA GESTION | Cabinet de services professionnels",
-          description: "PRISMA GESTION offre des services d'expertise comptable, fiscale et de conseil financier pour entreprises et indépendants. Consultez nos services personnalisés.",
-          keywords: ["expertise comptable", "fiscalité", "conseil financier", "PRISMA", "services professionnels"],
+          description: "PRISMA GESTION accompagne entreprises et indépendants en comptabilité, fiscalité et finance, et pilote leurs projets de génie logiciel et d'intelligence artificielle : conseil, développement sur mesure, choix et paramétrage des modèles d'IA.",
+          keywords: ["expertise comptable", "fiscalité", "conseil financier", "génie logiciel", "intelligence artificielle", "PRISMA", "services professionnels"],
           canonicalUrl: window.location.origin + "/"
         }}
       />
@@ -71,6 +72,7 @@ const Index = () => {
         <HeroSection />
         <AboutSection />
         <OffersSection />
+        <DigitalExpertiseSection />
         <ServicesSection />
         <BlogSection />
         <ContactSection />

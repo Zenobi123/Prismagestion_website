@@ -1,6 +1,9 @@
 import { useState } from 'react';
-import { Check } from 'lucide-react';
-import { OFFERS, type Offer } from '@/constants/offers';
+import { ArrowRight, CalendarCheck } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { OFFER_POLES, getOffersByPole, type Offer } from '@/constants/offers';
+import { DIGITAL_EXPERTISE_ROUTE } from '@/constants/digitalExpertise';
+import { OfferCard } from '@/components/offers/OfferCard';
 import { QuoteDialog } from '@/components/QuoteDialog';
 import { AppointmentDialog } from '@/components/AppointmentDialog';
 
@@ -26,70 +29,63 @@ const OffersSection = () => {
             Nos <span className="text-gradient">offres</span>
           </h2>
           <p className="text-gray-600">
-            Des solutions claires et packagées pour chaque étape de votre entreprise —
-            de la création à la sérénité fiscale au quotidien.
+            Deux pôles, un même cabinet : la rigueur du chiffre et la maîtrise du numérique.
+            Des solutions packagées pour tenir vos obligations comme pour outiller votre entreprise.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch max-w-5xl mx-auto">
-          {OFFERS.map((offer) => {
-            const Icon = offer.icon;
-            const highlighted = offer.highlighted;
-            return (
-              <div
-                key={offer.id}
-                className={`relative flex flex-col rounded-2xl bg-white p-6 lg:p-8 transition-all ${
-                  highlighted
-                    ? 'border-2 border-prisma-purple shadow-xl md:-mt-4 md:mb-4'
-                    : 'border border-gray-200 shadow-sm hover:shadow-md'
-                }`}
-              >
-                {offer.badge && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-prisma-purple px-4 py-1 text-xs font-semibold text-white">
-                    {offer.badge}
-                  </span>
-                )}
-
-                <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-prisma-purple/10">
-                  <Icon className="h-6 w-6 text-prisma-purple" />
-                </div>
-
-                <h3 className="font-heading text-lg md:text-xl font-bold text-prisma-purple mb-1">
-                  {offer.name}
+        <div className="space-y-14 md:space-y-20">
+          {OFFER_POLES.map((pole) => (
+            <div key={pole.id}>
+              <div className="max-w-3xl mx-auto text-center mb-8 md:mb-12">
+                <h3 className="font-heading text-xl md:text-2xl font-bold text-prisma-purple">
+                  {pole.title}
                 </h3>
-                <p className="text-sm text-gray-600 mb-5">{offer.tagline}</p>
-
-                <div className="mb-5">
-                  <div className="text-xl md:text-2xl font-bold text-prisma-purple">{offer.priceLabel}</div>
-                  {offer.priceNote && <div className="text-xs text-gray-500 mt-1">{offer.priceNote}</div>}
-                </div>
-
-                <ul className="space-y-2.5 mb-8 flex-1">
-                  {offer.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-2 text-sm text-gray-700">
-                      <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-prisma-chartreuse" />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <button
-                  type="button"
-                  onClick={() => handleCta(offer)}
-                  className={`w-full rounded-md px-5 py-3 text-center font-medium transition-all ${
-                    highlighted
-                      ? 'bg-prisma-purple text-white hover:bg-prisma-purple/90'
-                      : 'border border-prisma-purple text-prisma-purple hover:bg-prisma-purple hover:text-white'
-                  }`}
-                >
-                  {offer.ctaLabel}
-                </button>
+                <p className="text-sm md:text-base text-gray-600 mt-2">{pole.subtitle}</p>
               </div>
-            );
-          })}
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch max-w-5xl mx-auto">
+                {getOffersByPole(pole.id).map((offer) => (
+                  <OfferCard key={offer.id} offer={offer} onCta={handleCta} />
+                ))}
+              </div>
+
+              {pole.id === 'numerique' && (
+                <div className="max-w-5xl mx-auto mt-8 rounded-2xl bg-prisma-light-gray p-6 md:p-8 flex flex-col md:flex-row md:items-center gap-6">
+                  <div className="flex-1">
+                    <h4 className="font-heading text-lg font-bold text-prisma-purple mb-2">
+                      Pas encore sûr par où commencer ?
+                    </h4>
+                    <p className="text-sm text-gray-600">
+                      Réservez un atelier découverte de 45 minutes, offert et sans engagement :
+                      nous passons en revue vos outils actuels, repérons les tâches automatisables
+                      et identifions le premier cas d'usage d'IA qui vous ferait gagner du temps.
+                    </p>
+                  </div>
+                  <div className="flex flex-col sm:flex-row md:flex-col gap-3 md:w-56 md:flex-shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => setApptOpen(true)}
+                      className="inline-flex items-center justify-center gap-2 rounded-md bg-prisma-purple px-5 py-3 font-medium text-white transition-colors hover:bg-prisma-purple/90"
+                    >
+                      <CalendarCheck className="h-4 w-4" />
+                      Réserver l'atelier
+                    </button>
+                    <Link
+                      to={DIGITAL_EXPERTISE_ROUTE}
+                      className="inline-flex items-center justify-center gap-2 rounded-md border border-prisma-purple px-5 py-3 font-medium text-prisma-purple transition-colors hover:bg-prisma-purple hover:text-white"
+                    >
+                      Notre méthode
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
         </div>
 
-        <p className="text-center text-sm text-gray-500 mt-10">
+        <p className="text-center text-sm text-gray-500 mt-12">
           Besoin d'une solution sur mesure ?{' '}
           <a href="#contact" className="text-prisma-purple font-medium hover:underline">Parlons-en</a>.
         </p>

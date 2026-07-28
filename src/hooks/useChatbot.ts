@@ -30,11 +30,33 @@ const PREDEFINED_RESPONSES = {
 - Paie et charges sociales
 - Conseil RH
 
-💻 **Services Digitaux**
-- Génie logiciel
-- Intelligence artificielle
+💻 **Génie Logiciel & Intelligence Artificielle**
+- Conseil et orientation logicielle
+- Développement d'applications métier
+- Choix, mise en place et paramétrage des modèles d'IA
 
 Souhaitez-vous plus d'informations sur un service en particulier ?`,
+
+  numerique: `Le pôle **Génie logiciel & Intelligence artificielle** de PRISMA GESTION couvre trois métiers :
+
+🧭 **Conseil & orientation logicielle**
+- Audit de vos outils et de vos processus
+- Cahier des charges et comparatif des solutions
+- Plan de migration et accompagnement au déploiement
+
+💻 **Conception & développement**
+- Applications métier web et mobiles
+- Automatisation des tâches répétitives
+- Intégrations, tableaux de bord et maintenance
+
+🤖 **Intelligence artificielle appliquée**
+- Identification des cas d'usage réellement rentables
+- Choix du modèle (propriétaire ou open source, cloud ou local)
+- Preuve de concept, mise en place et paramétrage sur vos données
+- Formation de vos équipes et supervision dans la durée
+
+👉 Détails, méthode et cas d'usage : **/expertise/ia-et-genie-logiciel**
+📅 Nous proposons un atelier découverte de 45 minutes, offert et sans engagement.`,
 
   contact: `Vous pouvez nous contacter de plusieurs façons :
 
@@ -62,6 +84,7 @@ Quel service vous intéresse le plus ?`,
   default: `Je suis là pour vous aider ! Voici ce que je peux faire :
 
 ✅ Vous renseigner sur nos services
+✅ Vous présenter notre pôle IA & génie logiciel
 ✅ Vous donner nos coordonnées
 ✅ Vous guider pour une demande de devis
 ✅ Répondre à vos questions générales
@@ -75,7 +98,24 @@ export const useChatbot = () => {
 
   const generateResponse = useCallback((userMessage: string): string => {
     const message = userMessage.toLowerCase();
-    
+
+    // Pôle numérique : génie logiciel & intelligence artificielle
+    // (testé avant les services pour ne pas être capté par « conseil »)
+    if (
+      /\bia\b/.test(message) ||
+      message.includes('intelligence artificielle') ||
+      message.includes('logiciel') ||
+      message.includes('application') ||
+      message.includes('automatis') ||
+      message.includes('numérique') ||
+      message.includes('digital') ||
+      message.includes('informatique') ||
+      message.includes('développement') ||
+      message.includes('chatbot')
+    ) {
+      return PREDEFINED_RESPONSES.numerique;
+    }
+
     // Services
     if (message.includes('service') || message.includes('comptab') || message.includes('fiscal') || message.includes('conseil')) {
       return PREDEFINED_RESPONSES.services;

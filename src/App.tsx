@@ -16,6 +16,7 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 const Admin = lazy(() => import('./pages/Admin'));
 const Outils = lazy(() => import('./pages/Outils'));
 const CalculateurImpots = lazy(() => import('./pages/CalculateurImpots'));
+const ExpertiseDigitale = lazy(() => import('./pages/ExpertiseDigitale'));
 const AuthPage = lazy(() => import('./components/auth/AuthPage'));
 
 // Component for route-specific loading states
@@ -62,6 +63,7 @@ function App() {
               />
               <Route path="/outils" element={<Outils />} />
               <Route path="/outils/calculateur-impots" element={<CalculateurImpots />} />
+              <Route path="/expertise/ia-et-genie-logiciel" element={<ExpertiseDigitale />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>

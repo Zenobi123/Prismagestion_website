@@ -62,6 +62,51 @@ panier moyen.
 
 ---
 
+## 2 bis. Le pôle numérique : génie logiciel & intelligence artificielle
+
+> Le cabinet ne fait pas que du chiffre : le conseil en orientation logicielle et l'IA appliquée
+> sont un **corps de métier à part entière**, et le principal différenciateur face aux cabinets
+> comptables classiques. Il lui faut donc ses propres offres, pas une simple ligne dans la liste
+> des services.
+
+### Offre 4 — « Cap Logiciel — Conseil & orientation » 🧭
+*Cible : dirigeants qui s'apprêtent à investir dans un outil (ERP, CRM, compta, paie, caisse).*
+
+| | |
+|---|---|
+| **Promesse** | « Investissez dans les bons outils : un système d'information choisi pour vos processus, pas l'inverse. » |
+| **Contenu** | Audit de l'existant · schéma directeur · cahier des charges · comparatif des solutions · plan de migration · assistance jusqu'au déploiement |
+| **Format** | Mission de conseil au forfait (2 à 4 semaines) |
+| **Upsell naturel** | → développement sur mesure (Offre 5) ou projet IA (Offre 6) |
+
+### Offre 5 — « Studio Logiciel — développement sur mesure » 💻
+*Cible : entreprises dont le métier ne rentre dans aucun logiciel du commerce.*
+
+| | |
+|---|---|
+| **Promesse** | « L'application métier qui automatise ce que vos équipes font encore à la main. » |
+| **Contenu** | Applications web et mobiles · automatisation des processus · intégrations · reprise de données · hébergement · maintenance |
+| **Format** | Projet au forfait, livré par lots |
+| **Revenu récurrent** | Contrat de maintenance et d'évolution après la mise en production |
+
+### Offre 6 — « IA sur Mesure — modèles choisis, installés, paramétrés » 🤖
+*Offre de différenciation. Cible : TPE/PME et cabinets qui veulent des gains de temps mesurables.*
+
+| | |
+|---|---|
+| **Promesse** | « Du cas d'usage au modèle en production : le bon modèle, branché sur vos données, adopté par vos équipes. » |
+| **Contenu** | Cadrage des cas d'usage · choix du modèle (propriétaire/open source, cloud/local) · preuve de concept · mise en place · paramétrage (instructions, RAG, garde-fous) · intégration · formation · supervision |
+| **Format** | Accompagnement par étapes, chacune avec son livrable |
+| **Ancrage** | Colonne mise en avant du pôle numérique (« Notre différence ») |
+| **Porte d'entrée** | Atelier découverte de 45 minutes, offert — l'équivalent numérique du diagnostic fiscal |
+
+**Traduction sur le site** : les six offres sont regroupées en deux pôles dans la section
+`#offres` ; le pôle numérique dispose en plus d'une section dédiée sur l'accueil (`#ia-logiciel`)
+et d'une page complète `/expertise/ia-et-genie-logiciel` (méthode, critères de choix des modèles,
+cas d'usage, engagements sur les données, FAQ).
+
+---
+
 ## 3. Architecture de montée en gamme
 
 ```
@@ -74,8 +119,13 @@ panier moyen.
    Abonnement Sérénité (Offre 2)   ← revenu RÉCURRENT, cœur de la valeur
             │  monte en gamme
             ▼
-   Premium + services digitaux     ← cross-sell Génie logiciel / IA (différenciateur PRISMA)
+   Pôle numérique (Offres 4-5-6)   ← conseil logiciel, développement, IA sur mesure
+                                     (différenciateur PRISMA, panier le plus élevé)
 ```
+
+Le pôle numérique a aussi sa **propre porte d'entrée** — l'atelier découverte offert — qui alimente
+directement les Offres 4 à 6 sans passer par la comptabilité, et fait entrer des clients que le
+métier historique n'aurait pas touchés.
 
 Chaque niveau finance et alimente le suivant. Le récurrent (Offre 2) est la **clé de la valorisation**
 du cabinet : un CA prévisible vaut bien plus qu'un CA au coup par coup.

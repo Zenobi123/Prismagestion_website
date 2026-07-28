@@ -6,7 +6,7 @@ import { AppointmentDialog } from './AppointmentDialog';
 
 const defaultData: HeroSectionContent = {
   title: "Votre partenaire en expertise comptable et numérique",
-  description: "PRISMA GESTION vous accompagne dans vos projets avec des solutions sur-mesure en comptabilité, finance, fiscalité, RH, et transformation digitale.",
+  description: "PRISMA GESTION vous accompagne avec des solutions sur-mesure en comptabilité, finance, fiscalité et RH — et pilote vos projets de génie logiciel et d'intelligence artificielle, du conseil au paramétrage des modèles.",
   buttonText: "Découvrir nos services",
   buttonLink: "#services",
   secondaryButtonText: "Prendre Rendez-vous",

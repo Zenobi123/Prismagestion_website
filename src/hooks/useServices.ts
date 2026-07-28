@@ -3,22 +3,30 @@ import { useState, useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { ServiceType } from '@/types/services';
 import { services as defaultServiceList } from '@/components/contact/form/ServiceSelector';
+import { SERVICE_DETAILS } from '@/constants/serviceDetails';
 import { getServiceImage } from '@/utils/serviceImages';
 import { useToast } from "@/hooks/use-toast";
 
-// Générer des services par défaut basés sur la liste complète des services
-const defaultServices: ServiceType[] = defaultServiceList.map((service) => ({
-  id: service.value,
-  title: service.label,
-  description: `Services professionnels de ${service.label.toLowerCase()} pour répondre aux besoins spécifiques de votre entreprise.`,
-  items: [
-    `Conseil en ${service.label.toLowerCase()}`,
-    `Analyse et optimisation`,
-    `Accompagnement personnalisé`,
-    `Suivi et reporting`
-  ],
-  image: getServiceImage(service.value)
-}));
+// Générer des services par défaut basés sur la liste complète des services.
+// Les descriptions détaillées (SERVICE_DETAILS) priment ; le texte générique
+// ne sert que pour un domaine ajouté sans contenu dédié.
+const defaultServices: ServiceType[] = defaultServiceList.map((service) => {
+  const detail = SERVICE_DETAILS[service.value];
+  return {
+    id: service.value,
+    title: service.label,
+    description:
+      detail?.description ??
+      `Services professionnels de ${service.label.toLowerCase()} pour répondre aux besoins spécifiques de votre entreprise.`,
+    items: detail?.items ?? [
+      `Conseil en ${service.label.toLowerCase()}`,
+      `Analyse et optimisation`,
+      `Accompagnement personnalisé`,
+      `Suivi et reporting`
+    ],
+    image: getServiceImage(service.value)
+  };
+});
 
 export const useServices = () => {
   const [services, setServices] = useState<ServiceType[]>([]);

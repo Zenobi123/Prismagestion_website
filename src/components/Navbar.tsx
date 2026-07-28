@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react';
 import { Menu, X, User, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useIsMobile } from '@/hooks/use-mobile';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -14,10 +13,28 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
+// La barre de navigation bascule en menu compact sous 1024px (lg) : en dessous,
+// les rubriques ne tiennent plus sur une seule ligne à côté du logo et du bouton.
+const useCompactNav = () => {
+  const [isCompact, setIsCompact] = useState(
+    () => typeof window !== 'undefined' && window.innerWidth < 1024
+  );
+
+  useEffect(() => {
+    const mql = window.matchMedia('(max-width: 1023px)');
+    const onChange = () => setIsCompact(mql.matches);
+    onChange();
+    mql.addEventListener('change', onChange);
+    return () => mql.removeEventListener('change', onChange);
+  }, []);
+
+  return isCompact;
+};
+
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const isMobile = useIsMobile();
+  const isCompact = useCompactNav();
   const location = useLocation();
   const navigate = useNavigate();
   const { user, signOut, loading } = useAuth();
@@ -51,10 +68,10 @@ const Navbar = () => {
 
   // Close mobile menu when switching to desktop view
   useEffect(() => {
-    if (!isMobile && isMenuOpen) {
+    if (!isCompact && isMenuOpen) {
       setIsMenuOpen(false);
     }
-  }, [isMobile, isMenuOpen]);
+  }, [isCompact, isMenuOpen]);
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
@@ -73,12 +90,13 @@ const Navbar = () => {
     { name: 'À propos', href: '/#about' },
     { name: 'Offres', href: '/#offres' },
     { name: 'Services', href: '/#services' },
-    { name: 'Outils pratiques', href: '/outils' },
+    { name: 'IA & Logiciel', href: '/expertise/ia-et-genie-logiciel' },
+    { name: 'Outils', href: '/outils' },
     { name: 'Notre Blog', href: '/blog' },
   ];
 
   const handleNavLinkClick = (href: string) => {
-    if (isMobile) {
+    if (isCompact) {
       setIsMenuOpen(false);
     }
     
@@ -112,7 +130,7 @@ const Navbar = () => {
             key={link.name}
             href={hash}
             className={cn(
-              "font-medium transition-colors text-sm lg:text-base",
+              "font-medium transition-colors text-sm xl:text-base",
               isScrolled || shouldForceScrolled ? "text-prisma-purple hover:text-prisma-chartreuse" : "text-white hover:text-prisma-chartreuse"
             )}
             onClick={() => handleNavLinkClick(link.href)}
@@ -127,7 +145,7 @@ const Navbar = () => {
             key={link.name}
             onClick={() => handleNavLinkClick(link.href)}
             className={cn(
-              "font-medium transition-colors text-sm lg:text-base",
+              "font-medium transition-colors text-sm xl:text-base",
               isScrolled || shouldForceScrolled ? "text-prisma-purple hover:text-prisma-chartreuse" : "text-white hover:text-prisma-chartreuse"
             )}
           >
@@ -142,7 +160,7 @@ const Navbar = () => {
           key={link.name}
           to={link.href}
           className={cn(
-            "font-medium transition-colors text-sm lg:text-base",
+            "font-medium transition-colors text-sm xl:text-base",
             isScrolled || shouldForceScrolled ? "text-prisma-purple hover:text-prisma-chartreuse" : "text-white hover:text-prisma-chartreuse"
           )}
           onClick={() => handleNavLinkClick(link.href)}
@@ -185,7 +203,7 @@ const Navbar = () => {
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-4 lg:space-x-8">
+        <nav className="hidden lg:flex items-center space-x-4 xl:space-x-6">
           {navLinks.map(link => renderNavLink(link))}
           
           {!loading && user && (
@@ -220,14 +238,14 @@ const Navbar = () => {
           {location.pathname === '/' ? (
             <a 
               href="#contact" 
-              className="btn-secondary text-sm lg:text-base"
+              className="btn-secondary text-sm xl:text-base"
             >
               Nous contacter
             </a>
           ) : (
             <button 
               onClick={handleContactClick}
-              className="btn-secondary text-sm lg:text-base"
+              className="btn-secondary text-sm xl:text-base"
             >
               Nous contacter
             </button>
@@ -238,7 +256,7 @@ const Navbar = () => {
         <button 
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           className={cn(
-            "md:hidden p-2 -mr-2 focus:outline-none focus:ring-2 focus:ring-prisma-chartreuse rounded-md",
+            "lg:hidden p-2 -mr-2 focus:outline-none focus:ring-2 focus:ring-prisma-chartreuse rounded-md",
             isScrolled || shouldForceScrolled ? "text-prisma-purple" : "text-white"
           )}
           aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
@@ -251,7 +269,7 @@ const Navbar = () => {
       {/* Mobile Navigation */}
       {isMenuOpen && (
         <div className={cn(
-          "md:hidden fixed inset-0 bg-white z-40 overflow-y-auto transition-all",
+          "lg:hidden fixed inset-0 bg-white z-40 overflow-y-auto transition-all",
           isScrolled || shouldForceScrolled ? "top-[57px]" : "top-[64px] sm:top-[77px]"
         )}>
           <div className="container py-6 px-4 flex flex-col space-y-2">
