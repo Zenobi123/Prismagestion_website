@@ -24,9 +24,14 @@ export const SEUIL_DROIT_PROPORTIONNEL = 5_000_000;
 /** En deçà de cet écart au seuil, le montant est signalé comme « proche du seuil ». */
 export const MARGE_ALERTE_SEUIL = 500_000;
 
-/** Frais annexes forfaitaires. */
+/**
+ * Timbre de dimension : élément fiscal, au même titre que le droit proportionnel
+ * et les CAC — il entre donc dans le Total Fiscal, pas dans les frais annexes.
+ */
 export const TIMBRE_PAR_PAGE = 1_500;
 export const NB_EXEMPLAIRES_ORIGINAUX = 3;
+
+/** Frais annexes forfaitaires. */
 export const FRAIS_MERCURIALE = 10_000;
 export const FRAIS_ATTESTATIONS_DGI = 4_200;
 

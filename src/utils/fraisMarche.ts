@@ -48,8 +48,10 @@ export interface LigneLiquidation {
 export interface FraisMarcheResult {
   lignesFiscales: LigneLiquidation[];
   lignesAnnexes: LigneLiquidation[];
-  totalFiscal: number | null;
-  /** Somme des seuls postes chiffrés : partiel si `annexesCompletes` est faux. */
+  /** Somme des seuls postes chiffrés : partielle si `fiscalComplet` est faux. */
+  totalFiscal: number;
+  fiscalComplet: boolean;
+  /** Somme des seuls postes chiffrés : partielle si `annexesCompletes` est faux. */
   totalAnnexes: number;
   annexesCompletes: boolean;
   /** `null` dès qu'un poste retenu n'a pas pu être chiffré. */
@@ -70,11 +72,13 @@ export const formatFcfa = (montant: number): string =>
 const trouverTranche = (grille: TrancheCne[], montant: number): TrancheCne | null =>
   grille.find((t) => montant >= t.min && (t.max === null || montant <= t.max)) ?? null;
 
-/** Somme des lignes ; `null` si au moins un poste reste à déterminer. */
-const totaliser = (lignes: LigneLiquidation[]): number | null =>
-  lignes.some((l) => l.montant === null)
-    ? null
-    : lignes.reduce((total, l) => total + (l.montant ?? 0), 0);
+/** Somme des seuls postes chiffrés d'un bloc. */
+const sommer = (lignes: LigneLiquidation[]): number =>
+  lignes.reduce((total, l) => total + (l.montant ?? 0), 0);
+
+/** Vrai lorsque tous les postes du bloc ont pu être chiffrés. */
+const estComplet = (lignes: LigneLiquidation[]): boolean =>
+  lignes.every((l) => l.montant !== null);
 
 export const calculerFraisMarche = (input: FraisMarcheInput): FraisMarcheResult => {
   const {
@@ -126,10 +130,8 @@ export const calculerFraisMarche = (input: FraisMarcheInput): FraisMarcheResult 
           : `${formatFcfa(droitProportionnel)} × 5 %`,
       montant: cac,
     },
-  ];
-
-  // ── Frais annexes ───────────────────────────────────────────────────────
-  const lignesAnnexes: LigneLiquidation[] = [
+    // Le timbre de dimension est un élément fiscal : il entre dans le Total
+    // Fiscal, aux côtés du droit proportionnel et des CAC.
     {
       id: 'timbres',
       libelle: 'Timbre de dimension',
@@ -137,6 +139,9 @@ export const calculerFraisMarche = (input: FraisMarcheInput): FraisMarcheResult 
       montant: nbPagesTimbrees * TIMBRE_PAR_PAGE,
     },
   ];
+
+  // ── Frais annexes ───────────────────────────────────────────────────────
+  const lignesAnnexes: LigneLiquidation[] = [];
 
   if (inclureMercuriale) {
     lignesAnnexes.push({
@@ -210,16 +215,18 @@ export const calculerFraisMarche = (input: FraisMarcheInput): FraisMarcheResult 
     );
   }
 
-  const totalFiscal = totaliser(lignesFiscales);
-  const totalAnnexes = lignesAnnexes.reduce((total, l) => total + (l.montant ?? 0), 0);
-  const annexesCompletes = lignesAnnexes.every((l) => l.montant !== null);
+  const totalFiscal = sommer(lignesFiscales);
+  const fiscalComplet = estComplet(lignesFiscales);
+  const totalAnnexes = sommer(lignesAnnexes);
+  const annexesCompletes = estComplet(lignesAnnexes);
   const coutTotal =
-    totalFiscal === null || !annexesCompletes ? null : totalFiscal + totalAnnexes;
+    fiscalComplet && annexesCompletes ? totalFiscal + totalAnnexes : null;
 
   return {
     lignesFiscales,
     lignesAnnexes,
     totalFiscal,
+    fiscalComplet,
     totalAnnexes,
     annexesCompletes,
     coutTotal,

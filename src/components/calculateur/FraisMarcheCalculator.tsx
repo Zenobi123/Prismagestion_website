@@ -263,9 +263,9 @@ const FraisMarcheCalculator = () => {
                     </td>
                     <td className="hidden sm:table-cell" />
                     <td className="py-2.5 text-right text-sm font-bold text-prisma-purple whitespace-nowrap">
-                      {resultat.totalFiscal === null
-                        ? 'à déterminer'
-                        : formatFcfa(resultat.totalFiscal)}
+                      {resultat.fiscalComplet
+                        ? formatFcfa(resultat.totalFiscal)
+                        : `${formatFcfa(resultat.totalFiscal)} + postes à déterminer`}
                     </td>
                   </tr>
 
@@ -306,7 +306,7 @@ const FraisMarcheCalculator = () => {
               </div>
               {resultat.coutTotal !== null && (
                 <div className="text-sm text-white/70 sm:text-right">
-                  Part fiscale {formatFcfa(resultat.totalFiscal ?? 0)}
+                  Part fiscale {formatFcfa(resultat.totalFiscal)}
                   <br />
                   Frais annexes {formatFcfa(resultat.totalAnnexes)}
                 </div>

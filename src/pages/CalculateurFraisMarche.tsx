@@ -70,8 +70,9 @@ const CalculateurFraisMarche = () => {
                   <p>
                     Droit proportionnel de <strong>7 %</strong> assis sur le montant hors taxes,
                     pour un bon de commande strictement inférieur à 5 000 000 F CFA, majoré des
-                    centimes additionnels communaux de <strong>5 %</strong> du droit. Au-delà du
-                    seuil, le taux ne s'extrapole pas : il doit être revérifié dans le CGI.
+                    centimes additionnels communaux de <strong>5 %</strong> du droit, et du
+                    <strong> timbre de dimension</strong> par page. Au-delà du seuil, le taux ne
+                    s'extrapole pas : il doit être revérifié dans le CGI.
                   </p>
                 </div>
                 <div className="rounded-lg border border-gray-200 p-5">
@@ -79,9 +80,9 @@ const CalculateurFraisMarche = () => {
                     Frais annexes
                   </h3>
                   <p>
-                    Timbre de dimension par page, frais d'exploitation de la mercuriale, frais de
-                    paiement TRESORPAY, droit de délivrance du CNE-ARMP et frais d'obtention du
-                    certificat — sur deux lignes distinctes — puis les attestations DGI.
+                    Frais d'exploitation de la mercuriale, frais de paiement TRESORPAY, droit de
+                    délivrance du CNE-ARMP et frais d'obtention du certificat — sur deux lignes
+                    distinctes — puis les attestations DGI.
                   </p>
                 </div>
               </div>
