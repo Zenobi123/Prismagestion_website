@@ -59,8 +59,8 @@ const Footer = () => {
               <li><a href="/#services" className="text-white/80 hover:text-white transition-colors">Finance</a></li>
               <li><a href="/#services" className="text-white/80 hover:text-white transition-colors">Fiscalité</a></li>
               <li><a href="/#services" className="text-white/80 hover:text-white transition-colors">Ressources Humaines</a></li>
-              <li><a href="/#services" className="text-white/80 hover:text-white transition-colors">Génie Logiciel</a></li>
-              <li><a href="/#services" className="text-white/80 hover:text-white transition-colors">Intelligence Artificielle</a></li>
+              <li><Link to="/expertise/ia-et-genie-logiciel" className="text-white/80 hover:text-white transition-colors">Génie Logiciel</Link></li>
+              <li><Link to="/expertise/ia-et-genie-logiciel" className="text-white/80 hover:text-white transition-colors">Intelligence Artificielle</Link></li>
             </ul>
           </div>
           
@@ -70,6 +70,7 @@ const Footer = () => {
               <li><Link to="/" className="text-white/80 hover:text-white transition-colors">Accueil</Link></li>
               <li><a href="/#about" className="text-white/80 hover:text-white transition-colors">À propos</a></li>
               <li><a href="/#services" className="text-white/80 hover:text-white transition-colors">Services</a></li>
+              <li><Link to="/expertise/ia-et-genie-logiciel" className="text-white/80 hover:text-white transition-colors">IA &amp; Génie Logiciel</Link></li>
               <li><Link to="/blog" className="text-white/80 hover:text-white transition-colors">Notre Blog</Link></li>
               <li><a href="/#contact" className="text-white/80 hover:text-white transition-colors">Nous contacter</a></li>
               <li><Link to="/admin" className="text-white/80 hover:text-white transition-colors">Administration</Link></li>
