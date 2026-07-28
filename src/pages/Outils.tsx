@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet-async";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Calculator, FileText, Briefcase, Globe, Receipt } from "lucide-react";
+import { Calculator, Receipt } from "lucide-react";
 import { Link } from "react-router-dom";
 import { SiteBreadcrumb } from "@/components/ui/SiteBreadcrumb";
 
@@ -71,63 +71,6 @@ const Outils = () => {
                 <Link to="/outils/calculateur-frais-marche">
                   <Button variant="outline" className="w-full">
                     Calculer les frais
-                  </Button>
-                </Link>
-              </div>
-
-              {/* Modèles de documents */}
-              <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="bg-prisma-purple/10 p-3 rounded-full">
-                    <FileText className="h-6 w-6 text-prisma-purple" />
-                  </div>
-                  <h3 className="heading-sm">Modèles de Documents</h3>
-                </div>
-                <p className="text-gray-600 mb-6">
-                  Téléchargez des modèles de documents adaptés au contexte camerounais : factures, contrats, 
-                  bulletins de paie conformes à la législation locale.
-                </p>
-                <Link to="/outils/modeles-documents">
-                  <Button variant="outline" className="w-full">
-                    Accéder aux modèles
-                  </Button>
-                </Link>
-              </div>
-
-              {/* Guide création d'entreprise */}
-              <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="bg-prisma-purple/10 p-3 rounded-full">
-                    <Briefcase className="h-6 w-6 text-prisma-purple" />
-                  </div>
-                  <h3 className="heading-sm">Création d'Entreprise</h3>
-                </div>
-                <p className="text-gray-600 mb-6">
-                  Guide complet pour créer votre entreprise au Cameroun : démarches administratives, 
-                  coûts et délais, informations sur le CFCE et les procédures simplifiées.
-                </p>
-                <Link to="/outils/guide-creation-entreprise">
-                  <Button variant="outline" className="w-full">
-                    Consulter le guide
-                  </Button>
-                </Link>
-              </div>
-
-              {/* Actualités législatives */}
-              <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="bg-prisma-purple/10 p-3 rounded-full">
-                    <Globe className="h-6 w-6 text-prisma-purple" />
-                  </div>
-                  <h3 className="heading-sm">Actualités Législatives</h3>
-                </div>
-                <p className="text-gray-600 mb-6">
-                  Restez informé des dernières évolutions législatives au Cameroun en matière fiscale, 
-                  sociale et juridique impactant votre activité professionnelle.
-                </p>
-                <Link to="/outils/actualites-legislatives">
-                  <Button variant="outline" className="w-full">
-                    Voir les actualités
                   </Button>
                 </Link>
               </div>

@@ -178,8 +178,9 @@ const FraisMarcheCalculator = () => {
             <legend className="text-sm font-medium text-gray-700 mb-2">
               Formalités à inclure
             </legend>
-            <div className="flex items-start gap-2">
+            <div className="flex items-start gap-3 py-1.5">
               <Checkbox
+                className="mt-0.5 h-5 w-5"
                 id="cne"
                 checked={inclureCne}
                 onCheckedChange={(v) => setInclureCne(v === true)}
@@ -188,8 +189,9 @@ const FraisMarcheCalculator = () => {
                 Certificat de Non Exclusion (CNE-ARMP) — droit de délivrance et frais d'obtention
               </Label>
             </div>
-            <div className="flex items-start gap-2">
+            <div className="flex items-start gap-3 py-1.5">
               <Checkbox
+                className="mt-0.5 h-5 w-5"
                 id="mercuriale"
                 checked={inclureMercuriale}
                 onCheckedChange={(v) => setInclureMercuriale(v === true)}
@@ -198,8 +200,9 @@ const FraisMarcheCalculator = () => {
                 Frais d'exploitation de la mercuriale
               </Label>
             </div>
-            <div className="flex items-start gap-2">
+            <div className="flex items-start gap-3 py-1.5">
               <Checkbox
+                className="mt-0.5 h-5 w-5"
                 id="attestations"
                 checked={inclureAttestations}
                 onCheckedChange={(v) => setInclureAttestations(v === true)}

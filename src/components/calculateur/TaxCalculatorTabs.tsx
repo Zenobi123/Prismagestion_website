@@ -12,7 +12,10 @@ import TVACalculator from "./TVACalculator";
 const TaxCalculatorTabs = () => {
   return (
     <Tabs defaultValue="igs">
-      <TabsList className="mb-6 w-full overflow-x-auto flex-wrap">
+      {/* `h-auto` est indispensable : avec la hauteur fixe de TabsList, les onglets
+          repliés par `flex-wrap` sortaient de la boîte et devenaient inatteignables
+          sur mobile (4 des 7 onglets étaient masqués sous 414 px). */}
+      <TabsList className="mb-6 w-full h-auto flex-wrap justify-start gap-1">
         <TabsTrigger value="igs">IGS</TabsTrigger>
         <TabsTrigger value="irpp">IRPP</TabsTrigger>
         <TabsTrigger value="ircm">IRCM (Dividendes)</TabsTrigger>
