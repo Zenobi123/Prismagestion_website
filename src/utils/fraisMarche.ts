@@ -163,8 +163,9 @@ export const calculerFraisMarche = (input: FraisMarcheInput): FraisMarcheResult 
   ];
 
   // ── Pénalité de retard d'enregistrement ─────────────────────────────────
-  // Au-delà du délai décompté depuis la signature, la part fiscale est majorée
-  // de 100 % : l'assiette est donc le total des lignes fiscales ci-dessus.
+  // Au-delà du délai décompté depuis la signature, les droits sont majorés de
+  // 100 %. L'assiette est le droit proportionnel augmenté des CAC : le timbre
+  // de dimension, bien que fiscal, en est exclu.
   const joursEcoules = joursEntre(dateSignature, dateEnregistrement);
   const datesIncoherentes = joursEcoules !== null && joursEcoules < 0;
   const horsDelai =
@@ -178,20 +179,20 @@ export const calculerFraisMarche = (input: FraisMarcheInput): FraisMarcheResult 
   }
 
   if (horsDelai) {
-    const assiettePenalite = sommer(lignesFiscales);
-    const assietteComplete = estComplet(lignesFiscales);
+    const assietteComplete = droitProportionnel !== null && cac !== null;
+    const assiettePenalite = (droitProportionnel ?? 0) + (cac ?? 0);
 
     avertissements.push(
       `Dépôt à ${joursEcoules} jours de la signature, au-delà du délai de ` +
-        `${DELAI_ENREGISTREMENT_JOURS} jours : une pénalité de 100 % de la part fiscale est due.`
+        `${DELAI_ENREGISTREMENT_JOURS} jours : une pénalité de 100 % des droits est due.`
     );
 
     lignesFiscales.push({
       id: 'penalite-retard',
       libelle: "Pénalité de retard d'enregistrement",
       formule: assietteComplete
-        ? `${formatFcfa(assiettePenalite)} × 100 % (dépôt à J+${joursEcoules})`
-        : `100 % de la part fiscale, elle-même incomplète (dépôt à J+${joursEcoules})`,
+        ? `${formatFcfa(assiettePenalite)} × 100 % — droits hors timbre (dépôt à J+${joursEcoules})`
+        : `100 % des droits, eux-mêmes à déterminer (dépôt à J+${joursEcoules})`,
       montant: assietteComplete ? Math.round(assiettePenalite * TAUX_PENALITE_RETARD) : null,
     });
   } else if (
@@ -202,7 +203,7 @@ export const calculerFraisMarche = (input: FraisMarcheInput): FraisMarcheResult 
     const reste = DELAI_ENREGISTREMENT_JOURS - joursEcoules;
     avertissements.push(
       `Délai d'enregistrement bientôt expiré : il reste ${reste} jour(s) avant que la pénalité ` +
-        'de 100 % de la part fiscale ne soit due.'
+        'de 100 % des droits ne soit due.'
     );
   }
 

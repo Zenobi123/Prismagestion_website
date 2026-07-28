@@ -137,7 +137,7 @@ const FraisMarcheCalculator = () => {
               />
               <p className="text-xs text-gray-500">
                 Au-delà de {DELAI_ENREGISTREMENT_JOURS} jours après la signature, une pénalité de
-                100 % de la part fiscale est due.
+                100 % des droits — timbre exclu — est due.
               </p>
             </div>
 

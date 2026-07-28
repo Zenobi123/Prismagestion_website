@@ -80,8 +80,9 @@ const CalculateurFraisMarche = () => {
                   </p>
                   <p className="mt-3">
                     Passé le délai de <strong>{DELAI_ENREGISTREMENT_JOURS} jours</strong> décompté
-                    depuis la signature, une <strong>pénalité de retard de 100 %</strong> de la
-                    part fiscale s'ajoute à la liquidation.
+                    depuis la signature, une <strong>pénalité de retard de 100 %</strong> s'ajoute
+                    à la liquidation. Elle porte sur les seuls droits — droit proportionnel et
+                    CAC — le timbre de dimension en étant exclu.
                   </p>
                 </div>
                 <div className="rounded-lg border border-gray-200 p-5">
@@ -135,7 +136,7 @@ const CalculateurFraisMarche = () => {
               <h2 className="heading-sm text-prisma-purple mb-4">À vérifier avant de conclure</h2>
               <ul className="space-y-2.5 text-sm text-gray-700">
                 {[
-                  `Le délai d'enregistrement de ${DELAI_ENREGISTREMENT_JOURS} jours à compter de la signature : au-delà, la part fiscale est doublée par la pénalité de retard.`,
+                  `Le délai d'enregistrement de ${DELAI_ENREGISTREMENT_JOURS} jours à compter de la signature : au-delà, les droits sont doublés par la pénalité de retard.`,
                   "Le seuil de 5 000 000 F CFA : un avenant fait basculer à la fois le taux de liquidation et la tranche du CNE.",
                   "La cohérence entre l'objet du bon de commande, l'imputation budgétaire et les désignations — une discordance expose à un refus de visa ou à un redressement.",
                   'Les références mercuriales de chaque ligne, qui conditionnent la recevabilité du dossier.',

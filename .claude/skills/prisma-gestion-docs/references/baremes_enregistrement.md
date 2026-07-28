@@ -13,10 +13,10 @@ Base d'imposition : la valeur **Hors Taxes (HT)** de la commande publique, jamai
 | Droit proportionnel | Montant HT, pour un bon de commande strictement inférieur à 5 000 000 F CFA | 7 % |
 | Centimes Additionnels Communaux (CAC) | Montant du droit proportionnel | 5 % |
 | Timbre de dimension | Chaque page timbrée, soit 3 pages pour les 3 exemplaires originaux exigés | 1 500 F CFA par page |
-| Pénalité de retard | Total de la part fiscale, lorsque le dépôt intervient plus de 30 jours après la signature | 100 % |
+| Pénalité de retard | Droit proportionnel augmenté des CAC — **hors timbre de dimension** — lorsque le dépôt intervient plus de 30 jours après la signature | 100 % |
 
 Le **Total Fiscal** des tableaux de synthèse réunit le droit proportionnel, les CAC et le timbre de
-dimension — **le timbre est un élément fiscal, pas un frais annexe** — majorés le cas échéant de la
+dimension — **le timbre est un élément fiscal, pas un frais annexe** — augmentés le cas échéant de la
 pénalité de retard. La mercuriale, TRESORPAY, le CNE et les attestations relèvent des
 **Frais Annexes**.
 
@@ -26,13 +26,17 @@ ne pas extrapoler le taux de 7 %.
 ### Délai d'enregistrement et pénalité
 
 Le bon de commande doit être enregistré dans les **30 jours** qui suivent sa **date de signature**.
-Au-delà de ce délai, une **pénalité de 100 % de la part fiscale** est due : la part fiscale est donc
-doublée. Le décompte s'arrête à la date de dépôt à l'enregistrement.
+Au-delà de ce délai, une **pénalité de 100 %** est due. Le décompte s'arrête à la date de dépôt à
+l'enregistrement.
+
+**Assiette de la pénalité :** les **seuls droits**, c'est-à-dire le droit proportionnel augmenté des
+CAC. Le **timbre de dimension en est exclu**, bien qu'il appartienne par ailleurs à la part fiscale.
+Les droits sont donc doublés, pas la part fiscale entière.
 
 La date de signature joue ainsi un double rôle : elle ouvre le délai de 30 jours et détermine le
-barème CNE applicable (cf. § 3). Lorsque la part fiscale ne peut pas être entièrement liquidée —
-montant au-delà du seuil de 5 000 000 F CFA — la pénalité se signale sans être chiffrée, plutôt que
-d'être assise sur une base partielle.
+barème CNE applicable (cf. § 3). Lorsque les droits ne peuvent pas être liquidés — montant au-delà du
+seuil de 5 000 000 F CFA — la pénalité se signale sans être chiffrée, plutôt que d'être assise sur
+une base partielle.
 
 ## 2. Frais annexes
 
@@ -77,7 +81,7 @@ de dépôt à l'enregistrement.
 
 Avant de conclure une évaluation, vérifier :
 
-1. **Le délai de 30 jours depuis la date de signature.** Un dépôt tardif double la part fiscale ;
+1. **Le délai de 30 jours depuis la date de signature.** Un dépôt tardif double les droits ;
    c'est le poste qui coûte le plus cher au client et le plus facile à éviter. Le vérifier avant
    toute autre chose, et alerter le client dès que l'échéance approche.
 2. **Le seuil de 5 000 000 F CFA.** Un montant proche du seuil doit faire l'objet d'une mention :

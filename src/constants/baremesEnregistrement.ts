@@ -23,7 +23,8 @@ export const SEUIL_DROIT_PROPORTIONNEL = 5_000_000;
 
 /**
  * Délai d'enregistrement, décompté à partir de la date de signature du bon de
- * commande. Au-delà, une pénalité de retard de 100 % de la part fiscale est due.
+ * commande. Au-delà, une pénalité de retard de 100 % est due sur les seuls
+ * droits — droit proportionnel augmenté des CAC, timbre de dimension exclu.
  */
 export const DELAI_ENREGISTREMENT_JOURS = 30;
 export const TAUX_PENALITE_RETARD = 1;
