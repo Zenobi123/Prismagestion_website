@@ -16,6 +16,7 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 const Admin = lazy(() => import('./pages/Admin'));
 const Outils = lazy(() => import('./pages/Outils'));
 const CalculateurImpots = lazy(() => import('./pages/CalculateurImpots'));
+const CalculateurFraisMarche = lazy(() => import('./pages/CalculateurFraisMarche'));
 const ExpertiseDigitale = lazy(() => import('./pages/ExpertiseDigitale'));
 const AuthPage = lazy(() => import('./components/auth/AuthPage'));
 
@@ -63,6 +64,7 @@ function App() {
               />
               <Route path="/outils" element={<Outils />} />
               <Route path="/outils/calculateur-impots" element={<CalculateurImpots />} />
+              <Route path="/outils/calculateur-frais-marche" element={<CalculateurFraisMarche />} />
               <Route path="/expertise/ia-et-genie-logiciel" element={<ExpertiseDigitale />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

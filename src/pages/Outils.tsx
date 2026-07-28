@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet-async";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Calculator, FileText, Briefcase, Globe } from "lucide-react";
+import { Calculator, FileText, Briefcase, Globe, Receipt } from "lucide-react";
 import { Link } from "react-router-dom";
 import { SiteBreadcrumb } from "@/components/ui/SiteBreadcrumb";
 
@@ -51,6 +51,26 @@ const Outils = () => {
                 <Link to="/outils/calculateur-impots">
                   <Button variant="outline" className="w-full">
                     Accéder au calculateur
+                  </Button>
+                </Link>
+              </div>
+
+              {/* Calculateur des frais sur marché */}
+              <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="bg-prisma-purple/10 p-3 rounded-full">
+                    <Receipt className="h-6 w-6 text-prisma-purple" />
+                  </div>
+                  <h3 className="heading-sm">Frais sur Marché</h3>
+                </div>
+                <p className="text-gray-600 mb-6">
+                  Estimez le coût d'enregistrement d'un bon de commande administratif : droit
+                  proportionnel, CAC, timbres, mercuriale, TRESORPAY et certificat de non exclusion
+                  (CNE-ARMP).
+                </p>
+                <Link to="/outils/calculateur-frais-marche">
+                  <Button variant="outline" className="w-full">
+                    Calculer les frais
                   </Button>
                 </Link>
               </div>
