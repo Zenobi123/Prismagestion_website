@@ -9,8 +9,8 @@ description: >
   La compétence applique la charte graphique (violet/lavande/olive/gris), l'en-tête officiel en
   première page, le pied de page texte sur les pages courantes et le pied de page officiel
   (siège, BP, RCCM, Tél, Email, NIU) uniquement en dernière page. Embarque également les barèmes
-  d'enregistrement des bons de commande administratifs (droits, CAC, timbres, mercuriale,
-  TRESORPAY, grille CNE-ARMP) dans `references/baremes_enregistrement.md`. Ne PAS utiliser pour des
+  d'enregistrement des bons de commande administratifs (droits, CAC, timbres, pénalité de retard,
+  mercuriale, TRESORPAY, grille CNE-ARMP) dans `references/baremes_enregistrement.md`. Ne PAS utiliser pour des
   fichiers Word/Excel/PowerPoint (utiliser docx/xlsx/pptx) ni pour une réponse purement
   conversationnelle.
 ---
@@ -129,6 +129,9 @@ au moins la page 1 (en-tête + pied texte) et la dernière page (pied officiel).
   au lieu de le propager silencieusement.
 - **Barème périmé :** ne jamais recopier les montants d'un rapport antérieur sans les confronter à
   `references/baremes_enregistrement.md`. Un tarif ARMP ou DGI peut avoir changé entre deux dossiers.
+- **Délai d'enregistrement oublié :** vérifier l'écart entre la date de signature et la date de
+  dépôt avant toute liquidation. Au-delà de 30 jours, la part fiscale est doublée — omettre la
+  pénalité fausse le rapport du simple au double.
 - **Tables coupées :** `table.synth` est protégée des coupures ; pour les tableaux longs, vérifier le
   saut de page.
 
@@ -138,18 +141,22 @@ Pour toute évaluation d'enregistrement de bon de commande administratif, **lire
 `references/baremes_enregistrement.md`. Ce fichier centralise :
 
 - la part fiscale : droit proportionnel de 7 % sur le HT en dessous de 5 000 000 F CFA, CAC de 5 %
-  sur le droit ;
-- les frais annexes : timbres, mercuriale, TRESORPAY, CNE-ARMP, frais d'obtention, attestations DGI ;
+  sur le droit, timbre de dimension de 1 500 F CFA par page, et pénalité de retard de 100 % de la
+  part fiscale au-delà du délai d'enregistrement ;
+- le délai d'enregistrement : 30 jours à compter de la date de signature du bon de commande ;
+- les frais annexes : mercuriale, TRESORPAY, CNE-ARMP, frais d'obtention, attestations DGI ;
 - la grille CNE-ARMP issue de la Résolution n° 0357/ARMP/CA du 21 juillet 2026, ainsi que
   l'historique du barème antérieur ;
 - les points de contrôle systématiques et la trame recommandée du rapport.
 
-Deux règles à ne pas contourner :
+Trois règles à ne pas contourner :
 
 1. **Le droit versé à l'ARMP et les frais d'obtention du CNE se présentent sur deux lignes
    distinctes**, jamais agrégés, par souci de transparence vis-à-vis du client.
 2. **Le barème applicable est celui en vigueur à la date de signature du bon de commande.** Ne pas
    appliquer rétroactivement une grille nouvelle à un marché antérieur, ni l'inverse.
+3. **Le timbre de dimension est un élément fiscal**, à porter dans le Total Fiscal et non dans les
+   frais annexes — et la pénalité de retard s'assoit sur cette part fiscale, timbre compris.
 
 Mettre ce fichier à jour dès qu'une nouvelle résolution ARMP, une note DGI ou une Loi de Finances
 modifie un montant, en conservant l'historique du barème précédent.

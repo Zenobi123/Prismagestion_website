@@ -8,22 +8,36 @@ toute diffusion client, et signaler tout écart au lieu de le propager silencieu
 
 Base d'imposition : la valeur **Hors Taxes (HT)** de la commande publique, jamais le TTC.
 
-| Poste | Assiette | Taux |
+| Poste | Assiette | Taux ou montant |
 |---|---|---|
 | Droit proportionnel | Montant HT, pour un bon de commande strictement inférieur à 5 000 000 F CFA | 7 % |
 | Centimes Additionnels Communaux (CAC) | Montant du droit proportionnel | 5 % |
+| Timbre de dimension | Chaque page timbrée, soit 3 pages pour les 3 exemplaires originaux exigés | 1 500 F CFA par page |
+| Pénalité de retard | Total de la part fiscale, lorsque le dépôt intervient plus de 30 jours après la signature | 100 % |
 
-Le **Total Fiscal** des tableaux de synthèse correspond au droit proportionnel augmenté des CAC.
-Les timbres et les autres postes relèvent des **Frais Annexes**.
+Le **Total Fiscal** des tableaux de synthèse réunit le droit proportionnel, les CAC et le timbre de
+dimension — **le timbre est un élément fiscal, pas un frais annexe** — majorés le cas échéant de la
+pénalité de retard. La mercuriale, TRESORPAY, le CNE et les attestations relèvent des
+**Frais Annexes**.
 
 Au-delà de 5 000 000 F CFA, le taux applicable doit être revérifié dans le CGI avant liquidation :
 ne pas extrapoler le taux de 7 %.
+
+### Délai d'enregistrement et pénalité
+
+Le bon de commande doit être enregistré dans les **30 jours** qui suivent sa **date de signature**.
+Au-delà de ce délai, une **pénalité de 100 % de la part fiscale** est due : la part fiscale est donc
+doublée. Le décompte s'arrête à la date de dépôt à l'enregistrement.
+
+La date de signature joue ainsi un double rôle : elle ouvre le délai de 30 jours et détermine le
+barème CNE applicable (cf. § 3). Lorsque la part fiscale ne peut pas être entièrement liquidée —
+montant au-delà du seuil de 5 000 000 F CFA — la pénalité se signale sans être chiffrée, plutôt que
+d'être assise sur une base partielle.
 
 ## 2. Frais annexes
 
 | Poste | Montant (F CFA) | Nature |
 |---|---|---|
-| Timbre de dimension | 1 500 par page, soit 4 500 pour les 3 exemplaires originaux exigés | Format A4 normalisé |
 | Frais d'exploitation de la mercuriale | 10 000 | Forfait réglementaire par bon de commande |
 | Frais de paiement TRESORPAY | 5 000 à 7 500 selon le montant des droits liquidés | Forfait plateforme, confirmé à la liquidation automatique |
 | Droit de délivrance du CNE-ARMP | Selon la grille du § 3 | Versé à l'ARMP |
@@ -63,15 +77,18 @@ de dépôt à l'enregistrement.
 
 Avant de conclure une évaluation, vérifier :
 
-1. **Le seuil de 5 000 000 F CFA.** Un montant proche du seuil doit faire l'objet d'une mention :
+1. **Le délai de 30 jours depuis la date de signature.** Un dépôt tardif double la part fiscale ;
+   c'est le poste qui coûte le plus cher au client et le plus facile à éviter. Le vérifier avant
+   toute autre chose, et alerter le client dès que l'échéance approche.
+2. **Le seuil de 5 000 000 F CFA.** Un montant proche du seuil doit faire l'objet d'une mention :
    tout avenant fait basculer à la fois le taux de liquidation et la tranche du CNE.
-2. **La cohérence entre l'objet du bon de commande, l'imputation budgétaire et les désignations.**
+3. **La cohérence entre l'objet du bon de commande, l'imputation budgétaire et les désignations.**
    Une discordance expose le prestataire à un refus de visa du contrôle financier ou à un
    redressement en contrôle a posteriori. Elle se signale en point de vigilance, jamais en silence.
-3. **Les références mercuriales** de chaque ligne, qui conditionnent la recevabilité du dossier.
-4. **Le mode de règlement**, pour les marchés publics : la TVA et l'IR sont retenus à la source,
+4. **Les références mercuriales** de chaque ligne, qui conditionnent la recevabilité du dossier.
+5. **Le mode de règlement**, pour les marchés publics : la TVA et l'IR sont retenus à la source,
    donc le net à payer au prestataire vaut HT moins l'IR, et non TTC moins les retenues.
-5. **L'identité fiscale du prestataire.** Le NIU peut être celui d'une personne physique exploitant
+6. **L'identité fiscale du prestataire.** Le NIU peut être celui d'une personne physique exploitant
    un nom commercial. Mentionner le titulaire, le centre de rattachement et le nom commercial.
 
 ## 5. Trame recommandée du rapport d'évaluation fiscale
