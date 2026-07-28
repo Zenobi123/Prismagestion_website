@@ -22,6 +22,7 @@ import {
 import {
   BAREMES_DATE_ETAT,
   CNE_REFERENCE_RESOLUTION,
+  DELAI_ENREGISTREMENT_JOURS,
   NB_EXEMPLAIRES_ORIGINAUX,
   TRESORPAY_MIN,
   TRESORPAY_MAX,
@@ -47,6 +48,7 @@ const FraisMarcheCalculator = () => {
   const [montantHT, setMontantHT] = useState('');
   const [nbPages, setNbPages] = useState(String(NB_EXEMPLAIRES_ORIGINAUX));
   const [dateSignature, setDateSignature] = useState(aujourdhui);
+  const [dateEnregistrement, setDateEnregistrement] = useState(aujourdhui);
   const [fraisTresorpay, setFraisTresorpay] = useState(String(TRESORPAY_MAX));
   const [inclureCne, setInclureCne] = useState(true);
   const [inclureMercuriale, setInclureMercuriale] = useState(true);
@@ -63,6 +65,7 @@ const FraisMarcheCalculator = () => {
         montantHT: montantHTNum,
         nbPagesTimbrees: nbPagesNum,
         dateSignature,
+        dateEnregistrement,
         fraisTresorpay: toNumber(fraisTresorpay),
         inclureCne,
         inclureMercuriale,
@@ -72,6 +75,7 @@ const FraisMarcheCalculator = () => {
       montantHTNum,
       nbPagesNum,
       dateSignature,
+      dateEnregistrement,
       fraisTresorpay,
       inclureCne,
       inclureMercuriale,
@@ -118,7 +122,22 @@ const FraisMarcheCalculator = () => {
                 onChange={(e) => setDateSignature(e.target.value)}
               />
               <p className="text-xs text-gray-500">
-                Elle détermine le barème CNE applicable, pas la date de dépôt à l'enregistrement.
+                Elle détermine le barème CNE applicable et fait courir le délai d'enregistrement
+                de {DELAI_ENREGISTREMENT_JOURS} jours.
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="dateEnregistrement">Date de dépôt à l'enregistrement</Label>
+              <Input
+                id="dateEnregistrement"
+                type="date"
+                value={dateEnregistrement}
+                onChange={(e) => setDateEnregistrement(e.target.value)}
+              />
+              <p className="text-xs text-gray-500">
+                Au-delà de {DELAI_ENREGISTREMENT_JOURS} jours après la signature, une pénalité de
+                100 % des droits — timbre exclu — est due.
               </p>
             </div>
 
@@ -207,6 +226,9 @@ const FraisMarcheCalculator = () => {
             <CardTitle>Liquidation</CardTitle>
             <CardDescription>
               Montant HT retenu : {formatFcfa(montantHTNum)}
+              {resultat.joursEcoules !== null &&
+                resultat.joursEcoules >= 0 &&
+                ` · dépôt à J+${resultat.joursEcoules}`}
               {resultat.trancheCne && ` · tranche CNE ${resultat.trancheCne.libelle} F CFA`}
             </CardDescription>
           </CardHeader>
@@ -263,9 +285,9 @@ const FraisMarcheCalculator = () => {
                     </td>
                     <td className="hidden sm:table-cell" />
                     <td className="py-2.5 text-right text-sm font-bold text-prisma-purple whitespace-nowrap">
-                      {resultat.totalFiscal === null
-                        ? 'à déterminer'
-                        : formatFcfa(resultat.totalFiscal)}
+                      {resultat.fiscalComplet
+                        ? formatFcfa(resultat.totalFiscal)
+                        : `${formatFcfa(resultat.totalFiscal)} + postes à déterminer`}
                     </td>
                   </tr>
 
@@ -306,7 +328,7 @@ const FraisMarcheCalculator = () => {
               </div>
               {resultat.coutTotal !== null && (
                 <div className="text-sm text-white/70 sm:text-right">
-                  Part fiscale {formatFcfa(resultat.totalFiscal ?? 0)}
+                  Part fiscale {formatFcfa(resultat.totalFiscal)}
                   <br />
                   Frais annexes {formatFcfa(resultat.totalAnnexes)}
                 </div>

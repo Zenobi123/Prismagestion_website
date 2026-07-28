@@ -3,6 +3,9 @@ import {
   TAUX_CAC,
   SEUIL_DROIT_PROPORTIONNEL,
   MARGE_ALERTE_SEUIL,
+  DELAI_ENREGISTREMENT_JOURS,
+  TAUX_PENALITE_RETARD,
+  MARGE_ALERTE_DELAI_JOURS,
   TIMBRE_PAR_PAGE,
   FRAIS_MERCURIALE,
   FRAIS_ATTESTATIONS_DGI,
@@ -26,8 +29,13 @@ export interface FraisMarcheInput {
   montantHT: number;
   /** Nombre de pages à timbrer (3 exemplaires originaux exigés par défaut). */
   nbPagesTimbrees: number;
-  /** Date de signature du bon de commande (ISO `AAAA-MM-JJ`) : elle détermine le barème CNE. */
+  /**
+   * Date de signature du bon de commande (ISO `AAAA-MM-JJ`) : elle détermine le
+   * barème CNE applicable et fait courir le délai d'enregistrement.
+   */
   dateSignature: string;
+  /** Date de dépôt à l'enregistrement (ISO `AAAA-MM-JJ`), qui arrête le décompte du délai. */
+  dateEnregistrement: string;
   /** Forfait TRESORPAY retenu, dans la fourchette documentée. */
   fraisTresorpay: number;
   inclureCne: boolean;
@@ -48,8 +56,10 @@ export interface LigneLiquidation {
 export interface FraisMarcheResult {
   lignesFiscales: LigneLiquidation[];
   lignesAnnexes: LigneLiquidation[];
-  totalFiscal: number | null;
-  /** Somme des seuls postes chiffrés : partiel si `annexesCompletes` est faux. */
+  /** Somme des seuls postes chiffrés : partielle si `fiscalComplet` est faux. */
+  totalFiscal: number;
+  fiscalComplet: boolean;
+  /** Somme des seuls postes chiffrés : partielle si `annexesCompletes` est faux. */
   totalAnnexes: number;
   annexesCompletes: boolean;
   /** `null` dès qu'un poste retenu n'a pas pu être chiffré. */
@@ -57,6 +67,10 @@ export interface FraisMarcheResult {
   avertissements: string[];
   trancheCne: TrancheCne | null;
   baremeCneAnterieur: boolean;
+  /** Jours écoulés entre la signature et le dépôt ; `null` si une date manque. */
+  joursEcoules: number | null;
+  /** Vrai lorsque le dépôt intervient au-delà du délai d'enregistrement. */
+  horsDelai: boolean;
 }
 
 /**
@@ -70,17 +84,29 @@ export const formatFcfa = (montant: number): string =>
 const trouverTranche = (grille: TrancheCne[], montant: number): TrancheCne | null =>
   grille.find((t) => montant >= t.min && (t.max === null || montant <= t.max)) ?? null;
 
-/** Somme des lignes ; `null` si au moins un poste reste à déterminer. */
-const totaliser = (lignes: LigneLiquidation[]): number | null =>
-  lignes.some((l) => l.montant === null)
-    ? null
-    : lignes.reduce((total, l) => total + (l.montant ?? 0), 0);
+/** Somme des seuls postes chiffrés d'un bloc. */
+const sommer = (lignes: LigneLiquidation[]): number =>
+  lignes.reduce((total, l) => total + (l.montant ?? 0), 0);
+
+/** Vrai lorsque tous les postes du bloc ont pu être chiffrés. */
+const estComplet = (lignes: LigneLiquidation[]): boolean =>
+  lignes.every((l) => l.montant !== null);
+
+/** Nombre de jours calendaires entre deux dates ISO ; `null` si une date manque ou est invalide. */
+const joursEntre = (debut: string, fin: string): number | null => {
+  if (!debut || !fin) return null;
+  const depart = Date.parse(`${debut}T00:00:00Z`);
+  const arrivee = Date.parse(`${fin}T00:00:00Z`);
+  if (Number.isNaN(depart) || Number.isNaN(arrivee)) return null;
+  return Math.round((arrivee - depart) / 86_400_000);
+};
 
 export const calculerFraisMarche = (input: FraisMarcheInput): FraisMarcheResult => {
   const {
     montantHT,
     nbPagesTimbrees,
     dateSignature,
+    dateEnregistrement,
     fraisTresorpay,
     inclureCne,
     inclureMercuriale,
@@ -126,10 +152,8 @@ export const calculerFraisMarche = (input: FraisMarcheInput): FraisMarcheResult 
           : `${formatFcfa(droitProportionnel)} × 5 %`,
       montant: cac,
     },
-  ];
-
-  // ── Frais annexes ───────────────────────────────────────────────────────
-  const lignesAnnexes: LigneLiquidation[] = [
+    // Le timbre de dimension est un élément fiscal : il entre dans le Total
+    // Fiscal, aux côtés du droit proportionnel et des CAC.
     {
       id: 'timbres',
       libelle: 'Timbre de dimension',
@@ -137,6 +161,54 @@ export const calculerFraisMarche = (input: FraisMarcheInput): FraisMarcheResult 
       montant: nbPagesTimbrees * TIMBRE_PAR_PAGE,
     },
   ];
+
+  // ── Pénalité de retard d'enregistrement ─────────────────────────────────
+  // Au-delà du délai décompté depuis la signature, les droits sont majorés de
+  // 100 %. L'assiette est le droit proportionnel augmenté des CAC : le timbre
+  // de dimension, bien que fiscal, en est exclu.
+  const joursEcoules = joursEntre(dateSignature, dateEnregistrement);
+  const datesIncoherentes = joursEcoules !== null && joursEcoules < 0;
+  const horsDelai =
+    joursEcoules !== null && !datesIncoherentes && joursEcoules > DELAI_ENREGISTREMENT_JOURS;
+
+  if (datesIncoherentes) {
+    avertissements.push(
+      "La date d'enregistrement est antérieure à la date de signature : le délai ne peut pas " +
+        'être décompté. Vérifiez les dates saisies.'
+    );
+  }
+
+  if (horsDelai) {
+    const assietteComplete = droitProportionnel !== null && cac !== null;
+    const assiettePenalite = (droitProportionnel ?? 0) + (cac ?? 0);
+
+    avertissements.push(
+      `Dépôt à ${joursEcoules} jours de la signature, au-delà du délai de ` +
+        `${DELAI_ENREGISTREMENT_JOURS} jours : une pénalité de 100 % des droits est due.`
+    );
+
+    lignesFiscales.push({
+      id: 'penalite-retard',
+      libelle: "Pénalité de retard d'enregistrement",
+      formule: assietteComplete
+        ? `${formatFcfa(assiettePenalite)} × 100 % — droits hors timbre (dépôt à J+${joursEcoules})`
+        : `100 % des droits, eux-mêmes à déterminer (dépôt à J+${joursEcoules})`,
+      montant: assietteComplete ? Math.round(assiettePenalite * TAUX_PENALITE_RETARD) : null,
+    });
+  } else if (
+    joursEcoules !== null &&
+    !datesIncoherentes &&
+    joursEcoules > DELAI_ENREGISTREMENT_JOURS - MARGE_ALERTE_DELAI_JOURS
+  ) {
+    const reste = DELAI_ENREGISTREMENT_JOURS - joursEcoules;
+    avertissements.push(
+      `Délai d'enregistrement bientôt expiré : il reste ${reste} jour(s) avant que la pénalité ` +
+        'de 100 % des droits ne soit due.'
+    );
+  }
+
+  // ── Frais annexes ───────────────────────────────────────────────────────
+  const lignesAnnexes: LigneLiquidation[] = [];
 
   if (inclureMercuriale) {
     lignesAnnexes.push({
@@ -210,21 +282,25 @@ export const calculerFraisMarche = (input: FraisMarcheInput): FraisMarcheResult 
     );
   }
 
-  const totalFiscal = totaliser(lignesFiscales);
-  const totalAnnexes = lignesAnnexes.reduce((total, l) => total + (l.montant ?? 0), 0);
-  const annexesCompletes = lignesAnnexes.every((l) => l.montant !== null);
+  const totalFiscal = sommer(lignesFiscales);
+  const fiscalComplet = estComplet(lignesFiscales);
+  const totalAnnexes = sommer(lignesAnnexes);
+  const annexesCompletes = estComplet(lignesAnnexes);
   const coutTotal =
-    totalFiscal === null || !annexesCompletes ? null : totalFiscal + totalAnnexes;
+    fiscalComplet && annexesCompletes ? totalFiscal + totalAnnexes : null;
 
   return {
     lignesFiscales,
     lignesAnnexes,
     totalFiscal,
+    fiscalComplet,
     totalAnnexes,
     annexesCompletes,
     coutTotal,
     avertissements,
     trancheCne,
     baremeCneAnterieur,
+    joursEcoules,
+    horsDelai,
   };
 };
