@@ -1,4 +1,11 @@
-# Welcome to your Lovable project
+# Site web PRISMA GESTION
+
+Site public du cabinet PRISMA GESTION (Yaoundé, Cameroun) : présentation
+des services, blog de veille fiscale, calculateurs et espace admin.
+
+**En production :** https://prismagestion.site — hébergement Vercel,
+déploiement automatique depuis la branche `main`.
+Marche à suivre complète : [`docs/DEPLOIEMENT.md`](docs/DEPLOIEMENT.md).
 
 ## Backend Supabase
 
@@ -48,59 +55,32 @@ localStorage du navigateur — pratique pour développer hors ligne. Dans ce
 mode, un compte admin local `obiangtimenathan@gmail.com` / `admin123` est créé
 et les données restent propres à chaque navigateur.
 
-## Project info
+## Développer en local
 
-**URL**: https://lovable.dev/projects/340433e9-ca27-4bce-a3f6-02758a95abb6
-
-## How can I edit this code?
-
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/340433e9-ca27-4bce-a3f6-02758a95abb6) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+Le projet a été démarré sur Lovable puis sorti de la plateforme : le dépôt
+GitHub fait désormais seule référence. Prérequis : Node.js & npm
+([installation avec nvm](https://github.com/nvm-sh/nvm#installing-and-updating)).
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+git clone https://github.com/Zenobi123/Prisma-Gestion_website.git
+cd Prisma-Gestion_website
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+npm install
+cp .env.example .env   # renseigner les variables Supabase (facultatif :
+                       # sans elles, le backend local prend le relais)
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+npm run dev            # serveur de développement sur http://localhost:8080
 ```
 
-**Edit a file directly in GitHub**
+Autres commandes :
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```sh
+npm run build          # build de production dans dist/
+npm run preview        # servir le build de production en local
+npm run lint           # ESLint
+```
 
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with the following technologies:
+## Technologies
 
 - Vite
 - TypeScript
@@ -108,10 +88,12 @@ This project is built with the following technologies:
 - shadcn-ui
 - Tailwind CSS
 
-## How can I deploy this project?
+## Déploiement
 
-Simply open [Lovable](https://lovable.dev/projects/340433e9-ca27-4bce-a3f6-02758a95abb6) and click on Share -> Publish.
+Toute fusion dans `main` déclenche un déploiement en production sur Vercel.
+La configuration d'hébergement (réécriture SPA, en-têtes de sécurité, cache)
+est dans `vercel.json`.
 
-## I want to use a custom domain - is that possible?
-
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+La procédure complète — projet Vercel, variables d'environnement, DNS du
+domaine `prismagestion.site` et vérifications après mise en ligne — est
+documentée dans [`docs/DEPLOIEMENT.md`](docs/DEPLOIEMENT.md).

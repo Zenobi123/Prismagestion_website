@@ -21,11 +21,11 @@ const cspPlugin = (): Plugin => ({
         .map(([, body]) => `'sha256-${createHash("sha256").update(body).digest("base64")}'`);
       const csp = [
         "default-src 'self'",
-        `script-src 'self' https://cdn.gpteng.co ${inlineScriptHashes.join(" ")}`.trim(),
+        `script-src 'self' ${inlineScriptHashes.join(" ")}`.trim(),
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
         "font-src 'self' data: https://fonts.gstatic.com",
         "img-src 'self' data: blob: https:",
-        "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://cdn.gpteng.co",
+        "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
         "worker-src 'self'",
         "object-src 'none'",
         "frame-src 'none'",
