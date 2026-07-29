@@ -2,7 +2,8 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { BlogPost as BlogPostType } from '@/types/blog';
-import { getBlogPostBySlug, getPublishedBlogPosts } from '@/services/blog/getBlogPosts';
+import { getPublishedBlogPosts } from '@/services/blog/getBlogPosts';
+import { getBlogPostBySlug } from '@/services/blog/getBlogPost';
 import { SEOHead } from '@/components/SEOHead';
 import { MetadataService } from '@/services/metadataService';
 import Navbar from '@/components/Navbar';
