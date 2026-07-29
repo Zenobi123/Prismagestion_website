@@ -53,8 +53,25 @@ Vercel : *Settings → Environment Variables*, portée **Production** *et*
 | `VITE_SUPABASE_URL` | URL du projet Supabase | Le site bascule sur le backend local (`localStorage`) : les messages de contact, devis et rendez-vous **ne vous parviennent pas** et restent dans le navigateur du visiteur. |
 | `VITE_SUPABASE_PUBLISHABLE_KEY` | Clé publique Supabase | Idem. |
 | `VITE_SUPABASE_PROJECT_ID` | Identifiant du projet | Idem. |
-| `VITE_GA_ID` | `G-XXXXXXXXXX` (facultatif) | Aucune mesure d'audience. |
-| `VITE_PLAUSIBLE_DOMAIN` | `prismagestion.site` (facultatif) | Alternative sans cookies à Google Analytics. |
+| `VITE_PLAUSIBLE_DOMAIN` | `prismagestion.site` | **À renseigner au lancement** (voir encadré). Mesure d'audience sans cookies. |
+| `VITE_GA_ID` | `G-XXXXXXXXXX` | Alternative Google Analytics 4. Inutile si Plausible est activé. |
+
+> **Ne lancez pas le site sans mesure d'audience.**
+> C'est le premier verrou identifié par l'[audit commercial](../AUDIT_STRATEGIE_COMMERCIALE.md) :
+> « pilotage à l'aveugle ». Le code est prêt — `AnalyticsService.initialize()`
+> lit ces variables au build — mais aucune n'est définie aujourd'hui : le site
+> partirait en production sans savoir d'où viennent les visiteurs ni quelles
+> pages convertissent. Le jour de la mise en ligne est le bon moment : les
+> données manquées ne se rattrapent pas.
+>
+> **Plausible est recommandé** plutôt que GA4 : sans cookies (donc sans
+> bandeau de consentement à gérer), plus léger, et son domaine de mesure est
+> précisément celui qu'on met en service.
+>
+> La Content-Security-Policy s'adapte automatiquement : `vite.config.ts`
+> n'ouvre `plausible.io` ou `googletagmanager.com` que si la variable
+> correspondante est définie au build. Sans configuration, la politique reste
+> au plus strict — rien à modifier à la main.
 
 Ces trois variables `VITE_SUPABASE_*` sont **publiques par conception** : elles
 finissent dans le JavaScript envoyé au navigateur. La clé Supabase concernée
@@ -67,6 +84,24 @@ côté Supabase, jamais ici :
 ```sh
 supabase secrets set RESEND_API_KEY=... NOTIFY_EMAIL=...
 ```
+
+### Notifications e-mail : liste d'origines autorisées
+
+La fonction edge `send-email` rejette (403) toute requête venant d'une origine
+non autorisée. Sa liste par défaut, dans
+`supabase/functions/send-email/index.ts`, contient déjà
+`https://prismagestion.site` et `https://www.prismagestion.site` : **rien à
+faire pour le domaine final.** Deux réserves cependant :
+
+- **Le secret Supabase `ALLOWED_ORIGINS` écrase entièrement cette liste.**
+  S'il a été renseigné à l'époque Lovable, le domaine sera refusé. À vérifier
+  dans *Supabase → Edge Functions → Secrets* : soit le supprimer pour revenir
+  aux valeurs par défaut du code, soit y inclure les deux URLs ci-dessus.
+- **Les domaines `*.vercel.app` n'y sont pas** — voir l'avertissement du § 5.
+
+La liste tolère encore `*.lovable.app` et `*.lovableproject.com`, hérités de la
+plateforme. Sans danger réel, mais à retirer du code une fois le site en
+service.
 
 ## 3. Déclarer le domaine dans Vercel
 
@@ -178,6 +213,16 @@ dig www.prismagestion.site +short
 - [ ] Le formulaire de contact envoie un message qui **apparaît dans l'espace
       admin** (`/auth` puis `/admin`). Sinon, les variables Supabase du § 2 ne
       sont pas prises en compte.
+- [ ] La **notification e-mail** du message de test arrive bien dans votre
+      boîte.
+
+> ⚠️ **Testez le formulaire depuis `prismagestion.site`, pas depuis l'adresse
+> `.vercel.app`.** Les domaines `*.vercel.app` ne figurent pas dans la liste
+> d'origines autorisées de la fonction `send-email` : depuis une URL de
+> prévisualisation, la notification e-mail est rejetée en 403. Le message
+> serait tout de même enregistré et visible dans l'espace admin — la
+> notification n'est pas bloquante — mais vous concluriez à tort à une panne.
+> Sur le domaine final, tout fonctionne.
 - [ ] Partager le lien sur WhatsApp : le logo et le titre doivent apparaître.
       Diagnostic : [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/).
 - [ ] Déclarer le site sur [Google Search Console](https://search.google.com/search-console)
@@ -226,3 +271,24 @@ dig www.prismagestion.site +short
 6. **`public/_headers`** est un fichier au format Netlify, ignoré par Vercel.
    Sans effet — les mêmes en-têtes sont dans `vercel.json`. À supprimer si
    Netlify est définitivement écarté.
+
+---
+
+## 7. Ce que la mise en ligne débloque (audit commercial)
+
+La mise en service du domaine n'est pas une fin : c'est la condition d'entrée
+des cinq verrous décrits dans
+[`AUDIT_STRATEGIE_COMMERCIALE.md`](../AUDIT_STRATEGIE_COMMERCIALE.md), qui
+couvre les deux actifs du cabinet (ce site vitrine et l'application métier
+`prisma-taskmaster-planner`).
+
+| Verrou de l'audit | État vis-à-vis de la mise en ligne |
+|---|---|
+| 1 — Pilotage à l'aveugle | **Traité ici** : § 2 rend la mesure d'audience active dès le lancement. Le tableau de bord admin affiche cependant encore des données de démonstration (`mockData`) : à brancher sur les vraies mesures. |
+| 2 — Aimants à leads inertes | Les calculateurs d'impôts ne demandent aucun e-mail. C'est le trafic le plus qualifié du site — un entrepreneur qui calcule son IGS est un prospect chaud. À traiter en priorité **après** la mise en ligne, une fois le § 5 validé. |
+| 3 — Tunnel de conversion faible | Ni offre packagée, ni prix, ni preuve sociale. Le plan opérationnel est déjà rédigé dans [`STRATEGIE_OFFRES_COMMERCIALES.md`](../STRATEGIE_OFFRES_COMMERCIALES.md). |
+| 4 — Aucune présence sociale | `src/config/social.ts` attend les URLs Facebook et LinkedIn (`facebook: ''`, `linkedin: ''`) : les liens n'apparaissent que si elles sont renseignées. Une ligne à remplir dès que les pages existent. |
+| 5 — Base clients dormante | Concerne l'application métier, hors périmètre de ce guide. |
+
+L'ordre compte : sans le § 2, aucun des chantiers suivants ne pourra être
+mesuré, donc ni arbitré ni défendu.
