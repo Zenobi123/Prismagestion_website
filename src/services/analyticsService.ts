@@ -54,17 +54,29 @@ export class AnalyticsService {
     script.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
     document.head.appendChild(script);
 
-    const script2 = document.createElement('script');
-    script2.innerHTML = `
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', '${gaId}', {
-        page_title: document.title,
-        page_location: window.location.href
-      });
-    `;
-    document.head.appendChild(script2);
+    // L'amorce gtag est exécutée directement, et non injectée dans un
+    // <script> inline : la Content-Security-Policy du site n'autorise que
+    // les scripts inline connus au build (par empreinte), ce qui bloquerait
+    // un script créé à l'exécution. Le code ci-dessous s'exécute depuis un
+    // module déjà autorisé, donc sans assouplir la CSP.
+    const w = window as typeof window & {
+      dataLayer?: IArguments[];
+      gtag?: (...args: unknown[]) => void;
+    };
+    w.dataLayer = w.dataLayer || [];
+    // gtag.js attend l'objet `arguments` lui-même dans la file, pas un tableau :
+    // les paramètres nommés ne servent qu'au typage de l'appel.
+    function gtag(..._args: unknown[]) {
+      // eslint-disable-next-line prefer-rest-params
+      w.dataLayer!.push(arguments);
+    }
+    w.gtag = gtag as unknown as (...args: unknown[]) => void;
+
+    gtag('js', new Date());
+    gtag('config', gaId, {
+      page_title: document.title,
+      page_location: window.location.href,
+    });
 
     this.isInitialized = true;
   }

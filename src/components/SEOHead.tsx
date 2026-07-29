@@ -2,6 +2,7 @@
 import { Helmet } from 'react-helmet-async';
 import { SEOService, SEOConfig } from '@/services/seoService';
 import { MetadataService } from '@/services/metadataService';
+import { absoluteUrl } from '@/config/site';
 
 interface SEOHeadProps {
   config: Partial<SEOConfig>;
@@ -11,6 +12,8 @@ export const SEOHead = ({ config }: SEOHeadProps) => {
   const seoConfig = SEOService.createSEOConfig(config);
   const structuredData = SEOService.generateStructuredData(seoConfig);
   const organizationData = MetadataService.generateOrganizationStructuredData();
+  // Facebook, LinkedIn et WhatsApp rejettent les images de partage relatives.
+  const ogImageUrl = absoluteUrl(seoConfig.ogImage ?? '');
 
   return (
     <Helmet>
@@ -25,7 +28,7 @@ export const SEOHead = ({ config }: SEOHeadProps) => {
       <meta property="og:description" content={seoConfig.description} />
       <meta property="og:type" content={seoConfig.type} />
       <meta property="og:url" content={seoConfig.canonicalUrl} />
-      <meta property="og:image" content={seoConfig.ogImage} />
+      <meta property="og:image" content={ogImageUrl} />
       <meta property="og:site_name" content="PRISMA GESTION" />
       <meta property="og:locale" content="fr_FR" />
       
@@ -33,7 +36,7 @@ export const SEOHead = ({ config }: SEOHeadProps) => {
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={seoConfig.title} />
       <meta name="twitter:description" content={seoConfig.description} />
-      <meta name="twitter:image" content={seoConfig.ogImage} />
+      <meta name="twitter:image" content={ogImageUrl} />
       
       {/* Canonical URL */}
       <link rel="canonical" href={seoConfig.canonicalUrl} />
