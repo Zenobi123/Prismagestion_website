@@ -2,6 +2,7 @@
 import { Plus, ArrowLeft } from "lucide-react";
 import { Button } from "@gestion/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { GESTION_BASE } from "@gestion/routes";
 
 interface CollaborateurHeaderProps {
   onOpenDialog: () => void;
@@ -15,7 +16,7 @@ export function CollaborateurHeader({ onOpenDialog }: CollaborateurHeaderProps) 
       <div className="flex items-center gap-4 mb-4">
         <Button
           variant="outline"
-          onClick={() => navigate("/")}
+          onClick={() => navigate(GESTION_BASE)}
           className="flex items-center gap-2"
         >
           <ArrowLeft className="w-4 h-4" />

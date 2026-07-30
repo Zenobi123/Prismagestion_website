@@ -23,6 +23,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuthorization } from "@gestion/hooks/useAuthorization";
 import { CollaborateurUnauthorized } from "@gestion/components/collaborateurs/CollaborateurUnauthorized";
 import { ExerciceSelector, ExerciceReadOnlyBanner } from "@gestion/components/exercice/ExerciceControls";
+import { GESTION_BASE } from "@gestion/routes";
 
 const Facturation = () => {
   const [activeTab, setActiveTab] = useState("devis");
@@ -47,7 +48,7 @@ const Facturation = () => {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => navigate("/")}
+            onClick={() => navigate(GESTION_BASE)}
             className="flex items-center gap-1 sm:gap-2 hover:bg-gray-100 h-8 px-2 sm:px-3"
           >
             <ArrowLeft className="w-4 h-4" />

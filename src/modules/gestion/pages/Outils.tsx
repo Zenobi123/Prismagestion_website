@@ -7,6 +7,7 @@ import IGSCalculatorCard from "@gestion/components/outils/IGSCalculatorCard";
 import IGSInformation from "@gestion/components/outils/IGSInformation";
 import { useAuthorization } from "@gestion/hooks/useAuthorization";
 import { CollaborateurUnauthorized } from "@gestion/components/collaborateurs/CollaborateurUnauthorized";
+import { GESTION_BASE } from "@gestion/routes";
 
 /**
  * Page « Outils » : reprend l'outil pratique du site vitrine PRISMA GESTION
@@ -32,7 +33,7 @@ const Outils = () => {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => navigate("/")}
+            onClick={() => navigate(GESTION_BASE)}
             className="flex items-center gap-1 sm:gap-2"
           >
             <ArrowLeft className="w-4 h-4" />

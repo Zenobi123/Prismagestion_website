@@ -5,6 +5,7 @@ import { getCollaborateur } from "@gestion/services/collaborateurService";
 import { Button } from "@gestion/components/ui/button";
 import { ArrowLeft, Edit, Mail, Phone, MapPin, GraduationCap, Calendar, Briefcase } from "lucide-react";
 import { Card } from "@gestion/components/ui/card";
+import { gestionPath } from "@gestion/routes";
 
 export default function CollaborateurDetails() {
   const { id } = useParams<{ id: string }>();
@@ -46,7 +47,7 @@ export default function CollaborateurDetails() {
       <div className="flex items-center justify-between mb-4 sm:mb-6">
         <Button
           variant="outline"
-          onClick={() => navigate("/collaborateurs")}
+          onClick={() => navigate(gestionPath('collaborateurs'))}
           className="flex items-center gap-1 sm:gap-2"
         >
           <ArrowLeft className="h-4 w-4" />

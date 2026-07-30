@@ -3,6 +3,7 @@ import { Button } from "@gestion/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import NewMissionDialog from "@gestion/components/missions/NewMissionDialog";
+import { GESTION_BASE } from "@gestion/routes";
 
 const MissionHeader = () => {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ const MissionHeader = () => {
         <Button
           variant="outline"
           size="sm"
-          onClick={() => navigate("/")}
+          onClick={() => navigate(GESTION_BASE)}
           className="flex items-center gap-1 sm:gap-2"
         >
           <ArrowLeft className="w-4 h-4" />

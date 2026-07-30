@@ -10,6 +10,7 @@ import { ReportTypeFilter } from "@gestion/components/rapports/ReportTypeFilter"
 import { SearchInput } from "@gestion/components/rapports/SearchInput";
 import { ReportCard } from "@gestion/components/rapports/ReportCard";
 import { EmptyState } from "@gestion/components/rapports/EmptyState";
+import { GESTION_BASE } from "@gestion/routes";
 
 // Les générateurs de rapports (jsPDF + autotable, ~400 ko) ne sont chargés
 // qu'au clic sur « Générer » : import dynamique pour garder la route légère.
@@ -348,7 +349,7 @@ const Rapports = () => {
         <Button
           variant="outline"
           size="sm"
-          onClick={() => navigate("/")}
+          onClick={() => navigate(GESTION_BASE)}
           className="flex items-center gap-1 sm:gap-2"
         >
           <ArrowLeft className="w-4 h-4" />

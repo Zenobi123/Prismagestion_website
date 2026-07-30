@@ -6,6 +6,7 @@ import { ExpiringClient } from "@gestion/hooks/useExpiringClients";
 import { Button } from "@gestion/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Badge } from "@gestion/components/ui/badge";
+import { gestionPath } from "@gestion/routes";
 
 interface ExpiringClientDocumentsProps {
   clients: ExpiringClient[];
@@ -117,7 +118,7 @@ const ExpiringClientDocuments = ({ clients }: ExpiringClientDocumentsProps) => {
             </p>
             <Button 
               variant="outline"
-              onClick={() => navigate('/gestion')}
+              onClick={() => navigate(gestionPath('gestion'))}
               className="bg-white hover:bg-gray-100"
             >
               Configurer les attestations fiscales

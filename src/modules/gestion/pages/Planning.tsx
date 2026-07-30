@@ -10,6 +10,7 @@ import { PlanningImportExport } from "@gestion/components/planning/PlanningImpor
 import PageLayout from "@gestion/components/layout/PageLayout";
 import { useAuthorization } from "@gestion/hooks/useAuthorization";
 import { CollaborateurUnauthorized } from "@gestion/components/collaborateurs/CollaborateurUnauthorized";
+import { GESTION_BASE } from "@gestion/routes";
 
 const Planning = () => {
   const { isAuthorized } = useAuthorization(
@@ -32,7 +33,7 @@ const Planning = () => {
         <Button
           variant="outline"
           size="sm"
-          onClick={() => navigate("/")}
+          onClick={() => navigate(GESTION_BASE)}
           className="flex items-center gap-1 sm:gap-2"
         >
           <ArrowLeft className="w-4 h-4" />

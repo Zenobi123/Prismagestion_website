@@ -42,6 +42,7 @@ import {
   LAST_UPDATED,
   type AideSection,
 } from "@gestion/lib/spec/aideContent";
+import { GESTION_BASE } from "@gestion/routes";
 
 /** Mapping nom d'icône (depuis le contenu) -> composant lucide-react. */
 const iconMap: Record<string, LucideIcon> = {
@@ -142,7 +143,7 @@ const Aide = () => {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => navigate("/")}
+            onClick={() => navigate(GESTION_BASE)}
             className="flex items-center gap-1 sm:gap-2"
           >
             <ArrowLeft className="w-4 h-4" />

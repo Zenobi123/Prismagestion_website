@@ -3,6 +3,7 @@ import { Button } from "@gestion/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { Card, CardDescription, CardHeader, CardTitle } from "@gestion/components/ui/card";
 import { useNavigate } from "react-router-dom";
+import { GESTION_BASE } from "@gestion/routes";
 
 interface GestionHeaderProps {
   nombreClientsEnGestion: number;
@@ -18,7 +19,7 @@ export function GestionHeader({ nombreClientsEnGestion }: GestionHeaderProps) {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => navigate("/")}
+            onClick={() => navigate(GESTION_BASE)}
             className="flex items-center gap-2 hover:bg-[#F2FCE2]"
           >
             <ArrowLeft className="w-4 h-4" />

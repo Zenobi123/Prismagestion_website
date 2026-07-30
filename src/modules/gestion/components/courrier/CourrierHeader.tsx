@@ -2,6 +2,7 @@
 import { Mail, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@gestion/components/ui/button";
+import { GESTION_BASE } from "@gestion/routes";
 
 interface CourrierHeaderProps {
   title?: string;
@@ -17,7 +18,7 @@ const CourrierHeader = ({ title = "Courrier" }: CourrierHeaderProps) => {
           <div className="flex items-center gap-2 sm:gap-4 min-w-0">
             <Button
               variant="outline"
-              onClick={() => navigate("/")}
+              onClick={() => navigate(GESTION_BASE)}
               className="flex items-center gap-2 shrink-0"
             >
               <ArrowLeft className="w-4 h-4" />

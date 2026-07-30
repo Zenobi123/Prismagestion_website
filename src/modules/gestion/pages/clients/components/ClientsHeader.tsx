@@ -2,6 +2,7 @@
 import { Button } from "@gestion/components/ui/button";
 import { Plus, Trash2, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { GESTION_BASE } from "@gestion/routes";
 
 interface ClientsHeaderProps {
   onAddClientClick: () => void;
@@ -13,7 +14,7 @@ export function ClientsHeader({ onAddClientClick, onTrashClick, isMobile }: Clie
   const navigate = useNavigate();
 
   const handleBackToDashboard = () => {
-    navigate("/");
+    navigate(GESTION_BASE);
   };
 
   return (

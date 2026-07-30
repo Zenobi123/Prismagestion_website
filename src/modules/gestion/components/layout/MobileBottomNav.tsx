@@ -24,8 +24,10 @@ import LogoutButton from "@gestion/components/LogoutButton";
 import { supabase } from "@gestion/integrations/supabase/client";
 import { useIsMobile } from "@gestion/hooks/use-mobile";
 import { cn } from "@gestion/lib/utils";
+import { gestionPath } from "@gestion/routes";
 
 type NavItem = {
+  // Chemin relatif à la console, résolu par gestionPath() au rendu.
   path: string;
   icon: React.ElementType;
   label: string;
@@ -104,7 +106,7 @@ const MobileBottomNav = () => {
 
   const canSee = (item: NavItem) =>
     !item.allowedRoles || item.allowedRoles.includes(userRole || "");
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) => location.pathname === gestionPath(path);
 
   const visiblePrimary = primaryItems.filter(canSee);
   const visibleAll = allItems.filter(canSee);
@@ -123,7 +125,7 @@ const MobileBottomNav = () => {
           {visiblePrimary.map((item) => (
             <Link
               key={item.path}
-              to={item.path}
+              to={gestionPath(item.path)}
               aria-current={isActive(item.path) ? "page" : undefined}
               className={cn(
                 "flex flex-col items-center justify-center gap-1 text-[11px] font-medium transition-colors active:scale-95",
@@ -166,7 +168,7 @@ const MobileBottomNav = () => {
             {visibleAll.map((item) => (
               <Link
                 key={item.path}
-                to={item.path}
+                to={gestionPath(item.path)}
                 aria-current={isActive(item.path) ? "page" : undefined}
                 className={cn(
                   "flex flex-col items-center justify-center gap-1.5 rounded-xl border p-3 text-xs font-medium text-center transition-colors min-h-[72px]",

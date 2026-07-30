@@ -6,6 +6,7 @@ import { Button } from "@gestion/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Badge } from "@gestion/components/ui/badge";
 import { useQueryClient } from "@tanstack/react-query";
+import { gestionPath } from "@gestion/routes";
 
 interface ExpiringFiscalAttestationsProps {
   attestations: FiscalAttestation[];
@@ -146,7 +147,7 @@ const ExpiringFiscalAttestations = ({ attestations, isLoading }: ExpiringFiscalA
           </p>
           <Button 
             variant="outline"
-            onClick={() => navigate('/gestion')}
+            onClick={() => navigate(gestionPath('gestion'))}
             className="bg-white hover:bg-gray-100"
           >
             Configurer les attestations fiscales

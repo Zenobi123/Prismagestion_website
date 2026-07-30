@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Button } from "@gestion/components/ui/button";
 import { PageLayout } from "@gestion/components/layout/PageLayout";
 import { Home, AlertTriangle } from "lucide-react";
+import { GESTION_BASE } from "@gestion/routes";
 
 const NotFound = () => {
   const location = useLocation();
@@ -17,7 +18,7 @@ const NotFound = () => {
           ou n'est plus disponible.
         </p>
         <Button asChild>
-          <Link to="/">
+          <Link to={GESTION_BASE}>
             <Home className="h-4 w-4 mr-2" />
             Retour à l'accueil
           </Link>
