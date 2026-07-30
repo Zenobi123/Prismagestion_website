@@ -11,6 +11,7 @@ import { Badge } from "@gestion/components/ui/badge";
 import { Button } from "@gestion/components/ui/button";
 import { Edit } from "lucide-react";
 import { getClientsWithNonCompliantFiscalSituation } from "@gestion/services/fiscal/nonCompliantFiscalService";
+import { gestionPath } from "@gestion/routes";
 
 interface NonCompliantDialogProps {
   open: boolean;
@@ -30,7 +31,7 @@ export const NonCompliantDialog = ({ open, onOpenChange }: NonCompliantDialogPro
   });
 
   const handleEditClient = (clientId: string) => {
-    navigate(`/gestion?client=${clientId}&tab=obligations-fiscales`);
+    navigate(gestionPath(`gestion?client=${clientId}&tab=obligations-fiscales`));
     onOpenChange(false);
   };
 

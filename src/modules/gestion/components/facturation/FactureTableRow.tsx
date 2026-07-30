@@ -15,6 +15,7 @@ import { Copy, Edit, MoreHorizontal, Send, Trash } from 'lucide-react';
 import StatusBadge from './StatusBadge';
 import { Facture } from '@gestion/types/facture';
 import FacturePrintButton from '@gestion/components/printable/connectors/FacturePrintButton';
+import { gestionPath } from "@gestion/routes";
 
 interface FactureTableRowProps {
   facture: Facture;
@@ -28,7 +29,7 @@ export const FactureTableRow: React.FC<FactureTableRowProps> = ({ facture, onDel
   return (
     <tr>
       <td>
-        <Link to={`/factures/${id}`} className="font-medium hover:underline">
+        <Link to={gestionPath(`factures/${id}`)} className="font-medium hover:underline">
           {id}
         </Link>
       </td>
@@ -59,7 +60,7 @@ export const FactureTableRow: React.FC<FactureTableRowProps> = ({ facture, onDel
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <Link to={`/factures/edit/${id}`}>
+              <Link to={gestionPath(`factures/edit/${id}`)}>
                 <Edit className="mr-2 h-4 w-4" />
                 Modifier
               </Link>

@@ -7,6 +7,7 @@ import { Button } from "@gestion/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { FileText } from "lucide-react";
 import { useIsMobile } from "@gestion/hooks/use-mobile";
+import { gestionPath } from "@gestion/routes";
 
 interface UnfiledDarpDialogProps {
   open: boolean;
@@ -23,7 +24,7 @@ export function UnfiledDarpDialog({ open, onOpenChange }: UnfiledDarpDialogProps
   });
 
   const handleClientClick = (clientId: string) => {
-    navigate(`/gestion?client=${clientId}&tab=fiscal`);
+    navigate(gestionPath(`gestion?client=${clientId}&tab=fiscal`));
     onOpenChange(false);
   };
 

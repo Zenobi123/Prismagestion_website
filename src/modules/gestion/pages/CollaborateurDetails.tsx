@@ -54,7 +54,7 @@ export default function CollaborateurDetails() {
           <span className="hidden sm:inline">Retour</span>
         </Button>
         <Button
-          onClick={() => navigate(`/collaborateurs/${id}/edit`)}
+          onClick={() => navigate(gestionPath(`collaborateurs/${id}/edit`))}
           className="flex items-center gap-1 sm:gap-2"
         >
           <Edit className="h-4 w-4" />

@@ -30,6 +30,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { Collaborateur } from "@gestion/types/collaborateur";
 import { useIsMobile } from "@gestion/hooks/use-mobile";
+import { gestionPath } from "@gestion/routes";
 
 interface CollaborateurListProps {
   collaborateurs: Collaborateur[];
@@ -56,14 +57,14 @@ function CollaborateurActions({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem
-          onClick={() => navigate(`/collaborateurs/${collaborateur.id}`)}
+          onClick={() => navigate(gestionPath(`collaborateurs/${collaborateur.id}`))}
           className="flex items-center gap-2 cursor-pointer"
         >
           <Eye className="h-4 w-4" />
           Voir le profil
         </DropdownMenuItem>
         <DropdownMenuItem
-          onClick={() => navigate(`/collaborateurs/${collaborateur.id}/edit`)}
+          onClick={() => navigate(gestionPath(`collaborateurs/${collaborateur.id}/edit`))}
           className="flex items-center gap-2 cursor-pointer"
         >
           <Edit className="h-4 w-4" />

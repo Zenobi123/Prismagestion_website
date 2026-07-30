@@ -18,7 +18,7 @@ const ExpiringFiscalAttestations = ({ attestations, isLoading }: ExpiringFiscalA
   const queryClient = useQueryClient();
   
   const handleNavigateToFiscal = (clientId: string) => {
-    navigate(`/gestion?client=${clientId}&tab=obligations-fiscales`);
+    navigate(gestionPath(`gestion?client=${clientId}&tab=obligations-fiscales`));
   };
   
   const handleManualRefresh = () => {

@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@gestion/components/ui
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@gestion/components/ui/table";
 import { Button } from "@gestion/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { gestionPath } from "@gestion/routes";
 
 const UnpaidPatenteList = () => {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ const UnpaidPatenteList = () => {
 
 
   const handleNavigateToClient = (clientId: string) => {
-    navigate(`/gestion?client=${clientId}&tab=obligations-fiscales`);
+    navigate(gestionPath(`gestion?client=${clientId}&tab=obligations-fiscales`));
   };
 
   if (isLoading) {

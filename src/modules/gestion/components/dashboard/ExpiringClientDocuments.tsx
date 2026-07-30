@@ -16,7 +16,7 @@ const ExpiringClientDocuments = ({ clients }: ExpiringClientDocumentsProps) => {
   const navigate = useNavigate();
   
   const handleNavigateToFiscal = (clientId: string) => {
-    navigate(`/gestion?client=${clientId}&tab=obligations-fiscales`);
+    navigate(gestionPath(`gestion?client=${clientId}&tab=obligations-fiscales`));
   };
   
   const getStatusBadge = (daysRemaining: number) => {

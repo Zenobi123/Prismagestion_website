@@ -6,6 +6,7 @@ import { FileText, AlertTriangle, FileWarning, Phone, Building } from "lucide-re
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@gestion/components/ui/table";
 import { Button } from "@gestion/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { gestionPath } from "@gestion/routes";
 
 interface UnpaidPatenteDialogProps {
   open: boolean;
@@ -25,7 +26,7 @@ export const UnpaidPatenteDialog = ({ open, onOpenChange }: UnpaidPatenteDialogP
   });
 
   const handleNavigateToClient = (clientId: string) => {
-    navigate(`/gestion?client=${clientId}&tab=obligations-fiscales`);
+    navigate(gestionPath(`gestion?client=${clientId}&tab=obligations-fiscales`));
     onOpenChange(false);
   };
 

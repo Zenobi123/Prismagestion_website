@@ -18,6 +18,7 @@ import {
   HelpCircle
 } from "lucide-react";
 import LogoutButton from "@gestion/components/LogoutButton";
+import { gestionPath } from "@gestion/routes";
 import { supabase } from "@gestion/integrations/supabase/client";
 import { useIsMobile } from "@gestion/hooks/use-mobile";
 
@@ -67,8 +68,10 @@ const Sidebar = () => {
     fetchRole();
   }, []);
 
+  // Les chemins sont déclarés relativement à la console ; c'est ici qu'ils
+  // sont résolus sous /admin/gestion.
   const isActiveRoute = (path: string) => {
-    return location.pathname === path;
+    return location.pathname === gestionPath(path);
   };
 
   const filteredMenuItems = menuItems.filter(item =>
@@ -110,7 +113,7 @@ const Sidebar = () => {
         {filteredMenuItems.map((item) => (
           <Link
             key={item.path}
-            to={item.path}
+            to={gestionPath(item.path)}
             className={`sidebar-link group relative ${
               isActiveRoute(item.path) && "active"
             }`}

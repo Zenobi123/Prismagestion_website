@@ -7,6 +7,7 @@ import { ArrowLeft } from "lucide-react";
 import { useToast } from "@gestion/components/ui/use-toast";
 import { CollaborateurForm } from "@gestion/components/collaborateurs/CollaborateurForm";
 import { Collaborateur } from "@gestion/types/collaborateur";
+import { gestionPath } from "@gestion/routes";
 
 export default function CollaborateurEdit() {
   const { id } = useParams<{ id: string }>();
@@ -29,7 +30,7 @@ export default function CollaborateurEdit() {
         title: "Collaborateur modifié",
         description: "Les modifications ont été enregistrées avec succès.",
       });
-      navigate(`/collaborateurs/${id}`);
+      navigate(gestionPath(`collaborateurs/${id}`));
     },
     onError: (error) => {
       toast({
@@ -80,7 +81,7 @@ export default function CollaborateurEdit() {
       <div className="flex items-center justify-between mb-6">
         <Button
           variant="outline"
-          onClick={() => navigate(`/collaborateurs/${id}`)}
+          onClick={() => navigate(gestionPath(`collaborateurs/${id}`))}
           className="flex items-center gap-2"
         >
           <ArrowLeft className="h-4 w-4" />

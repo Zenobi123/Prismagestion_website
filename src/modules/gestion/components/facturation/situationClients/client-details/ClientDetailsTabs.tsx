@@ -10,6 +10,7 @@ import InformationTab from "./tabs/InformationTab";
 import InvoicesTab from "./tabs/InvoicesTab";
 import PaymentsTab from "./tabs/PaymentsTab";
 import DerivedPrestationsTab from "./tabs/DerivedPrestationsTab";
+import { gestionPath } from "@gestion/routes";
 
 type VueSituation = "globale" | "cabinet" | "fiscale";
 
@@ -73,7 +74,7 @@ const ClientDetailsTabs = () => {
 
         {(vue === "globale" || vue === "fiscale") && clientId && (
           <Button asChild size="sm" variant="outline" className="h-7 text-xs">
-            <Link to={`/gestion?client=${clientId}&tab=obligations-fiscales`}>
+            <Link to={gestionPath(`gestion?client=${clientId}&tab=obligations-fiscales`)}>
               <ExternalLink className="h-3 w-3 mr-1" />
               Dossier fiscal complet (Gestion)
             </Link>

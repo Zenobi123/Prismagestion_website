@@ -8,6 +8,7 @@ import { LoaderCircle, AlertCircle } from 'lucide-react';
 import { Client } from '@gestion/types/client';
 import { useNavigate } from 'react-router-dom';
 import { Separator } from '@gestion/components/ui/separator';
+import { gestionPath } from "@gestion/routes";
 
 interface UnpaidIgsDialogProps {
   isOpen: boolean;
@@ -27,7 +28,7 @@ export const UnpaidIgsDialog = ({ isOpen, onClose }: UnpaidIgsDialogProps) => {
   });
   
   const handleViewClient = (clientId: string) => {
-    navigate(`/gestion?client=${clientId}&tab=obligations-fiscales`);
+    navigate(gestionPath(`gestion?client=${clientId}&tab=obligations-fiscales`));
     onClose();
   };
   

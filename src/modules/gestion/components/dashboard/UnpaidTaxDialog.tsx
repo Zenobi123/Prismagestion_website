@@ -5,6 +5,7 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@
 import { Button } from "@gestion/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Client } from "@gestion/types/client";
+import { gestionPath } from "@gestion/routes";
 
 interface UnpaidTaxDialogProps {
   open: boolean;
@@ -19,7 +20,7 @@ export const UnpaidTaxDialog = ({ open, onOpenChange, clients, isLoading, taxNam
   const navigate = useNavigate();
 
   const handleNavigateToClient = (clientId: string) => {
-    navigate(`/gestion?client=${clientId}&tab=obligations-fiscales`);
+    navigate(gestionPath(`gestion?client=${clientId}&tab=obligations-fiscales`));
     onOpenChange(false);
   };
 
