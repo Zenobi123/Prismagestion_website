@@ -8,7 +8,6 @@ export interface Document {
   client_id: string;
   nom: string;
   type: string;
-  categorie: string;
   description?: string;
   date_creation: string;
   date_expiration?: string;

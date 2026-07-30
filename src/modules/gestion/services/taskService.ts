@@ -174,11 +174,17 @@ export const createTask = async (task: Omit<Task, "id" | "created_at" | "updated
   
   // Determine initial status based on start date
   const initialStatus = determineInitialStatus(task.start_date);
+
+  // `clients` et `collaborateurs` sont les relations chargées par les
+  // jointures de lecture, pas des colonnes de `tasks`. Si l'appelant
+  // recycle une tâche lue pour en créer une nouvelle, elles arrivent
+  // jusqu'ici et PostgREST rejette alors l'insertion entière.
+  const { clients: _clients, collaborateurs: _collaborateurs, ...colonnes } = task;
   const taskWithStatus = {
-    ...task,
+    ...colonnes,
     status: initialStatus
   };
-  
+
   const { data, error } = await supabase
     .from("tasks")
     .insert([taskWithStatus])

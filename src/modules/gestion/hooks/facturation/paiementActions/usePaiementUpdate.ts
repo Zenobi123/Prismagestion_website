@@ -5,6 +5,31 @@ import { supabase } from "@gestion/integrations/supabase/client";
 import { Paiement } from "@gestion/types/paiement";
 import { recalculerStatutPaiementFacture } from "@gestion/services/factureServices/facturePaiementSyncService";
 
+/**
+ * Ne conserve que les champs qui correspondent à une colonne de `paiements`.
+ *
+ * Le type `Paiement` est plus riche que la table : il porte le libellé de
+ * facture, l'objet client résolu, le type de paiement et le détail des
+ * prestations réglées, utiles à l'affichage mais absents du schéma. Envoyés
+ * tels quels, ils faisaient rejeter la requête entière par PostgREST — la
+ * mise à jour d'un paiement échouait donc systématiquement.
+ */
+const versColonnesPaiement = (updates: Partial<Paiement>) => {
+  const {
+    facture,
+    client: _client,
+    type_paiement: _typePaiement,
+    prestations_payees: _prestationsPayees,
+    ...colonnes
+  } = updates;
+
+  return {
+    ...colonnes,
+    // Côté base, la facture rattachée est référencée par `facture_id`.
+    ...(facture !== undefined ? { facture_id: facture } : {}),
+  };
+};
+
 export const usePaiementUpdate = () => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
@@ -20,7 +45,7 @@ export const usePaiementUpdate = () => {
 
       const { data, error } = await supabase
         .from("paiements")
-        .update(updates)
+        .update(versColonnesPaiement(updates))
         .eq("id", id)
         .select()
         .single();

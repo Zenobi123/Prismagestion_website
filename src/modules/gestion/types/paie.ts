@@ -17,7 +17,6 @@ export interface Paie {
   cac?: number;
   cfc?: number;
   tdl?: number;
-  rav?: number;
   autres_retenues?: { libelle?: string; montant?: number }[];
   total_retenues?: number;
   salaire_net: number;
