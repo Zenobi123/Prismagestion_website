@@ -556,12 +556,14 @@ export type Database = {
           client_nom: string | null
           contenu: string | null
           created_at: string
+          date_accuse: string | null
           date_creation: string
           date_envoi: string | null
           id: string
           message_personnalise: string | null
           mission_doc_type: string | null
           mode_envoi: string | null
+          notes: string | null
           reference: string
           statut: string
           sujet: string | null
@@ -575,12 +577,14 @@ export type Database = {
           client_nom?: string | null
           contenu?: string | null
           created_at?: string
+          date_accuse?: string | null
           date_creation?: string
           date_envoi?: string | null
           id?: string
           message_personnalise?: string | null
           mission_doc_type?: string | null
           mode_envoi?: string | null
+          notes?: string | null
           reference: string
           statut?: string
           sujet?: string | null
@@ -594,12 +598,14 @@ export type Database = {
           client_nom?: string | null
           contenu?: string | null
           created_at?: string
+          date_accuse?: string | null
           date_creation?: string
           date_envoi?: string | null
           id?: string
           message_personnalise?: string | null
           mission_doc_type?: string | null
           mode_envoi?: string | null
+          notes?: string | null
           reference?: string
           statut?: string
           sujet?: string | null
@@ -1030,6 +1036,36 @@ export type Database = {
           uploaded_at?: string
           uploaded_by?: string | null
           url?: string
+        }
+        Relationships: []
+      }
+      newsletter_subscribers: {
+        Row: {
+          consent: boolean
+          context: string | null
+          created_at: string
+          email: string
+          id: string
+          read: boolean
+          source: string
+        }
+        Insert: {
+          consent?: boolean
+          context?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          read?: boolean
+          source?: string
+        }
+        Update: {
+          consent?: boolean
+          context?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          read?: boolean
+          source?: string
         }
         Relationships: []
       }
@@ -1680,7 +1716,6 @@ export type Database = {
         Args: { title_to_check: string }
         Returns: string
       }
-      has_role: { Args: { _role: string; _user_id: string }; Returns: boolean }
     }
     Enums: {
       user_role: "admin" | "comptable" | "assistant"
