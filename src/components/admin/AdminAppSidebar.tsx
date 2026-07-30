@@ -12,8 +12,11 @@ import {
   Shield,
   BarChart3,
   HardDrive,
-  UserPlus
+  UserPlus,
+  Building2,
+  ArrowRight
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import {
   Sidebar,
   SidebarContent,
@@ -32,6 +35,7 @@ type AdminAppSidebarProps = {
 };
 
 const AdminAppSidebar = ({ activeTab, setActiveTab, onLogout }: AdminAppSidebarProps) => {
+  const navigate = useNavigate();
   const menuItems = [
     { id: "dashboard", label: "Tableau de bord", icon: Home },
     { id: "homepage", label: "Page d'accueil", icon: Globe },
@@ -76,6 +80,31 @@ const AdminAppSidebar = ({ activeTab, setActiveTab, onLogout }: AdminAppSidebarP
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* La console de gestion n'est pas un onglet de cette page mais une
+            route à part entière : on navigue au lieu de changer d'onglet.
+            Groupe distinct pour signaler qu'on quitte l'administration du
+            site vitrine et qu'on entre dans les outils du cabinet. */}
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-white/60">Cabinet</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  onClick={() => navigate('/admin/gestion')}
+                  className="group flex items-center w-full p-3 rounded-lg text-sm text-white/80 hover:bg-white/5 hover:text-white transition-colors"
+                >
+                  <Building2 size={18} className="mr-3" />
+                  <span className="flex-1 text-left">Gestion du cabinet</span>
+                  <ArrowRight
+                    size={14}
+                    className="opacity-40 transition-transform group-hover:translate-x-0.5"
+                  />
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
