@@ -19,6 +19,8 @@ const CalculateurImpots = lazy(() => import('./pages/CalculateurImpots'));
 const CalculateurFraisMarche = lazy(() => import('./pages/CalculateurFraisMarche'));
 const ExpertiseDigitale = lazy(() => import('./pages/ExpertiseDigitale'));
 const AuthPage = lazy(() => import('./components/auth/AuthPage'));
+// Console de gestion du cabinet, montée comme module invité de l'espace admin.
+const GestionModule = lazy(() => import('./modules/gestion/GestionModule'));
 
 // Component for route-specific loading states
 const PageLoader = () => (
@@ -54,13 +56,23 @@ function App() {
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/auth" element={<AuthPage />} />
-              <Route 
-                path="/admin/*" 
+              {/* Déclarée avant /admin/* par lisibilité : React Router v6
+                  choisit de toute façon la route la plus spécifique. */}
+              <Route
+                path="/admin/gestion/*"
+                element={
+                  <ProtectedRoute requireAdmin>
+                    <GestionModule />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/*"
                 element={
                   <ProtectedRoute requireAdmin>
                     <Admin />
                   </ProtectedRoute>
-                } 
+                }
               />
               <Route path="/outils" element={<Outils />} />
               <Route path="/outils/calculateur-impots" element={<CalculateurImpots />} />
