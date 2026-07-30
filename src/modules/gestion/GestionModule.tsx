@@ -1,8 +1,7 @@
 // Point de montage de la console de gestion dans le site vitrine.
 //
-// Ce composant remplace l'ancien App.tsx de l'application autonome
-// (conservé en App.tsx.reference le temps de la migration). Trois
-// différences tiennent à son nouveau statut de module invité :
+// Ce composant remplace l'ancien App.tsx de l'application autonome.
+// Trois différences tiennent à son nouveau statut de module invité :
 //
 //   1. Pas de <BrowserRouter> : l'hôte en fournit déjà un. Les chemins
 //      déclarés ici sont relatifs et se greffent sous /admin/gestion.
