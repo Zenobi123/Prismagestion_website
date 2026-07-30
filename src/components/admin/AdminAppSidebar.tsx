@@ -59,6 +59,31 @@ const AdminAppSidebar = ({ activeTab, setActiveTab, onLogout }: AdminAppSidebarP
           <span className="text-white font-medium text-xl ml-2">Admin</span>
         </div>
 
+        {/* Placé en tête, avant la navigation du site : la console est
+            l'outil de travail quotidien du cabinet, et les douze entrées
+            qui suivent débordent de l'écran. En bas de liste, elle n'était
+            atteignable qu'en faisant défiler la barre — donc invisible. */}
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-white/60">Cabinet</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  onClick={() => navigate('/admin/gestion')}
+                  className="group flex items-center w-full p-3 rounded-lg text-sm bg-white/10 text-[#D6DD00] hover:bg-white/20 transition-colors"
+                >
+                  <Building2 size={18} className="mr-3" />
+                  <span className="flex-1 text-left font-medium">Gestion du cabinet</span>
+                  <ArrowRight
+                    size={14}
+                    className="opacity-60 transition-transform group-hover:translate-x-0.5"
+                  />
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
         <SidebarGroup>
           <SidebarGroupLabel className="text-white/60">Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
@@ -80,31 +105,6 @@ const AdminAppSidebar = ({ activeTab, setActiveTab, onLogout }: AdminAppSidebarP
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        {/* La console de gestion n'est pas un onglet de cette page mais une
-            route à part entière : on navigue au lieu de changer d'onglet.
-            Groupe distinct pour signaler qu'on quitte l'administration du
-            site vitrine et qu'on entre dans les outils du cabinet. */}
-        <SidebarGroup>
-          <SidebarGroupLabel className="text-white/60">Cabinet</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  onClick={() => navigate('/admin/gestion')}
-                  className="group flex items-center w-full p-3 rounded-lg text-sm text-white/80 hover:bg-white/5 hover:text-white transition-colors"
-                >
-                  <Building2 size={18} className="mr-3" />
-                  <span className="flex-1 text-left">Gestion du cabinet</span>
-                  <ArrowRight
-                    size={14}
-                    className="opacity-40 transition-transform group-hover:translate-x-0.5"
-                  />
-                </SidebarMenuButton>
-              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
