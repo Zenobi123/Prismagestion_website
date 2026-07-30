@@ -49,7 +49,12 @@ const FactureTable = ({
                 <FactureTableRow
                   key={facture.id}
                   facture={facture}
-                  onDelete={() => onDeleteFacture(facture.id)}
+                  onView={onViewFacture}
+                  onDownload={onDownloadFacture}
+                  onEdit={onEditFacture}
+                  onDelete={onDeleteFacture}
+                  onSend={onSendFacture}
+                  onCancel={onCancelFacture}
                 />
               ))
             ) : (
