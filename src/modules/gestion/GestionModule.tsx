@@ -22,12 +22,21 @@ import { Toaster } from '@gestion/components/ui/toaster';
 import { Toaster as Sonner } from '@gestion/components/ui/sonner';
 import { ExerciceProvider } from '@gestion/contexts/ExerciceContext';
 import { DocumentPreviewProvider } from '@gestion/components/printable/DocumentPreviewProvider';
+import MobileBottomNav from '@gestion/components/layout/MobileBottomNav';
 
-// Première tranche de pages montées. Les autres (facturation, gestion,
-// courrier, missions, planning, collaborateurs, rapports, paramètres,
-// outils) suivront une fois la navigation et l'authentification validées.
 const Index = lazy(() => import('@gestion/pages/Index'));
 const Clients = lazy(() => import('@gestion/pages/Clients'));
+const Gestion = lazy(() => import('@gestion/pages/Gestion'));
+const Facturation = lazy(() => import('@gestion/pages/Facturation'));
+const Courrier = lazy(() => import('@gestion/pages/Courrier'));
+const Missions = lazy(() => import('@gestion/pages/Missions'));
+const Planning = lazy(() => import('@gestion/pages/Planning'));
+const Collaborateurs = lazy(() => import('@gestion/pages/Collaborateurs'));
+const CollaborateurDetails = lazy(() => import('@gestion/pages/CollaborateurDetails'));
+const CollaborateurEdit = lazy(() => import('@gestion/pages/CollaborateurEdit'));
+const Rapports = lazy(() => import('@gestion/pages/Rapports'));
+const Parametres = lazy(() => import('@gestion/pages/Parametres'));
+const Outils = lazy(() => import('@gestion/pages/Outils'));
 const Aide = lazy(() => import('@gestion/pages/Aide'));
 const NotFound = lazy(() => import('@gestion/pages/NotFound'));
 
@@ -59,10 +68,26 @@ const GestionModule = () => (
             <Routes>
               <Route index element={<Index />} />
               <Route path="clients" element={<Clients />} />
+              <Route path="gestion" element={<Gestion />} />
+              <Route path="facturation" element={<Facturation />} />
+              <Route path="courrier" element={<Courrier />} />
+              <Route path="missions" element={<Missions />} />
+              <Route path="planning" element={<Planning />} />
+              <Route path="collaborateurs" element={<Collaborateurs />} />
+              <Route path="collaborateurs/:id" element={<CollaborateurDetails />} />
+              <Route path="collaborateurs/:id/edit" element={<CollaborateurEdit />} />
+              <Route path="rapports" element={<Rapports />} />
+              <Route path="parametres" element={<Parametres />} />
+              <Route path="outils" element={<Outils />} />
               <Route path="aide" element={<Aide />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
+          {/* Barre de navigation basse, affichée sur mobile uniquement
+              (le composant se retire lui-même au-dessus du point de
+              rupture). L'ancien App.tsx la conditionnait à la présence
+              d'une session : ici, l'hôte l'a déjà garantie. */}
+          <MobileBottomNav />
           <Toaster />
           <Sonner />
         </DocumentPreviewProvider>
