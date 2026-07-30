@@ -20,7 +20,6 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@gestion/components/ui/sheet";
-import RetourAdminButton from "@gestion/components/RetourAdminButton";
 import { supabase } from "@gestion/integrations/supabase/client";
 import { useIsMobile } from "@gestion/hooks/use-mobile";
 import { cn } from "@gestion/lib/utils";
@@ -181,9 +180,6 @@ const MobileBottomNav = () => {
                 <span className="leading-tight">{item.label}</span>
               </Link>
             ))}
-          </div>
-          <div className="mt-4 pt-3 border-t border-neutral-200 flex justify-center">
-            <RetourAdminButton />
           </div>
         </SheetContent>
       </Sheet>

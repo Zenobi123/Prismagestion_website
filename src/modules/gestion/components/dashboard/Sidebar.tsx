@@ -17,7 +17,6 @@ import {
   Mail,
   HelpCircle
 } from "lucide-react";
-import RetourAdminButton from "@gestion/components/RetourAdminButton";
 import { gestionPath } from "@gestion/routes";
 import { supabase } from "@gestion/integrations/supabase/client";
 import { useIsMobile } from "@gestion/hooks/use-mobile";
@@ -138,9 +137,6 @@ const Sidebar = () => {
         ))}
       </nav>
 
-      <div className={`p-4 border-t border-neutral-200 ${!isSidebarOpen && "flex justify-center"}`}>
-        <RetourAdminButton />
-      </div>
     </aside>
   );
 };
