@@ -31,10 +31,5 @@
   },
   "include": [
     "src"
-  ],
-  "exclude": [
-    "src/modules/gestion/**/__tests__/**",
-    "src/modules/gestion/**/*.test.ts",
-    "src/modules/gestion/**/*.test.tsx"
   ]
 }
