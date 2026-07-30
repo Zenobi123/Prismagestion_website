@@ -1,0 +1,121 @@
+
+import { useEffect } from "react";
+import { Client } from "@gestion/types/client";
+import { ObligationStatuses, ClientFiscalData } from "./types";
+import { supabase } from "@gestion/integrations/supabase/client";
+import { invalidateClientsCache } from "@gestion/services/clientService";
+
+interface UseFiscalDataLoaderProps {
+  selectedClient: Client;
+  fiscalYear: string;
+  setCreationDate: (date: string) => void;
+  setValidityEndDate: (date: string) => void;
+  setShowInAlert: (show: boolean) => void;
+  setHiddenFromDashboard: (hidden: boolean) => void;
+  setFiscalYear: (year: string) => void;
+  setObligationStatuses: (statuses: ObligationStatuses | ((prev: ObligationStatuses) => ObligationStatuses)) => void;
+  getDefaultObligationStatuses: () => ObligationStatuses;
+}
+
+export const useFiscalDataLoader = ({
+  selectedClient,
+  fiscalYear,
+  setCreationDate,
+  setValidityEndDate,
+  setShowInAlert,
+  setHiddenFromDashboard,
+  setFiscalYear,
+  setObligationStatuses,
+  getDefaultObligationStatuses
+}: UseFiscalDataLoaderProps) => {
+  useEffect(() => {
+    const loadFiscalData = async () => {
+      if (!selectedClient?.id) return;
+      
+      try {
+        
+        // Invalider le cache pour s'assurer d'obtenir les données les plus récentes
+        invalidateClientsCache();
+        
+        const { data: client, error } = await supabase
+          .from("clients")
+          .select("fiscal_data")
+          .eq("id", selectedClient.id)
+          .single();
+
+        if (error) {
+          // En cas d'erreur, appliquer les règles par défaut
+          setObligationStatuses(getDefaultObligationStatuses());
+          return;
+        }
+
+        // Toujours appliquer les règles par défaut en premier
+        const defaultStatuses = getDefaultObligationStatuses();
+
+        if (client?.fiscal_data && typeof client.fiscal_data === 'object') {
+          const fiscalData = client.fiscal_data as unknown as ClientFiscalData;
+          
+          // Charger les données d'attestation
+          if (fiscalData.attestation) {
+            setCreationDate(fiscalData.attestation.creationDate || "2025-07-01");
+            setValidityEndDate(fiscalData.attestation.validityEndDate || "");
+            setShowInAlert(fiscalData.attestation.showInAlert !== false);
+          }
+          
+          // Charger les paramètres de tableau de bord
+          if (fiscalData.hiddenFromDashboard !== undefined) {
+            setHiddenFromDashboard(!!fiscalData.hiddenFromDashboard);
+          }
+          
+          // Fusionner les obligations existantes avec les règles par défaut
+          if (fiscalData.obligations && fiscalData.obligations[fiscalYear]) {
+            const existingObligations = fiscalData.obligations[fiscalYear];
+            
+            // Créer un objet fusionné : règles par défaut + données existantes
+            const mergedObligations: Record<string, unknown> = { ...defaultStatuses };
+
+            // Pour chaque obligation, fusionner les données existantes avec les valeurs par défaut
+            Object.keys(defaultStatuses).forEach(obligationType => {
+              const existingObligation = existingObligations[obligationType];
+              const defaultObligation = defaultStatuses[obligationType as keyof ObligationStatuses];
+
+              if (existingObligation) {
+                // Fusionner en gardant l'assujettissement par défaut mais les autres données existantes
+                const mergedEntry = {
+                  ...existingObligation,
+                  // FORCER l'assujettissement selon les règles par défaut - c'est la clé !
+                  assujetti: defaultObligation.assujetti
+                };
+
+                // Si les règles par défaut disent "non assujetti", forcer payee/depose à false
+                if (!defaultObligation.assujetti) {
+                  if ('payee' in mergedEntry) {
+                    (mergedEntry as { payee?: boolean }).payee = false;
+                  }
+                  if ('depose' in mergedEntry) {
+                    (mergedEntry as { depose?: boolean }).depose = false;
+                  }
+                }
+
+                mergedObligations[obligationType] = mergedEntry;
+              }
+            });
+
+            setObligationStatuses(mergedObligations as unknown as ObligationStatuses);
+          } else {
+            // Si aucune donnée n'existe pour cette année, utiliser les règles par défaut
+            setObligationStatuses(defaultStatuses);
+          }
+        } else {
+          // Si aucune donnée fiscale n'existe, utiliser les règles par défaut
+          setObligationStatuses(defaultStatuses);
+        }
+      } catch (error) {
+        // En cas d'erreur, appliquer les règles par défaut
+        setObligationStatuses(getDefaultObligationStatuses());
+      }
+    };
+
+    loadFiscalData();
+  }, [selectedClient?.id, selectedClient?.regimefiscal, selectedClient?.type, selectedClient?.situationimmobiliere?.type, fiscalYear, getDefaultObligationStatuses, setObligationStatuses, setCreationDate, setValidityEndDate, setShowInAlert, setHiddenFromDashboard]);
+};

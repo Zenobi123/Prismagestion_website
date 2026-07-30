@@ -1,0 +1,55 @@
+import { useMemo, useState } from 'react';
+import { Button } from '@gestion/components/ui/button';
+import { Printer } from 'lucide-react';
+import type { Proposition } from '@gestion/types/proposition';
+import type { Client } from '@gestion/types/client';
+import { propositionToPrintData } from '@gestion/lib/spec/adapters';
+import { useCabinetConfig } from '@gestion/lib/spec/cabinetConfig';
+import { PAGE_STYLE_PROPOSITION } from '@gestion/lib/spec/printStyles';
+import { sanitizePdfSegment } from '@gestion/lib/spec/fiscal';
+import PrintableProposition from '../PrintableProposition';
+import PrintPreviewDialog from '../PrintPreviewDialog';
+import { useResolvedClient } from './useResolvedClient';
+
+interface Props {
+  proposition: Proposition;
+  client?: Client | null;
+  variant?: 'icon' | 'button';
+  label?: string;
+}
+
+export default function PropositionPrintButton({
+  proposition,
+  client,
+  variant = 'icon',
+  label = 'Imprimer',
+}: Props) {
+  const [open, setOpen] = useState(false);
+  const [config] = useCabinetConfig();
+  const resolvedClient = useResolvedClient(proposition.client_id, client);
+  const data = useMemo(() => propositionToPrintData(proposition, resolvedClient), [proposition, resolvedClient]);
+  const filename = `Proposition_${sanitizePdfSegment(proposition.numero, 'doc')}_${sanitizePdfSegment(data.client.name, 'client')}.pdf`;
+
+  return (
+    <>
+      {variant === 'icon' ? (
+        <Button size="icon" variant="ghost" onClick={() => setOpen(true)} title={label}>
+          <Printer className="h-4 w-4" />
+        </Button>
+      ) : (
+        <Button size="sm" variant="outline" onClick={() => setOpen(true)}>
+          <Printer className="h-4 w-4 mr-1" /> {label}
+        </Button>
+      )}
+      <PrintPreviewDialog
+        open={open}
+        onOpenChange={setOpen}
+        title={`Aperçu — ${proposition.numero}`}
+        pdfFilename={filename}
+        pageStyle={PAGE_STYLE_PROPOSITION}
+      >
+        <PrintableProposition data={data} config={config} />
+      </PrintPreviewDialog>
+    </>
+  );
+}

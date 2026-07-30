@@ -1,0 +1,103 @@
+
+import { useParams, useNavigate } from "react-router-dom";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getCollaborateur, updateCollaborateur } from "@gestion/services/collaborateurService";
+import { Button } from "@gestion/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+import { useToast } from "@gestion/components/ui/use-toast";
+import { CollaborateurForm } from "@gestion/components/collaborateurs/CollaborateurForm";
+import { Collaborateur } from "@gestion/types/collaborateur";
+
+export default function CollaborateurEdit() {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  const { data: collaborateur, isLoading } = useQuery({
+    queryKey: ["collaborateur", id],
+    queryFn: () => getCollaborateur(id!),
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: (data: Partial<Omit<Collaborateur, 'id' | 'created_at'>>) => 
+      updateCollaborateur(id!, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["collaborateur", id] });
+      queryClient.invalidateQueries({ queryKey: ["collaborateurs"] });
+      toast({
+        title: "Collaborateur modifié",
+        description: "Les modifications ont été enregistrées avec succès.",
+      });
+      navigate(`/collaborateurs/${id}`);
+    },
+    onError: (error) => {
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de la mise à jour du collaborateur.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (collaborateur) {
+      updateMutation.mutate(collaborateur);
+    }
+  };
+
+  const handleChange = (field: string, value: string) => {
+    if (collaborateur) {
+      const updatedCollaborateur = {
+        ...collaborateur,
+        [field]: value,
+      };
+      queryClient.setQueryData(["collaborateur", id], updatedCollaborateur);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="p-4 sm:p-6 md:p-8">
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!collaborateur) {
+    return (
+      <div className="p-4 sm:p-6 md:p-8">
+        <h1>Collaborateur non trouvé</h1>
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-4 sm:p-6 md:p-8">
+      <div className="flex items-center justify-between mb-6">
+        <Button
+          variant="outline"
+          onClick={() => navigate(`/collaborateurs/${id}`)}
+          className="flex items-center gap-2"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Retour
+        </Button>
+      </div>
+
+      <div className="bg-white rounded-lg shadow-sm border border-neutral-200 p-3 sm:p-6">
+        <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-4 sm:mb-6">
+          Modifier {collaborateur.prenom} {collaborateur.nom}
+        </h2>
+        <CollaborateurForm
+          collaborateur={collaborateur}
+          onChange={handleChange}
+          onSubmit={handleSubmit}
+        />
+      </div>
+    </div>
+  );
+}

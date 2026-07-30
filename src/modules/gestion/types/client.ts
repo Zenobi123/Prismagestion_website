@@ -1,0 +1,82 @@
+
+export type ClientType = "physique" | "morale";
+export type Sexe = "homme" | "femme";
+export type EtatCivil = "celibataire" | "marie" | "divorce" | "veuf";
+export type SituationImmobiliere = "proprietaire" | "locataire" | "les_deux";
+export type FormeJuridique = 
+  | "sa" 
+  | "sarl" 
+  | "sas" 
+  | "snc" 
+  | "association" 
+  | "gie" 
+  | "autre";
+export type Civilite = "M." | "Mme";
+export type ModePaiement = "trimestriel" | "annuel";
+export type RegimeFiscal = "reel" | "igs" | "non_professionnel" | "obnl";
+export type ClientStatus = "actif" | "inactif" | "archive";
+
+export interface Agence {
+  libelle: string;
+  ville: string;
+  quartier: string;
+  principale: boolean;
+  chiffreAffaires: number;
+  statutImmo: "locataire" | "proprietaire" | "les_deux" | "";
+  loyerMensuel: number;
+  valeurBien: number;
+}
+
+export interface Interaction {
+  id: string;
+  date: string;
+  description: string;
+}
+
+export interface Client {
+  id: string;
+  type: ClientType;
+  nom?: string;
+  nomcommercial?: string;
+  numerorccm?: string;
+  raisonsociale?: string;
+  sigle?: string;
+  datecreation?: string;
+  lieucreation?: string;
+  nomdirigeant?: string;
+  formejuridique?: FormeJuridique;
+  regimefiscal: RegimeFiscal;
+  niu: string;
+  centrerattachement: string;
+  adresse: {
+    ville: string;
+    quartier: string;
+    lieuDit: string;
+  };
+  contact: {
+    telephone: string;
+    email: string;
+    contact_principal?: string;
+  };
+  secteuractivite: string;
+  numerocnps?: string;
+  interactions: Interaction[];
+  statut: ClientStatus;
+  gestionexternalisee: boolean;
+  created_at?: string;
+  sexe?: Sexe;
+  etatcivil?: EtatCivil;
+  situationimmobiliere?: {
+    type: SituationImmobiliere;
+    valeur?: number;
+    loyer?: number;
+  };
+  civilite?: Civilite;
+  chiffreaffaires?: number;
+  iscga?: boolean;
+  isvendeurboissons?: boolean;
+  modepaiementigs?: ModePaiement;
+  modepaiementpsl?: ModePaiement;
+  fiscal_data?: unknown; // Données fiscales (forme ClientFiscalData) — typées côté consommateurs
+  agences?: Agence[]; // Établissements multiples (PSL/Bail/TPF par bien)
+}

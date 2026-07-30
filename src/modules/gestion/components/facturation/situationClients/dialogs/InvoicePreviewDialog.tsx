@@ -1,0 +1,109 @@
+
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader, 
+  DialogTitle,
+  DialogFooter
+} from "@gestion/components/ui/dialog";
+import { Button } from "@gestion/components/ui/button";
+import { Download, Printer, X, Eye } from "lucide-react";
+import { Facture } from "@gestion/types/facture";
+import useFactureViewActions from "@gestion/hooks/facturation/factureActions/useFactureViewActions";
+import InvoiceHeader from "./invoice-components/InvoiceHeader";
+import InvoiceContent from "./invoice-components/InvoiceContent";
+import InvoiceFooter from "./invoice-components/InvoiceFooter";
+import { sanitizePdfSegment } from "@gestion/lib/spec/fiscal";
+import { printWithDocumentTitle } from "@gestion/lib/spec/usePrint";
+
+interface InvoicePreviewDialogProps {
+  invoice: Facture | null;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+const InvoicePreviewDialog = ({ invoice, open, onOpenChange }: InvoicePreviewDialogProps) => {
+  const { handleVoirFacture, handleTelechargerFacture } = useFactureViewActions();
+  
+  if (!invoice) return null;
+  
+  // Print the invoice (avec un nom de document généré pour le PDF)
+  const handlePrintInvoice = () => {
+    const docName = `Facture_${sanitizePdfSegment(invoice.numero, "doc")}_${sanitizePdfSegment(invoice.client?.nom, "client")}`;
+    printWithDocumentTitle(docName);
+  };
+  
+  // Handle view invoice in new tab
+  const handleViewInvoiceInNewTab = () => {
+    if (invoice) {
+      handleVoirFacture(invoice);
+    }
+  };
+  
+  // Handle download invoice
+  const handleDownloadInvoice = () => {
+    if (invoice) {
+      handleTelechargerFacture(invoice);
+    }
+  };
+  
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-[95vw] sm:max-w-[550px]">
+        <DialogHeader>
+          <DialogTitle>Aperçu de facture</DialogTitle>
+        </DialogHeader>
+        
+        <div className="mt-4 border rounded-md p-6 bg-white">
+          <InvoiceHeader invoice={invoice} />
+          <InvoiceContent invoice={invoice} />
+          <InvoiceFooter invoice={invoice} />
+        </div>
+        
+        <DialogFooter className="flex gap-2 justify-between">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => onOpenChange(false)}
+            className="gap-2"
+          >
+            <X className="h-4 w-4" /> Fermer
+          </Button>
+          
+          <div className="flex gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handlePrintInvoice}
+              className="gap-2"
+            >
+              <Printer className="h-4 w-4" /> Imprimer
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleViewInvoiceInNewTab}
+              className="gap-2"
+            >
+              <Eye className="h-4 w-4" /> Aperçu
+            </Button>
+            <Button
+              type="button"
+              variant="default"
+              size="sm"
+              onClick={handleDownloadInvoice}
+              className="gap-2 bg-[#3C6255] hover:bg-[#2B4B3E]"
+            >
+              <Download className="h-4 w-4" /> Télécharger
+            </Button>
+          </div>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default InvoicePreviewDialog;

@@ -1,0 +1,43 @@
+
+import { ClientFinancialDetails } from "@gestion/types/clientFinancial";
+import { Dialog, DialogContent } from "@gestion/components/ui/dialog";
+import ClientDetailsHeader from "./client-details/ClientDetailsHeader";
+import ClientDetailsTabs from "./client-details/ClientDetailsTabs";
+import { ClientDetailsProvider } from "./client-details/ClientDetailsContext";
+
+interface ClientDetailsDialogProps {
+  clientDetails: ClientFinancialDetails | null;
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+  onOpenApplyCreditDialog: (invoiceId: string) => void;
+  onOpenReminderDialog: (invoiceId: string) => void;
+}
+
+const ClientDetailsDialog = ({ 
+  clientDetails, 
+  isOpen, 
+  onOpenChange, 
+  onOpenApplyCreditDialog, 
+  onOpenReminderDialog 
+}: ClientDetailsDialogProps) => {
+  if (!clientDetails) {
+    return null;
+  }
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-[95vw] sm:max-w-5xl overflow-y-auto">
+        <ClientDetailsProvider
+          clientDetails={clientDetails}
+          onOpenApplyCreditDialog={onOpenApplyCreditDialog}
+          onOpenReminderDialog={onOpenReminderDialog}
+        >
+          <ClientDetailsHeader />
+          <ClientDetailsTabs />
+        </ClientDetailsProvider>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default ClientDetailsDialog;

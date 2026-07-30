@@ -1,0 +1,49 @@
+
+import { Badge } from "@gestion/components/ui/badge";
+import { getStatusBadgeVariant } from "@gestion/utils/factureUtils";
+
+interface StatusBadgeProps {
+  status: string;
+  type: "document" | "paiement";
+}
+
+export const StatusBadge = ({ status, type }: StatusBadgeProps) => {
+  const variant = getStatusBadgeVariant(status, type);
+  
+  const getStatusLabel = (status: string, type: "document" | "paiement") => {
+    if (type === "document") {
+      switch (status) {
+        case 'brouillon':
+          return 'Brouillon';
+        case 'envoyée':
+          // Libellé de la référence : une facture générée est « émise »
+          return 'Émise';
+        case 'annulée':
+          return 'Annulée';
+        default:
+          return status;
+      }
+    } else {
+      switch (status) {
+        case 'non_payée':
+          return 'Non payée';
+        case 'partiellement_payée':
+          return 'Partiellement payée';
+        case 'payée':
+          return 'Payée';
+        case 'en_retard':
+          return 'En retard';
+        default:
+          return status;
+      }
+    }
+  };
+
+  return (
+    <Badge variant={variant} className="text-xs">
+      {getStatusLabel(status, type)}
+    </Badge>
+  );
+};
+
+export default StatusBadge;

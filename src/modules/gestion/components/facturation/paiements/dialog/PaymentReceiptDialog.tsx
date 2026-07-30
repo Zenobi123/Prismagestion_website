@@ -1,0 +1,138 @@
+
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogDescription,
+  DialogHeader, 
+  DialogTitle,
+  DialogFooter
+} from "@gestion/components/ui/dialog";
+import { Receipt } from "lucide-react";
+import { Button } from "@gestion/components/ui/button";
+import { Download, Printer, X, Eye } from "lucide-react";
+import { Paiement } from "@gestion/types/paiement";
+import useFactureViewActions from "@gestion/hooks/facturation/factureActions/useFactureViewActions";
+import ReceiptHeader from "./receipt-components/ReceiptHeader";
+import ReceiptContent from "./receipt-components/ReceiptContent";
+import ReceiptFooter from "./receipt-components/ReceiptFooter";
+import RecuPrintButton from "@gestion/components/printable/connectors/RecuPrintButton";
+import { useResolvedFacture } from "@gestion/components/printable/connectors/useResolvedFacture";
+import { ventilerPaiement } from "@gestion/lib/spec/adapters";
+import { sanitizePdfSegment } from "@gestion/lib/spec/fiscal";
+import { printWithDocumentTitle } from "@gestion/lib/spec/usePrint";
+
+interface PaymentReceiptDialogProps {
+  paiement: Paiement | null;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+const PaymentReceiptDialog = ({ paiement, open, onOpenChange }: PaymentReceiptDialogProps) => {
+  const { handleTelechargerRecu, handleVoirRecu } = useFactureViewActions();
+
+  const factureRef = paiement?.facture as string | { id?: string } | undefined;
+  const factureId = typeof factureRef === "string" ? factureRef : factureRef?.id;
+  const resolvedFacture = useResolvedFacture(paiement && !paiement.est_credit ? factureId : undefined);
+
+  if (!paiement) return null;
+
+  // Ventilation Impôts / Honoraires commune à tous les rendus du reçu.
+  const { montantImpots, montantHonoraires } = ventilerPaiement(
+    paiement,
+    Number(paiement.montant) || 0,
+    resolvedFacture,
+  );
+  const paiementEnrichi = {
+    ...paiement,
+    montant_impots: montantImpots || undefined,
+    montant_honoraires: montantHonoraires || undefined,
+  } as Paiement;
+  
+  // Print the receipt (avec un nom de document généré pour le PDF)
+  const handlePrintReceipt = () => {
+    const clientName =
+      typeof paiement.client === "string"
+        ? paiement.client
+        : paiement.client?.nom || paiement.client?.raisonsociale || "";
+    const dateStr = paiement.date ? new Date(paiement.date).toISOString().slice(0, 10) : "";
+    const docName = `Recu_${sanitizePdfSegment(clientName, "client")}_${sanitizePdfSegment(dateStr, "date")}`;
+    printWithDocumentTitle(docName);
+  };
+  
+  // Handle download receipt
+  const handleDownloadReceipt = () => {
+    handleTelechargerRecu(paiementEnrichi);
+  };
+
+  // Handle view receipt in a new tab
+  const handleViewReceipt = () => {
+    handleVoirRecu(paiementEnrichi);
+  };
+  
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-[95vw] sm:max-w-[550px]">
+        <DialogHeader className="pb-4 border-b border-border/50">
+          <DialogTitle className="flex items-center gap-2">
+            <Receipt className="h-5 w-5 text-primary" />
+            Reçu de paiement
+          </DialogTitle>
+          <DialogDescription>
+            Consultez, imprimez ou téléchargez le reçu de ce paiement.
+          </DialogDescription>
+        </DialogHeader>
+        
+        <div className="mt-4 border rounded-md p-6 bg-white">
+          <ReceiptHeader paiement={paiementEnrichi} />
+          <ReceiptContent paiement={paiementEnrichi} />
+          <ReceiptFooter paiement={paiementEnrichi} />
+        </div>
+        
+        <DialogFooter className="flex gap-2 justify-between">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => onOpenChange(false)}
+            className="gap-2"
+          >
+            <X className="h-4 w-4" /> Fermer
+          </Button>
+          
+          <div className="flex gap-2">
+            <RecuPrintButton paiement={paiement} label="Aperçu fidèle" />
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handlePrintReceipt}
+              className="gap-2"
+            >
+              <Printer className="h-4 w-4" /> Imprimer
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleViewReceipt}
+              className="gap-2"
+            >
+              <Eye className="h-4 w-4" /> Aperçu
+            </Button>
+            <Button
+              type="button"
+              variant="default"
+              size="sm"
+              onClick={handleDownloadReceipt}
+              className="gap-2 bg-[#3C6255] hover:bg-[#2B4B3E]"
+            >
+              <Download className="h-4 w-4" /> Télécharger
+            </Button>
+          </div>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default PaymentReceiptDialog;

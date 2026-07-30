@@ -1,0 +1,84 @@
+
+import { Client, ClientType, RegimeFiscal } from "@gestion/types/client";
+import { ClientList } from "@gestion/components/clients/ClientList";
+import { ClientFilters } from "@gestion/components/clients/ClientFilters";
+
+interface ClientsContentProps {
+  clients: Client[];
+  searchTerm: string;
+  onSearchChange: (value: string) => void;
+  selectedType: ClientType | "all";
+  onTypeChange: (value: ClientType | "all") => void;
+  selectedSecteur: string;
+  onSecteurChange: (value: string) => void;
+  selectedRegimeFiscal: RegimeFiscal | "all";
+  onRegimeFiscalChange: (value: RegimeFiscal | "all") => void;
+  selectedCDI?: string;
+  onCDIChange?: (value: string) => void;
+  showArchived: boolean;
+  onShowArchivedChange: (value: boolean) => void;
+  onView: (client: Client) => void;
+  onEdit: (client: Client) => void;
+  onArchive: (client: Client) => void;
+  onRestore: (client: Client) => void;
+  onDelete: (client: Client) => void;
+  onImportClients?: (clients: Partial<Client>[]) => void;
+  isMobile?: boolean;
+}
+
+export function ClientsContent({
+  clients,
+  searchTerm,
+  onSearchChange,
+  selectedType,
+  onTypeChange,
+  selectedSecteur,
+  onSecteurChange,
+  selectedRegimeFiscal,
+  onRegimeFiscalChange,
+  selectedCDI,
+  onCDIChange,
+  showArchived,
+  onShowArchivedChange,
+  onView,
+  onEdit,
+  onArchive,
+  onRestore,
+  onDelete,
+  onImportClients,
+  isMobile
+}: ClientsContentProps) {
+  return (
+    <div className={`bg-white rounded-lg shadow-sm border border-neutral-200 p-${isMobile ? '4' : '6'} h-full overflow-hidden flex flex-col`}>
+      <ClientFilters
+        searchTerm={searchTerm}
+        onSearchChange={onSearchChange}
+        selectedType={selectedType}
+        onTypeChange={onTypeChange}
+        selectedSecteur={selectedSecteur}
+        onSecteurChange={onSecteurChange}
+        selectedRegimeFiscal={selectedRegimeFiscal}
+        onRegimeFiscalChange={onRegimeFiscalChange}
+        selectedCDI={selectedCDI}
+        onCDIChange={onCDIChange}
+        showArchived={showArchived}
+        onShowArchivedChange={onShowArchivedChange}
+        clients={clients}
+        onImportClients={onImportClients}
+        isMobile={isMobile}
+      />
+
+      <div className="flex-1 overflow-y-auto">
+        <ClientList
+          clients={clients}
+          onView={onView}
+          onEdit={onEdit}
+          onArchive={onArchive}
+          onRestore={onRestore}
+          onDelete={onDelete}
+          isMobile={isMobile}
+        />
+      </div>
+    </div>
+  );
+}
