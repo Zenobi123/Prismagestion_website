@@ -1,5 +1,6 @@
 
 import { RegimeFiscal, Client } from "@gestion/types/client";
+import type { TablesUpdate } from "@gestion/integrations/supabase/types";
 
 // Valid regime fiscal values - now strictly enforced by database constraint
 export const VALID_REGIME_FISCAL = ["reel", "igs", "non_professionnel"] as const;
@@ -11,8 +12,11 @@ export const validateRegimeFiscal = (regimefiscal: string): RegimeFiscal => {
   return "reel";
 };
 
-export const cleanClientUpdateData = (updates: Partial<Client>): Record<string, unknown> => {
-  const cleanedUpdates: Record<string, unknown> = {};
+// Le retour est typé sur la table plutôt que sur Record<string, unknown> :
+// ce dernier acceptait n'importe quelle clé, y compris une colonne
+// inexistante, que PostgREST aurait rejetée à l'exécution seulement.
+export const cleanClientUpdateData = (updates: Partial<Client>): TablesUpdate<'clients'> => {
+  const cleanedUpdates: TablesUpdate<'clients'> = {};
   
   // Only include fields that have actual values and are valid
   if (updates.type !== undefined) cleanedUpdates.type = updates.type;

@@ -1,4 +1,5 @@
 import { supabase } from "@gestion/integrations/supabase/client";
+import type { TablesUpdate } from "@gestion/integrations/supabase/types";
 import { Facture, Prestation } from "@gestion/types/facture";
 import { Paiement } from "@gestion/types/paiement";
 import { transformClient } from "./factureTransformUtils";
@@ -143,7 +144,7 @@ export const factureDataService = {
   },
 
   async updateFacture(id: string, updates: Partial<Facture>): Promise<Facture | null> {
-    const dbUpdates: Record<string, unknown> = {};
+    const dbUpdates: TablesUpdate<'factures'> = {};
     if (updates.client_id !== undefined) dbUpdates.client_id = updates.client_id;
     if (updates.date !== undefined) dbUpdates.date = updates.date;
     if (updates.echeance !== undefined) dbUpdates.echeance = updates.echeance;

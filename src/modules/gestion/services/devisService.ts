@@ -1,5 +1,6 @@
 
 import { supabase } from "@gestion/integrations/supabase/client";
+import type { TablesUpdate } from "@gestion/integrations/supabase/types";
 import { Devis, DevisFormData, DevisPrestation } from "@gestion/types/devis";
 import { getNextFactureNumber } from "./factureServices/factureNumberService";
 
@@ -237,7 +238,7 @@ export async function createDevis(data: DevisFormData): Promise<Devis> {
 
 // Update a devis
 export async function updateDevis(id: string, data: Partial<DevisFormData>): Promise<void> {
-  const updatePayload: Record<string, unknown> = {};
+  const updatePayload: TablesUpdate<'devis'> = {};
 
   if (data.client_id !== undefined) updatePayload.client_id = data.client_id;
   if (data.date !== undefined) updatePayload.date = data.date;

@@ -1,6 +1,6 @@
 
 import { supabase } from "@gestion/integrations/supabase/client";
-import type { Json } from "@gestion/integrations/supabase/types";
+import type { Json, TablesUpdate } from "@gestion/integrations/supabase/types";
 import { Proposition, PropositionFormData, PropositionLigne } from "@gestion/types/proposition";
 
 // Numéro de proposition: PROP-NNNN/YYYY/MM (séquentiel par année)
@@ -216,7 +216,7 @@ export async function createProposition(data: PropositionFormData): Promise<Prop
 
 // Update a proposition
 export async function updateProposition(id: string, data: Partial<PropositionFormData>): Promise<void> {
-  const updatePayload: Record<string, unknown> = {};
+  const updatePayload: TablesUpdate<'propositions'> = {};
 
   if (data.client_id !== undefined) updatePayload.client_id = data.client_id;
   if (data.date !== undefined) updatePayload.date = data.date;
@@ -229,7 +229,9 @@ export async function updateProposition(id: string, data: Partial<PropositionFor
 
   if (data.lignes) {
     const { total, total_impots, total_honoraires } = calculateTotals(data.lignes);
-    updatePayload.lignes = data.lignes;
+    // Même conversion qu'à la création : la colonne est un jsonb, et une
+    // interface TypeScript ne satisfait pas la signature d'index de Json.
+    updatePayload.lignes = data.lignes as unknown as Json;
     updatePayload.total = total;
     updatePayload.total_impots = total_impots;
     updatePayload.total_honoraires = total_honoraires;
