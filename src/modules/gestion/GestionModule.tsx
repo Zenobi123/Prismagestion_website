@@ -14,7 +14,8 @@
 //      le site vitrine ne lit aucune des tables métier du cabinet.
 
 import { lazy, Suspense } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Link, Route, Routes } from 'react-router-dom';
+import { ArrowLeft, Building2 } from 'lucide-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { TooltipProvider } from '@gestion/components/ui/tooltip';
 import { Toaster } from '@gestion/components/ui/toaster';
@@ -22,6 +23,8 @@ import { Toaster as Sonner } from '@gestion/components/ui/sonner';
 import { ExerciceProvider } from '@gestion/contexts/ExerciceContext';
 import { DocumentPreviewProvider } from '@gestion/components/printable/DocumentPreviewProvider';
 import MobileBottomNav from '@gestion/components/layout/MobileBottomNav';
+// Rétablit la palette d'origine de la console à l'intérieur de .gestion-theme.
+import '@gestion/gestion-theme.css';
 
 const Index = lazy(() => import('@gestion/pages/Index'));
 const Clients = lazy(() => import('@gestion/pages/Clients'));
@@ -58,11 +61,38 @@ const ModuleLoader = () => (
   </div>
 );
 
+// Bandeau de liaison : la console est atteinte depuis la barre latérale de
+// l'administration du site, il lui faut le chemin de retour. Sans lui, on
+// entre dans le module sans pouvoir en ressortir autrement qu'en modifiant
+// l'URL. Sticky pour rester atteignable sur les pages longues.
+const BandeauRetour = () => (
+  <div className="sticky top-0 z-40 bg-[#2E1A47] text-white">
+    <div className="flex items-center gap-3 px-4 py-2">
+      <Link
+        to="/admin"
+        className="group inline-flex items-center gap-1.5 text-sm text-white/80 hover:text-white transition-colors"
+      >
+        <ArrowLeft size={16} className="transition-transform group-hover:-translate-x-0.5" />
+        Administration du site
+      </Link>
+      <span className="text-white/25">|</span>
+      <span className="inline-flex items-center gap-1.5 text-sm font-medium text-[#D6DD00]">
+        <Building2 size={16} />
+        Gestion du cabinet
+      </span>
+    </div>
+  </div>
+);
+
 const GestionModule = () => (
   <QueryClientProvider client={gestionQueryClient}>
     <TooltipProvider>
       <ExerciceProvider>
         <DocumentPreviewProvider>
+          <BandeauRetour />
+          {/* Toute la console vit sous .gestion-theme : ses variables y
+              reprennent les valeurs d'origine, sans toucher au site. */}
+          <div className="gestion-theme">
           <Suspense fallback={<ModuleLoader />}>
             <Routes>
               <Route index element={<Index />} />
@@ -87,6 +117,7 @@ const GestionModule = () => (
               rupture). L'ancien App.tsx la conditionnait à la présence
               d'une session : ici, l'hôte l'a déjà garantie. */}
           <MobileBottomNav />
+          </div>
           <Toaster />
           <Sonner />
         </DocumentPreviewProvider>
