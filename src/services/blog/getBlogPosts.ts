@@ -810,5 +810,3 @@ export const getPublishedBlogPosts = async (): Promise<BlogPost[]> => {
     return DEFAULT_BLOG_POSTS.filter(p => p.status === 'Publié');
   }
 };
-
-export { getBlogPostBySlug } from './getBlogPost';
