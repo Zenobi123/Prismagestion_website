@@ -33,13 +33,17 @@ Le compte `zenobi123s-projects` contient désormais :
 
 | Projet | Dépôt GitHub relié | État |
 |---|---|---|
-| `prismagestion-website` | `Zenobi123/Prismagestion_website` | **Le projet du site.** Créé et connecté le 31/07/2026. |
+| `prismagestionsite` | `Zenobi123/Prismagestion_website` | **Le projet du site.** Créé et connecté le 31/07/2026. |
 | `prisma-scab` | `Zenobi123/Prisma_scab` | Autre application. **Ne pas y toucher.** |
 
 Le dépôt GitHub a changé de nom : `Prismagestion_website` (sans tiret). La
 connexion Git est active sur la branche de production `main` — **tout push sur
 `main` déclenche un déploiement de production**. Les branches de travail
 produisent des déploiements de prévisualisation.
+
+En attendant que le domaine soit branché (§ 3 et § 4), le site est en ligne à
+l'adresse **https://prismagestionsite.vercel.app**. Cette adresse est rattachée
+au projet : elle suit automatiquement chaque déploiement de production.
 
 ## 2. Variables d'environnement (à faire avant le premier déploiement)
 
