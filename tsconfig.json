@@ -7,6 +7,9 @@
     "paths": {
       "@/*": [
         "./src/*"
+      ],
+      "@gestion/*": [
+        "./src/modules/gestion/*"
       ]
     },
     "skipLibCheck": true,

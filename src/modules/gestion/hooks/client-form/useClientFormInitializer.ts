@@ -1,0 +1,56 @@
+
+import { useEffect } from "react";
+import { Client } from "@gestion/types/client";
+import { ClientFormState } from "./useClientFormState";
+import { validateRegimeFiscal } from "./useClientFormValidation";
+
+export function useClientFormInitializer(
+  initialData: Client | undefined,
+  setFormData: React.Dispatch<React.SetStateAction<ClientFormState>>
+) {
+  useEffect(() => {
+    if (initialData) {
+      
+      // Validate regime fiscal from initial data
+      const validatedRegimeFiscal = validateRegimeFiscal(initialData.regimefiscal);
+      
+      setFormData({
+        nom: initialData.nom || "",
+        nomcommercial: initialData.nomcommercial || "",
+        numerorccm: initialData.numerorccm || "",
+        raisonsociale: initialData.raisonsociale || "",
+        sigle: initialData.sigle || "",
+        datecreation: initialData.datecreation || "",
+        lieucreation: initialData.lieucreation || "",
+        nomdirigeant: initialData.nomdirigeant || "",
+        formejuridique: initialData.formejuridique,
+        niu: initialData.niu || "",
+        centrerattachement: initialData.centrerattachement || "",
+        ville: initialData.adresse?.ville || "",
+        quartier: initialData.adresse?.quartier || "",
+        lieuDit: initialData.adresse?.lieuDit || "",
+        telephone: initialData.contact?.telephone || "",
+        email: initialData.contact?.email || "",
+        contact_principal: initialData.contact?.contact_principal || "",
+        secteuractivite: initialData.secteuractivite || "",
+        numerocnps: initialData.numerocnps || "",
+        regimefiscal: validatedRegimeFiscal,
+        gestionexternalisee: initialData.gestionexternalisee || false,
+        sexe: initialData.sexe || "homme",
+        etatcivil: initialData.etatcivil || "celibataire",
+        situationimmobiliere: {
+          type: initialData.situationimmobiliere?.type || "locataire",
+          valeur: initialData.situationimmobiliere?.valeur,
+          loyer: initialData.situationimmobiliere?.loyer
+        },
+        civilite: initialData.civilite || "M.",
+        chiffreaffaires: String(initialData.chiffreaffaires || ""),
+        iscga: initialData.iscga || false,
+        isvendeurboissons: initialData.isvendeurboissons || false,
+        modepaiementigs: initialData.modepaiementigs || "trimestriel",
+        modepaiementpsl: initialData.modepaiementpsl || "trimestriel",
+        agences: Array.isArray(initialData.agences) ? initialData.agences : []
+      });
+    }
+  }, [initialData, setFormData]);
+}

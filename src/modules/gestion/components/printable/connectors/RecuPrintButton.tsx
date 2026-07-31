@@ -1,0 +1,57 @@
+import { useMemo, useState } from 'react';
+import { Button } from '@gestion/components/ui/button';
+import { Printer } from 'lucide-react';
+import type { Paiement } from '@gestion/types/paiement';
+import type { Client } from '@gestion/types/client';
+import { paiementToRecuPrintData } from '@gestion/lib/spec/adapters';
+import { useCabinetConfig } from '@gestion/lib/spec/cabinetConfig';
+import { PAGE_STYLE_RECU } from '@gestion/lib/spec/printStyles';
+import { sanitizePdfSegment } from '@gestion/lib/spec/fiscal';
+import PrintableRecu from '../PrintableRecu';
+import PrintPreviewDialog from '../PrintPreviewDialog';
+import { useResolvedClient } from './useResolvedClient';
+import { useResolvedFacture } from './useResolvedFacture';
+
+interface Props {
+  paiement: Paiement;
+  client?: Client | null;
+  variant?: 'icon' | 'button';
+  label?: string;
+}
+
+export default function RecuPrintButton({ paiement, client, variant = 'button', label = 'Aperçu fidèle' }: Props) {
+  const [open, setOpen] = useState(false);
+  const [config] = useCabinetConfig();
+  const resolvedClient = useResolvedClient(paiement.client_id, client);
+  const factureRef = paiement.facture as string | { id?: string } | undefined;
+  const factureId = typeof factureRef === 'string' ? factureRef : factureRef?.id;
+  const resolvedFacture = useResolvedFacture(paiement.est_credit ? undefined : factureId);
+  const data = useMemo(
+    () => paiementToRecuPrintData(paiement, resolvedClient, resolvedFacture),
+    [paiement, resolvedClient, resolvedFacture],
+  );
+  const filename = `Recu_${sanitizePdfSegment(data.number, 'doc')}_${sanitizePdfSegment(data.client.name, 'client')}.pdf`;
+
+  return (
+    <>
+      {variant === 'icon' ? (
+        <Button size="icon" variant="ghost" onClick={() => setOpen(true)} title={label}>
+          <Printer className="h-4 w-4" />
+        </Button>
+      ) : (
+        <Button size="sm" variant="outline" onClick={() => setOpen(true)} className="gap-2">
+          <Printer className="h-4 w-4" /> {label}
+        </Button>
+      )}
+      <PrintPreviewDialog
+        open={open}
+        onOpenChange={setOpen}
+        title={`Aperçu — ${data.number}`}
+        pdfFilename={filename}
+        pageStyle={PAGE_STYLE_RECU}
+      >
+        <PrintableRecu data={data} config={config} />
+      </PrintPreviewDialog>
+    </>
+  );
+}

@@ -1,0 +1,33 @@
+
+import { Wallet } from "lucide-react";
+import { formatMontant } from "@gestion/utils/formatUtils";
+import { 
+  DialogHeader, 
+  DialogTitle, 
+  DialogDescription 
+} from "@gestion/components/ui/dialog";
+import { Alert, AlertDescription } from "@gestion/components/ui/alert";
+import { useClientDetails } from "./client-details-context";
+
+const ClientDetailsHeader = () => {
+  const { clientDetails } = useClientDetails();
+
+  return (
+    <DialogHeader>
+      <DialogTitle>Détails financiers du client</DialogTitle>
+      <DialogDescription>
+        {clientDetails?.solde_disponible && clientDetails.solde_disponible > 0 ? (
+          <Alert className="mt-2 bg-green-50 border-green-200">
+            <AlertDescription className="flex items-center gap-2">
+              <Wallet className="h-5 w-5 text-green-500" />
+              Ce client dispose d'un solde positif de {formatMontant(clientDetails.solde_disponible)} 
+              qui peut être utilisé pour ses factures.
+            </AlertDescription>
+          </Alert>
+        ) : null}
+      </DialogDescription>
+    </DialogHeader>
+  );
+};
+
+export default ClientDetailsHeader;

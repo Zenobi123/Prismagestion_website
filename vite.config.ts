@@ -114,6 +114,9 @@ export default defineConfig(({ mode }) => {
     ].filter(Boolean),
     resolve: {
       alias: {
+        // L'ordre compte : "@gestion" doit précéder "@" pour que Vite ne
+        // résolve pas "@gestion/..." comme "@" suivi de "gestion/...".
+        "@gestion": path.resolve(__dirname, "./src/modules/gestion"),
         "@": path.resolve(__dirname, "./src"),
       },
     },

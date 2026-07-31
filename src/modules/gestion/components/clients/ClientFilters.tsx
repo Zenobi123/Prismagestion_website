@@ -1,0 +1,142 @@
+
+import { useMemo } from "react";
+import { Input } from "@gestion/components/ui/input";
+import { ClientType, RegimeFiscal } from "@gestion/types/client";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@gestion/components/ui/select";
+import { Search } from "lucide-react";
+import { Checkbox } from "@gestion/components/ui/checkbox";
+import { Label } from "@gestion/components/ui/label";
+import { Client } from "@gestion/types/client";
+import { ClientExportButton } from "./ClientExportButton";
+import { ClientImportButton } from "./ClientImportButton";
+
+interface ClientFiltersProps {
+  searchTerm: string;
+  onSearchChange: (value: string) => void;
+  selectedType: ClientType | "all";
+  onTypeChange: (value: ClientType | "all") => void;
+  selectedSecteur: string;
+  onSecteurChange: (value: string) => void;
+  selectedRegimeFiscal: RegimeFiscal | "all";
+  onRegimeFiscalChange: (value: RegimeFiscal | "all") => void;
+  selectedCDI?: string;
+  onCDIChange?: (value: string) => void;
+  showArchived: boolean;
+  onShowArchivedChange: (value: boolean) => void;
+  clients?: Client[];
+  isMobile?: boolean;
+  onImportClients?: (clients: Partial<Client>[]) => void;
+}
+
+export function ClientFilters({
+  searchTerm,
+  onSearchChange,
+  selectedType,
+  onTypeChange,
+  selectedSecteur,
+  onSecteurChange,
+  selectedRegimeFiscal,
+  onRegimeFiscalChange,
+  selectedCDI = "all",
+  onCDIChange,
+  showArchived,
+  onShowArchivedChange,
+  clients = [],
+  isMobile,
+  onImportClients,
+}: ClientFiltersProps) {
+  const cdiOptions = useMemo(() => {
+    const cdis = new Set<string>();
+    clients.forEach(c => {
+      if (c.centrerattachement) cdis.add(c.centrerattachement);
+    });
+    return Array.from(cdis).sort();
+  }, [clients]);
+
+  return (
+    <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
+      <div className={`flex ${isMobile ? 'flex-col' : 'flex-row flex-wrap'} gap-2 sm:gap-4`}>
+        <div className="relative w-full sm:w-72">
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Rechercher…"
+            className="pl-8"
+            value={searchTerm}
+            onChange={(e) => onSearchChange(e.target.value)}
+          />
+        </div>
+
+        <Select value={selectedType} onValueChange={onTypeChange}>
+          <SelectTrigger className="w-full sm:w-44">
+            <SelectValue placeholder="Type de client" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tous les types</SelectItem>
+            <SelectItem value="physique">Personne physique</SelectItem>
+            <SelectItem value="morale">Personne morale</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select value={selectedRegimeFiscal} onValueChange={onRegimeFiscalChange}>
+          <SelectTrigger className="w-full sm:w-44">
+            <SelectValue placeholder="Régime Fiscal" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tous les régimes</SelectItem>
+            <SelectItem value="reel">Réel</SelectItem>
+            <SelectItem value="igs">IGS</SelectItem>
+            <SelectItem value="non_professionnel">Non Professionnel</SelectItem>
+            <SelectItem value="obnl">OBNL</SelectItem>
+          </SelectContent>
+        </Select>
+
+        {onCDIChange && cdiOptions.length > 0 && (
+          <Select value={selectedCDI} onValueChange={onCDIChange}>
+            <SelectTrigger className="w-full sm:w-52">
+              <SelectValue placeholder="Centre (CFLP)" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Tous les CFLP</SelectItem>
+              {cdiOptions.map(cdi => (
+                <SelectItem key={cdi} value={cdi}>{cdi}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
+
+        <Select value={selectedSecteur} onValueChange={onSecteurChange}>
+          <SelectTrigger className="w-full sm:w-44">
+            <SelectValue placeholder="Statut" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tous les statuts</SelectItem>
+            <SelectItem value="actif">Actif</SelectItem>
+            <SelectItem value="inactif">Inactif</SelectItem>
+          </SelectContent>
+        </Select>
+
+        {onImportClients && (
+          <ClientImportButton onImport={onImportClients} isMobile={isMobile} />
+        )}
+        {clients && clients.length > 0 &&
+          <ClientExportButton clients={clients} isMobile={isMobile} />
+        }
+      </div>
+
+      <div className="flex items-center space-x-2">
+        <Checkbox
+          id="show-archived"
+          checked={showArchived}
+          onCheckedChange={(checked) => onShowArchivedChange(checked as boolean)}
+        />
+        <Label htmlFor="show-archived">Afficher les clients archivés</Label>
+      </div>
+    </div>
+  );
+}

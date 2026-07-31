@@ -1,0 +1,63 @@
+
+import { supabase } from "@gestion/integrations/supabase/client";
+import { Client } from "@gestion/types/client";
+import { mapClientRowToClient } from "@gestion/services/client/clientDataMapper";
+import { shouldClientBeSubjectToObligation } from "@gestion/services/fiscal/defaultObligationRules";
+
+export interface SubjectClientsCount {
+  igs: number;
+  patente: number;
+  dsf: number;
+  darp: number;
+}
+
+export const getClientsSubjectToObligation = async (): Promise<SubjectClientsCount> => {
+  try {
+    
+    const { data: clientsData, error } = await supabase
+      .from('clients')
+      .select('*')
+      .eq('statut', 'actif');
+
+    if (error) {
+      return { igs: 0, patente: 0, dsf: 0, darp: 0 };
+    }
+
+    if (!clientsData) return { igs: 0, patente: 0, dsf: 0, darp: 0 };
+
+    // Map raw client data to Client type
+    const clients = clientsData.map(mapClientRowToClient);
+
+    const counts = {
+      igs: 0,
+      patente: 0,
+      dsf: 0,
+      darp: 0
+    };
+
+    clients.forEach(client => {
+      try {
+        if (shouldClientBeSubjectToObligation(client, "igs")) {
+          counts.igs++;
+        }
+        if (shouldClientBeSubjectToObligation(client, "patente")) {
+          counts.patente++;
+        }
+        if (shouldClientBeSubjectToObligation(client, "dsf")) {
+          counts.dsf++;
+        }
+        if (shouldClientBeSubjectToObligation(client, "darp")) {
+          counts.darp++;
+        }
+      } catch (error) {
+        console.error('Error evaluating obligations for client:', error);
+      }
+    });
+
+    return counts;
+
+  } catch (error) {
+    console.error('Error in getSubjectClientsCounts:', error);
+    return { igs: 0, patente: 0, dsf: 0, darp: 0 };
+  }
+};

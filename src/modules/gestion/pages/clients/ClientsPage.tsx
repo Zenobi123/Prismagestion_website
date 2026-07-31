@@ -1,0 +1,148 @@
+
+import { useClientsPage } from "./hooks/useClientsPage";
+import { ClientsHeader } from "./components/ClientsHeader";
+import { ClientsContent } from "./components/ClientsContent";
+import { ClientDialogs } from "./components/ClientDialogs";
+import { LoadingState } from "./components/LoadingState";
+import { ClientTrash } from "@gestion/components/clients/ClientTrash";
+import { ConfirmDialog } from "@gestion/components/ui/confirm-dialog";
+import { useEffect } from "react";
+import { useIsMobile } from "@gestion/hooks/use-mobile";
+
+export default function ClientsPage() {
+  const {
+    clients,
+    isLoading,
+    isDataReady,
+    error,
+    searchTerm,
+    setSearchTerm,
+    selectedType,
+    setSelectedType,
+    selectedSecteur,
+    setSelectedSecteur,
+    selectedRegimeFiscal,
+    setSelectedRegimeFiscal,
+    selectedCDI,
+    setSelectedCDI,
+    showArchived,
+    setShowArchived,
+    showTrash,
+    isDialogOpen,
+    setIsDialogOpen,
+    isEditDialogOpen,
+    setIsEditDialogOpen,
+    isViewDialogOpen,
+    setIsViewDialogOpen,
+    newClientType,
+    setNewClientType,
+    selectedClient,
+    addMutation,
+    updateMutation,
+    handleView,
+    handleEdit,
+    handleArchive,
+    handleRestore,
+    handleDelete,
+    handleImportClients,
+    handleTrashClick,
+    handleCloseTrash,
+    confirmDialog,
+    closeConfirmDialog,
+    toast
+  } = useClientsPage();
+
+  const isMobile = useIsMobile();
+
+  // Error handling
+  useEffect(() => {
+    if (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de récupérer la liste des clients",
+        variant: "destructive",
+      });
+    }
+  }, [error, toast]);
+
+  if (isLoading || !isDataReady) {
+    return <LoadingState isMobile={isMobile} />;
+  }
+
+  // Show trash view
+  if (showTrash) {
+    return (
+      <div className={isMobile ? "p-3 sm:p-4" : "p-8"}>
+        <ClientTrash onClose={handleCloseTrash} />
+      </div>
+    );
+  }
+
+  return (
+    <div className={isMobile ? "p-3 sm:p-4" : "p-8"}>
+      <ClientsHeader
+        onAddClientClick={() => setIsDialogOpen(true)}
+        onTrashClick={handleTrashClick}
+        isMobile={isMobile}
+      />
+
+      {/* Scroll naturel de la page sur mobile comme sur desktop : un ScrollArea à
+          hauteur fixe (100vh-10rem) masquait le bas de liste derrière la barre du
+          navigateur et la bottom nav, et créait un double scroll. */}
+      <ClientsContent
+        clients={clients}
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        selectedType={selectedType}
+        onTypeChange={setSelectedType}
+        selectedSecteur={selectedSecteur}
+        onSecteurChange={setSelectedSecteur}
+        selectedRegimeFiscal={selectedRegimeFiscal}
+        onRegimeFiscalChange={setSelectedRegimeFiscal}
+        selectedCDI={selectedCDI}
+        onCDIChange={setSelectedCDI}
+        showArchived={showArchived}
+        onShowArchivedChange={setShowArchived}
+        onView={handleView}
+        onEdit={handleEdit}
+        onArchive={handleArchive}
+        onRestore={handleRestore}
+        onDelete={handleDelete}
+        onImportClients={handleImportClients}
+        isMobile={isMobile}
+      />
+
+      <ClientDialogs
+        isAddDialogOpen={isDialogOpen}
+        setIsAddDialogOpen={setIsDialogOpen}
+        isEditDialogOpen={isEditDialogOpen}
+        setIsEditDialogOpen={setIsEditDialogOpen}
+        isViewDialogOpen={isViewDialogOpen}
+        setIsViewDialogOpen={setIsViewDialogOpen}
+        selectedClient={selectedClient}
+        newClientType={newClientType}
+        onNewClientTypeChange={setNewClientType}
+        onAddClient={(clientData) => addMutation.mutate(clientData)}
+        onUpdateClient={(clientData) => {
+          if (selectedClient) {
+            updateMutation.mutate({
+              id: selectedClient.id,
+              updates: clientData,
+            });
+          }
+        }}
+      />
+
+      <ConfirmDialog
+        open={confirmDialog.open}
+        onOpenChange={closeConfirmDialog}
+        onConfirm={confirmDialog.onConfirm}
+        title={confirmDialog.title}
+        description={confirmDialog.description}
+        confirmLabel={confirmDialog.confirmLabel}
+        variant={confirmDialog.variant}
+        isLoading={confirmDialog.isLoading}
+      />
+    </div>
+  );
+}

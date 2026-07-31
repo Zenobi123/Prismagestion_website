@@ -1,0 +1,19 @@
+
+export type PrestationPayee = {
+  id: string;
+  montant_modifie: number | null;
+};
+
+export type PaiementFormData = {
+  client_id: string;
+  facture_id: string;
+  date: Date;
+  montant: number;
+  mode: "espèces" | "virement" | "orange_money" | "mtn_money" | "cheque";
+  est_credit: boolean;
+  reference_transaction: string;
+  notes: string;
+  type_paiement: "total" | "partiel";
+  prestations_payees: string[];
+  prestations_montants: Record<string, number>;
+};

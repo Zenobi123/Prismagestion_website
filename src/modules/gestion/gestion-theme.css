@@ -1,0 +1,83 @@
+/* Charte graphique d'origine de la console de gestion.
+ *
+ * Les deux applications nommaient toutes deux leur couleur d'accent
+ * « primary », mais ne la définissaient pas au même endroit : le site
+ * passe par une variable CSS (violet), la console la fixait directement
+ * dans sa configuration Tailwind (vert sauge #84A98C). En fusionnant, une
+ * seule configuration Tailwind subsiste — et la console s'est retrouvée
+ * habillée du violet du site.
+ *
+ * Tout est rétabli sous un conteneur de portée plutôt qu'en réécrivant
+ * 74 fichiers : `bg-primary` et `text-primary` retrouvent le vert sauge à
+ * l'intérieur de la console et gardent le violet partout ailleurs.
+ *
+ * Note sur la fidélité : la console d'origine ne déclarait que trois
+ * variables (--background, --foreground, --radius). Les huit autres
+ * qu'utilise shadcn — --border, --muted, --ring… — étaient absentes, si
+ * bien que `border-border` et consorts produisaient des couleurs
+ * invalides, ignorées par le navigateur. Les restituer à l'identique
+ * reviendrait à reproduire ce défaut : elles restent héritées du site,
+ * où elles valent des gris neutres.
+ */
+
+.gestion-theme {
+  /* #84A98C — accent d'origine de la console. */
+  --primary: 133 18% 59%;
+  --primary-foreground: 0 0% 100%;
+
+  /* Teinte de texte de la console (le site utilise 224 71.4% 4.1%). */
+  --foreground: 222.2 84% 4.9%;
+}
+
+/* Classes utilitaires que la console déclarait dans son propre index.css.
+ * Sans elles, sa barre latérale, ses cartes et ses tableaux perdent leur
+ * mise en forme. Seules les six réellement employées sont reprises ; les
+ * vingt-et-une autres du fichier d'origine ne servaient nulle part.
+ *
+ * Toutes sont préfixées par .gestion-theme : `.card` et `.table` sont des
+ * noms trop courants pour être lâchés dans la feuille de style du site.
+ *
+ * Pas d'enveloppe `@layer components` ici : cette directive suppose que le
+ * fichier porte lui-même les `@tailwind base/components/utilities`, ce qui
+ * n'est le cas que de src/index.css. Les règles sont donc écrites au
+ * premier niveau — `@apply` fonctionne sans l'enveloppe.
+ */
+.gestion-theme .sidebar-link {
+  @apply flex items-center gap-2 px-2 py-1.5 text-neutral-600 hover:bg-neutral-200 rounded-md transition-all duration-300;
+  /* Cible tactile confortable sur mobile. */
+  @apply min-h-[44px] md:min-h-[unset];
+}
+
+.gestion-theme .sidebar-link.active {
+  @apply bg-primary text-white hover:bg-primary-hover;
+}
+
+.gestion-theme .card {
+  @apply bg-white rounded-lg shadow-sm border border-neutral-200 p-1.5 sm:p-2 animate-fade-in hover:shadow transition-all duration-300;
+}
+
+.gestion-theme .table-container {
+  @apply w-full overflow-x-auto rounded-lg border border-neutral-200;
+}
+
+.gestion-theme .table {
+  @apply w-full text-sm text-left;
+}
+
+.gestion-theme .table th {
+  @apply px-1 sm:px-2 md:px-3 py-1.5 bg-neutral-100 text-neutral-600 font-semibold;
+  @apply text-xs sm:text-sm whitespace-nowrap;
+}
+
+.gestion-theme .table td {
+  @apply px-1 sm:px-2 md:px-3 py-1.5 sm:py-2 border-t border-neutral-200;
+  @apply text-xs sm:text-sm;
+}
+
+.gestion-theme .badge {
+  @apply px-1.5 py-0.5 text-xs font-medium rounded-full transition-all duration-300;
+}
+
+.gestion-theme .hover-lift {
+  @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-md;
+}

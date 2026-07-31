@@ -1,0 +1,91 @@
+
+import { Client } from "@gestion/types/client";
+import { exportToExcel } from "./csvExporter";
+
+/**
+ * Formate les données client pour l'exportation en supprimant les détails complexes
+ */
+const formatClientForExport = (client: Client) => {
+  return {
+    ID: client.id,
+    Type: client.type === "physique" ? "Personne physique" : "Personne morale",
+    Nom: client.type === "physique" ? client.nom : client.raisonsociale,
+    NIU: client.niu,
+    CentreRattachement: client.centrerattachement,
+    Ville: client.adresse.ville,
+    Quartier: client.adresse.quartier,
+    Telephone: client.contact.telephone,
+    Email: client.contact.email,
+    ContactPrincipal: client.contact.contact_principal || "",
+    SecteurActivite: client.secteuractivite,
+    Statut: client.statut,
+    NumeroCNPS: client.numerocnps || "",
+    "Gestion de dossiers en portefeuille": client.gestionexternalisee ? "Oui" : "Non",
+    DateCreation: client.created_at || ""
+  };
+};
+
+/**
+ * Exporte la liste des clients au format CSV
+ */
+export const exportClientsToCSV = (clients: Client[], filename = "clients") => {
+  const formattedClients = clients.map(formatClientForExport);
+  exportToExcel(formattedClients, filename);
+};
+
+/**
+ * Exporte la liste des clients au format JSON
+ */
+export const exportClientsToJSON = (clients: Client[], filename = "clients") => {
+  const formattedClients = clients.map(formatClientForExport);
+  const jsonContent = JSON.stringify(formattedClients, null, 2);
+  const blob = new Blob([jsonContent], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  
+  const link = document.createElement("a");
+  link.setAttribute("href", url);
+  link.setAttribute("download", `${filename}.json`);
+  link.style.visibility = "hidden";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
+/**
+ * Exporte la liste des clients au format XLS (via XLSX)
+ * Note: Cette fonction utilise le même format CSV car nous n'avons pas de dépendance XLSX.
+ * Pour un vrai format XLS, nous pourrions ajouter une bibliothèque comme xlsx ou exceljs.
+ */
+export const exportClientsToXLS = (clients: Client[], filename = "clients") => {
+  const formattedClients = clients.map(formatClientForExport);
+  exportToExcel(formattedClients, `${filename}`);
+};
+
+/**
+ * Exporte la liste des clients au format texte brut (.txt)
+ * Chaque client est présenté sous forme de bloc « Champ: valeur »,
+ * les blocs étant séparés par une ligne de tirets.
+ */
+export const exportClientsToText = (clients: Client[], filename = "clients") => {
+  const separator = "\n" + "-".repeat(40) + "\n";
+  const content = clients
+    .map((client) => {
+      const formatted = formatClientForExport(client);
+      return Object.entries(formatted)
+        .map(([key, value]) => `${key}: ${value ?? ""}`)
+        .join("\n");
+    })
+    .join(separator);
+
+  const blob = new Blob([content], { type: "text/plain;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.setAttribute("href", url);
+  link.setAttribute("download", `${filename}.txt`);
+  link.style.visibility = "hidden";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+};

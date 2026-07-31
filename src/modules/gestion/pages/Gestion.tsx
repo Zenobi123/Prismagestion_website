@@ -1,0 +1,158 @@
+import React from "react";
+import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getClients } from "@gestion/services/clientService";
+import { GestionHeader } from "@gestion/components/gestion/GestionHeader";
+import { ClientSelector } from "@gestion/components/gestion/ClientSelector";
+import { SelectedClientCard } from "@gestion/components/gestion/SelectedClientCard";
+import { GestionTabs } from "@gestion/components/gestion/GestionTabs";
+import { NoClientSelected } from "@gestion/components/gestion/NoClientSelected";
+import { useLocation, useBeforeUnload } from "react-router-dom";
+import { useAuthorization } from "@gestion/hooks/useAuthorization";
+import { CollaborateurUnauthorized } from "@gestion/components/collaborateurs/CollaborateurUnauthorized";
+import { ExerciceSelector, ExerciceReadOnlyBanner } from "@gestion/components/exercice/ExerciceControls";
+
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+const VALID_TABS: Record<string, string> = {
+  'obligations-fiscales': 'fiscal'
+};
+
+const VALID_ACTIVE_TABS = ['fiscal'];
+
+export default function Gestion() {
+  const { isAuthorized } = useAuthorization(
+    ["admin", "comptable", "gestionnaire", "expert-comptable", "fiscaliste", "assistant"],
+    "gestion",
+    { showToast: true }
+  );
+
+  const [activeTab, setActiveTab] = useState("fiscal");
+  const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
+  const [selectedSubTab, setSelectedSubTab] = useState<string | null>(null);
+  const location = useLocation();
+
+  const { data: clients = [], isLoading } = useQuery({
+    queryKey: ["clients"],
+    queryFn: () => getClients(false),
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+  });
+
+  const clientsEnGestion = React.useMemo(() =>
+    clients.filter(client => client.gestionexternalisee),
+    [clients]
+  );
+
+  const selectedClient = React.useMemo(() =>
+    clientsEnGestion.find(client => client.id === selectedClientId),
+    [clientsEnGestion, selectedClientId]
+  );
+
+  // Stocker la sélection du client dans localStorage pour persistance
+  useEffect(() => {
+    if (selectedClientId && UUID_REGEX.test(selectedClientId)) {
+      localStorage.setItem('lastSelectedGestionClientId', selectedClientId);
+    }
+  }, [selectedClientId]);
+
+  // Restaurer la sélection du client depuis localStorage au chargement
+  useEffect(() => {
+    const savedClientId = localStorage.getItem('lastSelectedGestionClientId');
+    if (savedClientId && UUID_REGEX.test(savedClientId) && !selectedClientId) {
+      setSelectedClientId(savedClientId);
+    }
+  }, [selectedClientId]);
+
+  // Stocker l'onglet actif dans localStorage pour persistance
+  useEffect(() => {
+    if (activeTab && VALID_ACTIVE_TABS.includes(activeTab)) {
+      localStorage.setItem('lastActiveGestionTab', activeTab);
+    }
+  }, [activeTab]);
+
+  // Restaurer l'onglet actif depuis localStorage au chargement
+  useEffect(() => {
+    const savedTab = localStorage.getItem('lastActiveGestionTab');
+    if (savedTab && VALID_ACTIVE_TABS.includes(savedTab)) {
+      setActiveTab(savedTab);
+    }
+  }, []);
+
+  // Handle URL query parameters with validation
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const clientParam = searchParams.get('client');
+    const tabParam = searchParams.get('tab');
+
+    if (clientParam && UUID_REGEX.test(clientParam)) {
+      setSelectedClientId(clientParam);
+    }
+
+    if (tabParam) {
+      const tabValue = VALID_TABS[tabParam];
+      if (tabValue) {
+        setActiveTab(tabValue);
+      }
+    }
+  }, [location.search]);
+
+  const handleTabChange = React.useCallback((value: string) => {
+    setActiveTab(value);
+    setSelectedSubTab(null); // Reset sub-tab when main tab changes
+  }, []);
+
+  const handleClientSelect = React.useCallback((clientId: string) => {
+    setSelectedClientId(clientId);
+  }, []);
+
+  const handleSubTabSelect = React.useCallback((subTab: string) => {
+    setSelectedSubTab(subTab);
+  }, []);
+
+  if (!isAuthorized) {
+    return <CollaborateurUnauthorized module="gestion" />;
+  }
+
+  if (isLoading) {
+    return (
+      <div className="px-4 py-6 sm:p-8 bg-[#F6F6F7]">
+        <div className="flex items-center justify-center min-h-[200px]">
+          <p className="text-muted-foreground">Chargement...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="px-4 py-6 sm:p-8 bg-[#F6F6F7]">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+        <GestionHeader nombreClientsEnGestion={clientsEnGestion.length} />
+        <ExerciceSelector />
+      </div>
+
+      <ExerciceReadOnlyBanner className="mb-4" />
+
+      <ClientSelector
+        clients={clientsEnGestion}
+        selectedClientId={selectedClientId}
+        onClientSelect={handleClientSelect}
+      />
+
+      {selectedClient ? (
+        <>
+          <SelectedClientCard client={selectedClient} />
+          <GestionTabs
+            activeTab={activeTab}
+            selectedClient={selectedClient}
+            selectedSubTab={selectedSubTab}
+            onTabChange={handleTabChange}
+            onSubTabSelect={handleSubTabSelect}
+          />
+        </>
+      ) : (
+        <NoClientSelected />
+      )}
+    </div>
+  );
+}

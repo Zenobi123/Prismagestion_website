@@ -1,0 +1,144 @@
+
+import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import {
+  LayoutDashboard,
+  Users,
+  Briefcase,
+  Calendar,
+  Calculator,
+  FileText,
+  Menu,
+  Wallet,
+  ChevronRight,
+  FolderOpen,
+  Receipt,
+  Settings,
+  Mail,
+  HelpCircle
+} from "lucide-react";
+import { gestionPath } from "@gestion/routes";
+import { supabase } from "@gestion/integrations/supabase/client";
+import { useIsMobile } from "@gestion/hooks/use-mobile";
+
+type MenuItem = {
+  path: string;
+  icon: React.ElementType;
+  label: string;
+  adminOnly?: boolean;
+  allowedRoles?: string[];
+};
+
+const menuItems: MenuItem[] = [
+  { path: "/", icon: LayoutDashboard, label: "Dashboard" },
+  { path: "/collaborateurs", icon: Users, label: "Collaborateurs", allowedRoles: ["admin"] },
+  { path: "/outils", icon: Calculator, label: "Outils" },
+  { path: "/clients", icon: Users, label: "Clients" },
+  { path: "/gestion", icon: FolderOpen, label: "Gestion" },
+  { path: "/missions", icon: Briefcase, label: "Mission" },
+  { path: "/planning", icon: Calendar, label: "Planning" },
+  { path: "/facturation", icon: Receipt, label: "Facturation", allowedRoles: ["admin"] },
+  { path: "/courrier", icon: Mail, label: "Courrier" },
+  { path: "/rapports", icon: FileText, label: "Rapports" },
+  { path: "/parametres", icon: Settings, label: "Paramètres", allowedRoles: ["admin"] },
+  { path: "/aide", icon: HelpCircle, label: "Aide" }
+];
+
+const Sidebar = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const location = useLocation();
+  const isMobile = useIsMobile();
+
+  useEffect(() => {
+    const fetchRole = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        const { data } = await supabase
+          .from('users')
+          .select('role')
+          .eq('id', session.user.id)
+          .single();
+        if (data) {
+          setUserRole(data.role);
+        }
+      }
+    };
+    fetchRole();
+  }, []);
+
+  // Les chemins sont déclarés relativement à la console ; c'est ici qu'ils
+  // sont résolus sous /admin/gestion.
+  const isActiveRoute = (path: string) => {
+    return location.pathname === gestionPath(path);
+  };
+
+  const filteredMenuItems = menuItems.filter(item =>
+    !item.allowedRoles || item.allowedRoles.includes(userRole || "")
+  );
+
+  // Mobile: la navigation est assurée par la barre d'onglets globale (MobileBottomNav).
+  if (isMobile) {
+    return null;
+  }
+
+  // Desktop: standard collapsible sidebar
+  return (
+    <aside
+      className={`${
+        isSidebarOpen ? "w-64" : "w-20"
+      } bg-white border-r border-neutral-200 transition-all duration-300 ease-in-out flex flex-col shrink-0`}
+    >
+      <div className="p-4 border-b border-neutral-200">
+        <div className="flex items-center justify-between">
+          <h1
+            className={`font-semibold text-neutral-800 transition-opacity duration-300 ${
+              !isSidebarOpen && "opacity-0 hidden"
+            }`}
+          >
+            PRISMA GESTION
+          </h1>
+          <button
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="p-2 hover:bg-neutral-100 rounded-md transition-colors"
+            aria-label={isSidebarOpen ? "Réduire le menu" : "Agrandir le menu"}
+          >
+            <Menu className="w-5 h-5 text-neutral-600" />
+          </button>
+        </div>
+      </div>
+
+      <nav className="flex-1 py-4 px-2 space-y-1">
+        {filteredMenuItems.map((item) => (
+          <Link
+            key={item.path}
+            to={gestionPath(item.path)}
+            className={`sidebar-link group relative ${
+              isActiveRoute(item.path) && "active"
+            }`}
+          >
+            <item.icon className="w-5 h-5 shrink-0" />
+            <span
+              className={`transition-opacity duration-300 ${
+                !isSidebarOpen && "opacity-0 hidden"
+              }`}
+            >
+              {item.label}
+            </span>
+            {!isSidebarOpen && (
+              <div className="absolute left-14 bg-neutral-800 text-white px-2 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50">
+                {item.label}
+              </div>
+            )}
+            {isActiveRoute(item.path) && (
+              <ChevronRight className={`w-4 h-4 ml-auto ${!isSidebarOpen && "hidden"}`} />
+            )}
+          </Link>
+        ))}
+      </nav>
+
+    </aside>
+  );
+};
+
+export default Sidebar;

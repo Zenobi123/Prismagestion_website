@@ -12,8 +12,11 @@ import {
   Shield,
   BarChart3,
   HardDrive,
-  UserPlus
+  UserPlus,
+  Building2,
+  ArrowRight
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import {
   Sidebar,
   SidebarContent,
@@ -32,6 +35,7 @@ type AdminAppSidebarProps = {
 };
 
 const AdminAppSidebar = ({ activeTab, setActiveTab, onLogout }: AdminAppSidebarProps) => {
+  const navigate = useNavigate();
   const menuItems = [
     { id: "dashboard", label: "Tableau de bord", icon: Home },
     { id: "homepage", label: "Page d'accueil", icon: Globe },
@@ -54,6 +58,31 @@ const AdminAppSidebar = ({ activeTab, setActiveTab, onLogout }: AdminAppSidebarP
           <span className="text-[#D6DD00] font-bold text-2xl">PRISMA</span>
           <span className="text-white font-medium text-xl ml-2">Admin</span>
         </div>
+
+        {/* Placé en tête, avant la navigation du site : la console est
+            l'outil de travail quotidien du cabinet, et les douze entrées
+            qui suivent débordent de l'écran. En bas de liste, elle n'était
+            atteignable qu'en faisant défiler la barre — donc invisible. */}
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-white/60">Cabinet</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  onClick={() => navigate('/admin/gestion')}
+                  className="group flex items-center w-full p-3 rounded-lg text-sm bg-white/10 text-[#D6DD00] hover:bg-white/20 transition-colors"
+                >
+                  <Building2 size={18} className="mr-3" />
+                  <span className="flex-1 text-left font-medium">Gestion du cabinet</span>
+                  <ArrowRight
+                    size={14}
+                    className="opacity-60 transition-transform group-hover:translate-x-0.5"
+                  />
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
 
         <SidebarGroup>
           <SidebarGroupLabel className="text-white/60">Navigation</SidebarGroupLabel>

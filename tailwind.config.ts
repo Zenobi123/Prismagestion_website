@@ -38,7 +38,12 @@ export default {
 				foreground: 'hsl(var(--foreground))',
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
+					foreground: 'hsl(var(--primary-foreground))',
+					// Nuances de la console de gestion, absentes du site : elles
+					// n'ont de sens que sous .gestion-theme, où --primary vaut le
+					// vert sauge d'origine. Le site n'utilise ni l'une ni l'autre.
+					hover: '#6B8E74',
+					light: '#A8C1AE'
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
@@ -80,6 +85,21 @@ export default {
 					white: '#FFFFFF',
 					gray: '#ABABAB',
 					"light-gray": '#F5F5F5',
+				},
+				// Palette de gris de la console de gestion, reprise telle quelle
+				// de son tailwind.config d'origine. Elle remplace la palette
+				// `neutral` par défaut de Tailwind, que le site n'utilise nulle
+				// part — le module s'en sert dans 166 classes.
+				neutral: {
+					100: '#F8F9FA',
+					200: '#E9ECEF',
+					300: '#DEE2E6',
+					400: '#CED4DA',
+					500: '#ADB5BD',
+					600: '#6C757D',
+					700: '#495057',
+					800: '#343A40',
+					900: '#212529',
 				}
 			},
 			fontFamily: {

@@ -1,0 +1,69 @@
+
+import { ClientType, FormeJuridique, Sexe, EtatCivil, SituationImmobiliere } from "@gestion/types/client";
+import { PersonalInfoFields } from "./identity/PersonalInfoFields";
+import { CompanyInfoFields } from "./identity/CompanyInfoFields";
+
+interface ClientIdentityFieldsProps {
+  type: ClientType;
+  nom: string;
+  nomcommercial?: string;
+  numerorccm?: string;
+  raisonsociale: string;
+  sigle?: string;
+  datecreation?: string;
+  lieucreation?: string;
+  nomdirigeant?: string;
+  formejuridique?: FormeJuridique;
+  sexe?: Sexe;
+  etatcivil?: EtatCivil;
+  situationimmobiliere?: {
+    type: SituationImmobiliere;
+    valeur?: number;
+    loyer?: number;
+  };
+  onChange: (name: string, value) => void;
+}
+
+export function ClientIdentityFields({
+  type,
+  nom = "",
+  nomcommercial = "",
+  numerorccm = "",
+  raisonsociale = "",
+  sigle = "",
+  datecreation = "",
+  lieucreation = "",
+  nomdirigeant = "",
+  formejuridique,
+  sexe = "homme",
+  etatcivil = "celibataire",
+  onChange,
+}: ClientIdentityFieldsProps) {
+  return (
+    <div className="space-y-6">
+      {type === "physique" ? (
+        <PersonalInfoFields
+          nom={nom}
+          nomcommercial={nomcommercial}
+          numerorccm={numerorccm}
+          sexe={sexe}
+          etatcivil={etatcivil}
+          onChange={onChange}
+        />
+      ) : (
+        <CompanyInfoFields
+          raisonsociale={raisonsociale}
+          nomcommercial={nomcommercial}
+          sigle={sigle}
+          numerorccm={numerorccm}
+          datecreation={datecreation}
+          lieucreation={lieucreation}
+          nomdirigeant={nomdirigeant}
+          formejuridique={formejuridique}
+          onChange={onChange}
+        />
+      )}
+    </div>
+  );
+}
+

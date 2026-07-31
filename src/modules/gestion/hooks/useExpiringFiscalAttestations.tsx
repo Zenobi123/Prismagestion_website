@@ -1,0 +1,93 @@
+
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@gestion/integrations/supabase/client";
+import { Client } from "@gestion/types/client";
+import type { ClientFiscalData } from "@gestion/hooks/fiscal/types";
+import { differenceInDays, isValid, parse } from "date-fns";
+import { Json, type Tables } from "@gestion/integrations/supabase/types";
+
+export interface FiscalAttestation {
+  id: string;
+  name: string;
+  creationDate: string;
+  expiryDate: string;
+  daysRemaining: number;
+  type: 'fiscal';
+}
+
+export const useExpiringFiscalAttestations = () => {
+  return useQuery({
+    queryKey: ["expiring-fiscal-attestations"],
+    queryFn: async (): Promise<FiscalAttestation[]> => {
+      
+      // Get all clients
+      const { data: clients, error } = await supabase
+        .from("clients")
+        .select("*")
+        .filter("fiscal_data", "not.is", null);
+      
+      if (error) {
+        throw error;
+      }
+      
+      // Filter and process clients with fiscal attestations
+      const expiringAttestations: FiscalAttestation[] = [];
+      
+      clients.forEach((client: Tables<"clients">) => {
+        try {
+          const fiscalData = client.fiscal_data as unknown as ClientFiscalData;
+          
+          // Skip if hidden from dashboard
+          if (fiscalData.hiddenFromDashboard === true) {
+            return;
+          }
+          
+          // Check if client has attestation data
+          if (fiscalData && 
+              fiscalData.attestation && 
+              fiscalData.attestation.creationDate && 
+              fiscalData.attestation.validityEndDate &&
+              fiscalData.attestation.showInAlert !== false) {
+                
+            // Parse the expiry date - handle both formats
+            let expiryDate: Date;
+            const expiryDateStr = fiscalData.attestation.validityEndDate;
+            
+            if (expiryDateStr.includes('-')) {
+              // Format YYYY-MM-DD
+              expiryDate = new Date(expiryDateStr);
+            } else {
+              // Format DD/MM/YYYY
+              expiryDate = parse(expiryDateStr, 'dd/MM/yyyy', new Date());
+            }
+            
+            if (isValid(expiryDate)) {
+              const today = new Date();
+              const daysRemaining = differenceInDays(expiryDate, today);
+              
+              // Add to the result array, regardless of days remaining
+              expiringAttestations.push({
+                id: client.id,
+                name: client.type === 'physique' ? client.nom : client.raisonsociale,
+                creationDate: fiscalData.attestation.creationDate,
+                expiryDate: fiscalData.attestation.validityEndDate,
+                daysRemaining,
+                type: 'fiscal'
+              });
+            }
+          }
+        } catch { /* erreur ignoree volontairement */ }
+      });
+      
+      
+      // Sort by days remaining (most urgent first)
+      return expiringAttestations.sort((a, b) => a.daysRemaining - b.daysRemaining);
+    },
+    // Configurer la mise en cache et le rafraîchissement automatique
+    staleTime: 2 * 60 * 1000,  // 2 minutes avant que les données soient considérées comme périmées
+    gcTime: 10 * 60 * 1000,    // 10 minutes avant le nettoyage du cache
+    refetchInterval: 60000,    // Rafraîchir toutes les 60 secondes
+    refetchOnWindowFocus: true, // Rafraîchir quand l'utilisateur revient sur l'onglet
+    refetchOnMount: true       // Rafraîchir à chaque montage du composant
+  });
+};
