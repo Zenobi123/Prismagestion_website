@@ -23,30 +23,35 @@ Aucune action de votre part sur ces points, ils sont dans le code :
 | Images de partage | `index.html`, `src/config/site.ts` | URLs absolues : Facebook, LinkedIn et WhatsApp refusent les images relatives. |
 | Content-Security-Policy | `vite.config.ts` | Injectée au build, scripts inline autorisés par empreinte SHA-256. |
 
-## 1. Choisir le projet Vercel
+## 1. Le projet Vercel
 
-Le compte `zenobi123s-projects` contient trois projets :
+> **Mis à jour le 31/07/2026.** Les projets décrits précédemment
+> (`prisma-gestion_website` et son doublon `prisma-gestion-website`) ont été
+> supprimés en même temps que le dépôt GitHub d'origine. Tout a été recréé.
+
+Le compte `zenobi123s-projects` contient désormais :
 
 | Projet | Dépôt GitHub relié | État |
 |---|---|---|
-| `prisma-gestion_website` | `Zenobi123/Prisma-Gestion_Website` | **À utiliser.** Déjà relié au bon dépôt. |
-| `prisma-gestion-website` | — | Doublon créé le même jour, jamais réutilisé. À supprimer. |
+| `prismagestion-website` | `Zenobi123/Prismagestion_website` | **Le projet du site.** Créé et connecté le 31/07/2026. |
 | `prisma-scab` | `Zenobi123/Prisma_scab` | Autre application. **Ne pas y toucher.** |
 
-Dans `prisma-gestion_website`, le dernier déploiement date d'avril 2026 et
-porte sur une version obsolète du code : la connexion Git ne redéploie plus.
-Sur **vercel.com → prisma-gestion_website → Settings → Git**, vérifier que le
-dépôt `Zenobi123/Prisma-Gestion_website` est bien connecté sur la branche de
-production `main` ; sinon, cliquer sur *Connect Git Repository* et le
-resélectionner.
+Le dépôt GitHub a changé de nom : `Prismagestion_website` (sans tiret). La
+connexion Git est active sur la branche de production `main` — **tout push sur
+`main` déclenche un déploiement de production**. Les branches de travail
+produisent des déploiements de prévisualisation.
 
 ## 2. Variables d'environnement (à faire avant le premier déploiement)
 
-Le fichier `.env` est actuellement versionné dans le dépôt : le build
-fonctionne donc même sans configuration côté Vercel. **C'est un défaut à
-corriger** (voir § 6). La bonne pratique est de déclarer les variables dans
-Vercel : *Settings → Environment Variables*, portée **Production** *et*
-**Preview**.
+> **Fait le 31/07/2026.** `.env` n'est plus versionné (voir § 6) et les
+> variables ci-dessous sont déclarées dans Vercel, portée **Production** *et*
+> **Preview**. Vérification : `vercel env ls`.
+>
+> Comme les variables `VITE_*` sont inlinées à la compilation, une variable
+> manquante ne produit **aucune erreur** : le site bascule silencieusement sur
+> le backend `localStorage`. Après toute modification de ces variables, il faut
+> redéployer pour qu'elle prenne effet — et vérifier qu'un formulaire arrive
+> bien dans Supabase.
 
 | Variable | Valeur | Conséquence si absente |
 |---|---|---|
