@@ -262,9 +262,12 @@ dig www.prismagestion.site +short
 3. **Dépendance `lovable-tagger`** (`package.json`, `vite.config.ts`) :
    inactive en production, elle ne s'exécute qu'en mode développement. Elle
    peut être retirée maintenant que la plateforme n'est plus utilisée.
-4. **Deux fichiers de verrouillage** coexistent (`package-lock.json` et
-   `bun.lockb`). Vercel choisira Bun. En garder un seul éviterait des écarts
-   entre installations locales et build de production.
+4. ~~**Deux fichiers de verrouillage** coexistent (`package-lock.json` et
+   `bun.lockb`). Vercel choisira Bun.~~ **Corrigé le 31/07/2026** :
+   `bun.lock` et `bun.lockb` ont été supprimés, `package-lock.json` fait
+   désormais foi et `package.json` déclare `"packageManager": "npm@11.4.2"`.
+   Vercel installe donc avec npm, en cohérence avec le `buildCommand`
+   `npm run build` de `vercel.json`.
 5. **Le linter remonte 51 erreurs préexistantes** (`npm run lint`),
    essentiellement des `any` explicites. Sans effet sur le build, mais à
    traiter avant d'ouvrir le code à d'autres contributeurs.
