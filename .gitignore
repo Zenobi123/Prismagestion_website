@@ -27,3 +27,5 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+# Liaison locale au projet Vercel (identifiants de projet et jetons de session)
+.vercel
