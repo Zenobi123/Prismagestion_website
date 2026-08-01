@@ -1,23 +1,9 @@
-import * as React from "react"
-
-import { cn } from "@gestion/lib/utils"
-
-export type TextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement>
-
-const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ className, ...props }, ref) => {
-    return (
-      <textarea
-        className={cn(
-          "flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-          className
-        )}
-        ref={ref}
-        {...props}
-      />
-    )
-  }
-)
-Textarea.displayName = "Textarea"
-
-export { Textarea }
+// Ré-export : l'implémentation unique vit dans src/components/ui/textarea.
+//
+// Ce composant était dupliqué à l'identique entre le site et la console. Une
+// seule copie subsiste ; ce fichier ne garde que le chemin d'accès, pour que
+// les imports "@gestion/components/ui/..." du module restent inchangés.
+//
+// Les composants dont le style diverge volontairement entre les deux
+// applications ont, eux, gardé leur implémentation propre — voir docs/FUSION.md.
+export * from "@/components/ui/textarea";

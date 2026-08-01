@@ -1,26 +1,9 @@
-import * as React from "react"
-import * as ProgressPrimitive from "@radix-ui/react-progress"
-
-import { cn } from "@gestion/lib/utils"
-
-const Progress = React.forwardRef<
-  React.ElementRef<typeof ProgressPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root>
->(({ className, value, ...props }, ref) => (
-  <ProgressPrimitive.Root
-    ref={ref}
-    className={cn(
-      "relative h-4 w-full overflow-hidden rounded-full bg-secondary",
-      className
-    )}
-    {...props}
-  >
-    <ProgressPrimitive.Indicator
-      className="h-full w-full flex-1 bg-primary transition-all"
-      style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
-    />
-  </ProgressPrimitive.Root>
-))
-Progress.displayName = ProgressPrimitive.Root.displayName
-
-export { Progress }
+// Ré-export : l'implémentation unique vit dans src/components/ui/progress.
+//
+// Ce composant était dupliqué à l'identique entre le site et la console. Une
+// seule copie subsiste ; ce fichier ne garde que le chemin d'accès, pour que
+// les imports "@gestion/components/ui/..." du module restent inchangés.
+//
+// Les composants dont le style diverge volontairement entre les deux
+// applications ont, eux, gardé leur implémentation propre — voir docs/FUSION.md.
+export * from "@/components/ui/progress";

@@ -65,6 +65,22 @@ const ChartContainer = React.forwardRef<
 })
 ChartContainer.displayName = "Chart"
 
+// Assainit une valeur CSS pour empêcher une injection : seules les formes de
+// couleur connues sont admises. `config` peut provenir de données, et le style
+// est écrit via dangerouslySetInnerHTML — sans ce filtre, une valeur comme
+// `red; } body { display:none` sortirait du bloc de règles.
+function sanitizeCssValue(value: string): string | null {
+  // Autorisé : hex (#fff, #ffffff), rgb/rgba, hsl/hsla, oklch, var(--x), nom de couleur
+  const safePattern = /^(#[0-9a-fA-F]{3,8}|rgba?\([^()]*\)|hsla?\([^()]*\)|oklch\([^()]*\)|var\(--[a-zA-Z0-9-]+\)|[a-zA-Z]{1,20})$/
+  return safePattern.test(value.trim()) ? value.trim() : null
+}
+
+// Assainit un nom de propriété personnalisée CSS.
+function sanitizeCssKey(key: string): string | null {
+  const safeKeyPattern = /^[a-zA-Z0-9-]+$/
+  return safeKeyPattern.test(key) ? key : null
+}
+
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(
     ([_, config]) => config.theme || config.color
@@ -83,11 +99,15 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
 ${prefix} [data-chart=${id}] {
 ${colorConfig
   .map(([key, itemConfig]) => {
+    const safeKey = sanitizeCssKey(key)
+    if (!safeKey) return null
     const color =
       itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ||
       itemConfig.color
-    return color ? `  --color-${key}: ${color};` : null
+    const safeColor = color ? sanitizeCssValue(color) : null
+    return safeColor ? `  --color-${safeKey}: ${safeColor};` : null
   })
+  .filter(Boolean)
   .join("\n")}
 }
 `

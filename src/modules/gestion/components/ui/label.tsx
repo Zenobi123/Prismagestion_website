@@ -1,24 +1,9 @@
-import * as React from "react"
-import * as LabelPrimitive from "@radix-ui/react-label"
-import { cva, type VariantProps } from "class-variance-authority"
-
-import { cn } from "@gestion/lib/utils"
-
-const labelVariants = cva(
-  "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-)
-
-const Label = React.forwardRef<
-  React.ElementRef<typeof LabelPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> &
-    VariantProps<typeof labelVariants>
->(({ className, ...props }, ref) => (
-  <LabelPrimitive.Root
-    ref={ref}
-    className={cn(labelVariants(), className)}
-    {...props}
-  />
-))
-Label.displayName = LabelPrimitive.Root.displayName
-
-export { Label }
+// Ré-export : l'implémentation unique vit dans src/components/ui/label.
+//
+// Ce composant était dupliqué à l'identique entre le site et la console. Une
+// seule copie subsiste ; ce fichier ne garde que le chemin d'accès, pour que
+// les imports "@gestion/components/ui/..." du module restent inchangés.
+//
+// Les composants dont le style diverge volontairement entre les deux
+// applications ont, eux, gardé leur implémentation propre — voir docs/FUSION.md.
+export * from "@/components/ui/label";

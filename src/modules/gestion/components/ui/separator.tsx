@@ -1,29 +1,9 @@
-import * as React from "react"
-import * as SeparatorPrimitive from "@radix-ui/react-separator"
-
-import { cn } from "@gestion/lib/utils"
-
-const Separator = React.forwardRef<
-  React.ElementRef<typeof SeparatorPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof SeparatorPrimitive.Root>
->(
-  (
-    { className, orientation = "horizontal", decorative = true, ...props },
-    ref
-  ) => (
-    <SeparatorPrimitive.Root
-      ref={ref}
-      decorative={decorative}
-      orientation={orientation}
-      className={cn(
-        "shrink-0 bg-border",
-        orientation === "horizontal" ? "h-[1px] w-full" : "h-full w-[1px]",
-        className
-      )}
-      {...props}
-    />
-  )
-)
-Separator.displayName = SeparatorPrimitive.Root.displayName
-
-export { Separator }
+// Ré-export : l'implémentation unique vit dans src/components/ui/separator.
+//
+// Ce composant était dupliqué à l'identique entre le site et la console. Une
+// seule copie subsiste ; ce fichier ne garde que le chemin d'accès, pour que
+// les imports "@gestion/components/ui/..." du module restent inchangés.
+//
+// Les composants dont le style diverge volontairement entre les deux
+// applications ont, eux, gardé leur implémentation propre — voir docs/FUSION.md.
+export * from "@/components/ui/separator";

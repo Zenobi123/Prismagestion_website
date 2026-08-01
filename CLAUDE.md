@@ -48,10 +48,11 @@ et `tsconfig.json`.
 **L'ordre de déclaration compte** : `@gestion` doit précéder `@`, sinon
 `@gestion/x` est résolu comme `@` suivi de `gestion/x`.
 
-Règle de dépendance : le module de gestion n'importe **rien** de l'hôte, à
-une exception documentée près — `@gestion/integrations/supabase/client.ts`
-réexporte le client de l'hôte (voir plus bas). L'hôte, lui, n'importe du
-module que `GestionModule.tsx`.
+Règle de dépendance : le module de gestion n'importe de l'hôte que deux
+choses, toutes deux par réexport explicite —
+`@gestion/integrations/supabase/client.ts` (le client Supabase, voir plus bas)
+et 38 des 55 composants de `@gestion/components/ui/` (voir « Composants
+shadcn/ui »). L'hôte, lui, n'importe du module que `GestionModule.tsx`.
 
 ## Architecture
 
@@ -224,9 +225,27 @@ Ne jamais afficher un flottant brut.
 
 - Accent du site : `#2E1A47` (violet). Accent de la console : `#84A98C`
   (vert sauge), appliqué via `.gestion-theme` uniquement.
-- Composants shadcn/ui : `src/components/ui/` pour le site,
-  `src/modules/gestion/components/ui/` pour la console. Les deux copies
-  coexistent volontairement — le module reste autonome.
+- **Composants shadcn/ui.** L'implémentation de référence est
+  `src/components/ui/`. Dans `src/modules/gestion/components/ui/`, **38 des 55
+  fichiers ne sont qu'un réexport d'une ligne** vers l'hôte : les modifier n'a
+  aucun effet, il faut éditer le fichier de `src/components/ui/`.
+
+  Les **17 autres gardent une implémentation propre**, parce que leur style ou
+  leur comportement diverge volontairement entre les deux applications :
+
+  | Fichier | Raison |
+  |---|---|
+  | `select` | défilement par `ScrollArea`, `rounded-lg`, ombre au survol |
+  | `button`, `badge`, `toggle`, `navigation-menu` + leurs `*-variants.ts` | variants CVA extraits (react-refresh) ; le bouton du site a en plus `amber`, `purple`, `success` |
+  | `alert-dialog`, `calendar`, `dialog`, `tabs` | classes Tailwind différentes |
+  | `sonner` | toasts en haut sur mobile, pour ne pas masquer `MobileBottomNav` |
+  | `toggle-group` | dépend de `toggle-variants` |
+  | `confirm-dialog`, `file-input` | propres à la console, sans équivalent côté site |
+
+  **Avant de toucher un composant de `@gestion/components/ui/`, regarder s'il
+  s'agit d'un réexport.** Pour en faire diverger un qui n'en diverge pas
+  encore, remplacer le réexport par une vraie implémentation et l'inscrire
+  au tableau ci-dessus.
 - Toasts : `useToast()` (shadcn) ou `sonner` — succès vert, avertissement
   ambre, erreur rouge, information bleu ; durée 3 s.
 - Confirmations de suppression : `<AlertDialog>` de shadcn.

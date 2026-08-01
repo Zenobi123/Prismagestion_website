@@ -1,33 +1,9 @@
-import { useToast } from "@gestion/hooks/use-toast"
-import {
-  Toast,
-  ToastClose,
-  ToastDescription,
-  ToastProvider,
-  ToastTitle,
-  ToastViewport,
-} from "@gestion/components/ui/toast"
-
-export function Toaster() {
-  const { toasts } = useToast()
-
-  return (
-    <ToastProvider>
-      {toasts.map(function ({ id, title, description, action, ...props }) {
-        return (
-          <Toast key={id} {...props}>
-            <div className="grid gap-1">
-              {title && <ToastTitle>{title}</ToastTitle>}
-              {description && (
-                <ToastDescription>{description}</ToastDescription>
-              )}
-            </div>
-            {action}
-            <ToastClose />
-          </Toast>
-        )
-      })}
-      <ToastViewport />
-    </ToastProvider>
-  )
-}
+// Ré-export : l'implémentation unique vit dans src/components/ui/toaster.
+//
+// Ce composant était dupliqué à l'identique entre le site et la console. Une
+// seule copie subsiste ; ce fichier ne garde que le chemin d'accès, pour que
+// les imports "@gestion/components/ui/..." du module restent inchangés.
+//
+// Les composants dont le style diverge volontairement entre les deux
+// applications ont, eux, gardé leur implémentation propre — voir docs/FUSION.md.
+export * from "@/components/ui/toaster";

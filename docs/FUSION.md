@@ -322,11 +322,58 @@ pas.
 
 ---
 
-## 5. Reste à faire, hors périmètre de cette fusion
+## 5. Déduplication de shadcn/ui (01/08/2026)
 
-- Éventuellement dédupliquer les deux copies de shadcn/ui
-  (`src/components/ui/`, 53 fichiers, et `src/modules/gestion/components/ui/`,
-  55 fichiers). Coexistence volontaire à ce jour : elle garde le module
-  autonome.
+Les deux dossiers `src/components/ui/` (53 fichiers) et
+`src/modules/gestion/components/ui/` (55) n'étaient **pas** de simples copies.
+Sur les 49 fichiers comparables : 28 identiques, **21 divergents**.
+
+### Ce qui a été dédupliqué — 38 fichiers
+
+Leur contenu dans le module est remplacé par un réexport d'une ligne vers
+`src/components/ui/`. Une seule implémentation subsiste, et **aucun des 651
+imports `@gestion/components/ui/…` n'a été touché** : le chemin reste valide.
+
+Le chunk `GestionModule` passe de **125,8 à 121,7 ko** (gzip 36,4 → 35,3).
+
+### Ce qui reste distinct — 17 fichiers
+
+Divergences délibérées, conservées telles quelles :
+
+| Fichier(s) | Divergence |
+|---|---|
+| `select` | défilement par `ScrollArea`, `rounded-lg`, ombre au survol |
+| `button`, `badge`, `toggle`, `navigation-menu` + 4 `*-variants.ts` | variants CVA extraits (react-refresh) ; le bouton du site a en plus `amber`, `purple`, `success` |
+| `alert-dialog`, `calendar`, `dialog`, `tabs` | classes Tailwind différentes |
+| `sonner` | toasts en haut sur mobile, pour ne pas masquer `MobileBottomNav` |
+| `toggle-group` | dépend de `toggle-variants` |
+| `confirm-dialog`, `file-input` | propres à la console |
+
+### Deux améliorations remontées du module vers le site
+
+L'analyse a montré que le module était **en avance** sur deux points. Les
+unifier naïvement en faveur du site aurait été une régression ; les deux ont
+donc été portées vers `src/components/ui/` avant déduplication :
+
+1. **`chart.tsx` — sécurité.** Le module assainissait les valeurs et les noms
+   de propriétés CSS avant de les écrire via `dangerouslySetInnerHTML`
+   (`sanitizeCssValue`, `sanitizeCssKey`). **Le site ne le faisait pas** : une
+   couleur issue de données pouvait sortir du bloc de règles. Correction déjà
+   mentionnée dans `docs/rapport-securite-2026-04-11.md`, jamais reportée.
+2. **`pagination.tsx` — langue.** Le module était traduit (« Précédent »,
+   « Suivant », `aria-label` français), le site était resté en anglais alors
+   que toute l'interface est en français.
+
+### Précaution pour la suite
+
+**Avant de modifier un fichier de `@gestion/components/ui/`, vérifier s'il
+s'agit d'un réexport** — l'éditer n'aurait aucun effet. Pour faire diverger un
+composant qui ne diverge pas encore, remplacer le réexport par une vraie
+implémentation et l'inscrire au tableau ci-dessus.
+
+---
+
+## 6. Reste à faire
+
 - Écrire des tests pour le site vitrine : les 13 fichiers de test existants
   couvrent tous la console, aucun ne couvre l'hôte.
