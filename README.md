@@ -1,16 +1,54 @@
-# Site web PRISMA GESTION
+# PRISMA GESTION
 
-Site public du cabinet PRISMA GESTION (Yaoundé, Cameroun) : présentation
-des services, blog de veille fiscale, calculateurs et espace admin.
+Dépôt unique du cabinet PRISMA GESTION (Yaoundé, Cameroun). Il porte deux
+applications dans un seul build Vite :
+
+| | Emplacement | Accès |
+|---|---|---|
+| **Site vitrine** — présentation, blog de veille fiscale, calculateurs, espace d'administration | `src/` | public |
+| **Console de gestion** — clients, obligations fiscales, facturation, courrier, missions, planning, rapports | `src/modules/gestion/` | `/admin/gestion`, réservé aux administrateurs |
+
+La console provenait d'un second dépôt (`prisma-taskmaster-planner`),
+désormais archivé. Le détail de la fusion et les écarts de migrations
+subsistants sont consignés dans [`docs/FUSION.md`](docs/FUSION.md).
 
 **En production :** https://prismagestion.site — hébergement Vercel,
 déploiement automatique depuis la branche `main`.
 Marche à suivre complète : [`docs/DEPLOIEMENT.md`](docs/DEPLOIEMENT.md).
 
+> **Dépôt privé.** `facturation/` contient des exports de données clients
+> réelles (noms, NIU, téléphones, numéros CNPS). Ne pas repasser le dépôt en
+> public sans avoir purgé ces fichiers de l'historique.
+
+## La console de gestion
+
+Modules, tous préfixés par `/admin/gestion` :
+
+| Route | Module | Description |
+|---|---|---|
+| `/` | Tableau de bord | KPIs, alertes fiscales (IGS, ACF, Patente, impôts immobiliers, DSF, DBEF), création rapide de tâches |
+| `/clients` | Clients | CRUD clients (personnes physiques/morales), calcul fiscal automatique, agences, import/export (CSV, JSON, TXT, PRISMA-CLIENTS), archivage et corbeille |
+| `/gestion` | Gestion | Dossier du client : onglets Fiscal (ACF, immatriculation, impôts directs, obligations annuelles), Comptable, Contrats, Clôture et Dossier (checklist documentaire, interactions, historique) |
+| `/facturation` | Facturation | Devis, factures, propositions de paiement, paiements avec reçus, situation clients |
+| `/courrier` | Courrier | Rédaction à partir d'une vingtaine de modèles, publipostage, historique avec statuts |
+| `/missions` | Missions | Suivi des missions, ordres et rapports de mission, import/export |
+| `/planning` | Planning | Vue calendrier des échéances par collaborateur |
+| `/collaborateurs` | Collaborateurs | Gestion du personnel et des accès |
+| `/rapports` | Rapports | Rapports PDF (financiers, clients, fiscaux, RH, opérationnels) |
+| `/parametres` | Paramètres | Cabinet (signature, cachet, signataire), clôture annuelle, transfert de données, utilisateurs |
+| `/aide` | Aide | Documentation intégrée et journal des nouveautés |
+
+L'interface est entièrement responsive : sur mobile, une barre de navigation
+en bas d'écran remplace le menu latéral et les tableaux s'affichent en cartes.
+
+Le dossier `facturation/` conserve le prototype HTML/localStorage dont la
+console est issue. Il n'est pas buildé et sert de référence historique.
+
 ## Backend Supabase
 
-Le site s'appuie sur **Supabase** (projet partagé « prisma taskplanner »,
-`xkwqgxqmwxxpzrsurchk`, région eu-central-1) :
+Les deux applications s'appuient sur **le même projet Supabase**
+(`xkwqgxqmwxxpzrsurchk`, région eu-central-1) et donc sur la même base de
+production — toute modification de schéma est croisée :
 
 - **Base de données partagée** : articles de blog, messages de contact,
   demandes de devis, rendez-vous, services, contenus des sections, fichiers
@@ -25,14 +63,19 @@ Le site s'appuie sur **Supabase** (projet partagé « prisma taskplanner »,
   jour automatiquement.
 - **Stockage** : bucket public `media` pour les images (upload réservé à
   l'admin).
-- **Notifications email** : la fonction edge `send-email` notifie le
-  propriétaire à chaque contact/devis/rendez-vous via Resend. Sans secret
-  `RESEND_API_KEY` configuré, elle répond sans erreur et les demandes restent
-  simplement visibles dans l'espace admin. Pour activer l'envoi :
-  `supabase secrets set RESEND_API_KEY=... NOTIFY_EMAIL=...` (ou via le
-  dashboard Supabase → Edge Functions → Secrets).
+- **Fonctions edge** (`supabase/functions/`) :
+  - `send-email` — notifie le propriétaire à chaque contact/devis/rendez-vous
+    via Resend. Sans secret `RESEND_API_KEY` configuré, elle répond sans
+    erreur et les demandes restent visibles dans l'espace admin. Pour activer
+    l'envoi : `supabase secrets set RESEND_API_KEY=... NOTIFY_EMAIL=...` (ou
+    via le dashboard Supabase → Edge Functions → Secrets).
+  - `apply-credit` — application d'un avoir sur la situation d'un client.
+  - `send-payment-reminders` — relances de paiement.
 
-Le schéma complet est versionné dans `supabase/migrations/`.
+Le schéma est versionné dans `supabase/migrations/`, dossier unique et
+chronologique. Son état a été réconcilié avec la base lors de la fusion ;
+**les écarts subsistants sont documentés dans
+[`docs/FUSION.md`](docs/FUSION.md) — à lire avant tout `supabase db push`.**
 
 ### Espace admin
 
@@ -62,8 +105,8 @@ GitHub fait désormais seule référence. Prérequis : Node.js & npm
 ([installation avec nvm](https://github.com/nvm-sh/nvm#installing-and-updating)).
 
 ```sh
-git clone https://github.com/Zenobi123/Prisma-Gestion_website.git
-cd Prisma-Gestion_website
+git clone https://github.com/Zenobi123/Prismagestion_website.git
+cd Prismagestion_website
 
 npm install
 cp .env.example .env   # renseigner les variables Supabase (facultatif :
@@ -78,15 +121,36 @@ Autres commandes :
 npm run build          # build de production dans dist/
 npm run preview        # servir le build de production en local
 npm run lint           # ESLint
+npm test               # Vitest (une passe)
+npm run test:watch     # Vitest en continu
 ```
+
+**npm exclusivement** (épinglé par `packageManager`, Node ≥ 22) : ne pas
+introduire de `bun.lock` ni de `yarn.lock`.
+
+### Alias de chemins
+
+`@/` pointe vers `src/` (site vitrine) et `@gestion/` vers
+`src/modules/gestion/` (console). Les trois fichiers `vite.config.ts`,
+`vitest.config.ts` et `tsconfig.json` doivent rester en phase, et `@gestion`
+doit y être déclaré **avant** `@` — sinon `@gestion/x` serait résolu comme
+`@` suivi de `gestion/x`.
+
+Les conventions détaillées — règles de calcul fiscal, numérotation des
+documents, instantané `client_data`, formatage monétaire, points
+d'intégration à ne pas casser — sont dans [CLAUDE.md](CLAUDE.md). Le module
+Aide de la console (`/admin/gestion/aide`) documente l'usage de chaque écran.
 
 ## Technologies
 
-- Vite
+- Vite 6
 - TypeScript
-- React
+- React 18
 - shadcn-ui
 - Tailwind CSS
+- Supabase
+- React Query
+- Vitest (jsdom)
 
 ## Déploiement
 

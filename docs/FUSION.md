@@ -1,0 +1,194 @@
+# Fusion des dépôts — état et écarts subsistants
+
+Fusion du dépôt `prisma-taskmaster-planner` dans `Prismagestion_website`,
+réalisée le **1er août 2026**. Ce dépôt est désormais l'unique source.
+
+Ce document existe pour une raison précise : **l'historique des migrations
+Supabase ne décrit pas fidèlement la base de production**. Le lire avant tout
+`supabase db push`, `supabase db reset` ou `supabase migration up`.
+
+---
+
+## 1. Ce qui a été fusionné
+
+### Code applicatif — déjà intégré avant cette opération
+
+Les 686 fichiers du taskplanner vivent dans `src/modules/gestion/`, montés
+sous `/admin/gestion` (voir `CLAUDE.md` § Points d'intégration).
+
+Contrôle de complétude effectué fichier par fichier, alias et fins de ligne
+neutralisés :
+
+| | Fichiers |
+|---|---|
+| Identiques à la source (modulo `@/` → `@gestion/`) | 635 |
+| Divergents | 47 |
+| **Total comparé** | **682** |
+
+Les 47 divergents ont été relus un par un. **Aucun ne constitue un retard** :
+ce sont des adaptations au montage en module invité, plus des correctifs faits
+côté site et absents de la source. Les principaux :
+
+- `hooks/facturation/paiementActions/usePaiementUpdate.ts` — la mise à jour
+  d'un paiement échouait **systématiquement** dans le taskplanner : le type
+  `Paiement` porte des champs d'affichage (facture résolue, client, type,
+  prestations réglées) qui ne sont pas des colonnes ; envoyés à PostgREST, ils
+  faisaient rejeter la requête entière. Corrigé par `versColonnesPaiement()`.
+- `services/taskService.ts` — même classe de bug à l'insertion : les relations
+  `clients` et `collaborateurs` chargées par jointure étaient renvoyées telles
+  quelles lors de la création d'une tâche.
+- `components/parametres/ProfileSettings.tsx` — affichait un profil fictif
+  (« Jean Dupont », téléphone français) et son bouton d'enregistrement
+  n'écrivait rien. Lit et écrit désormais la table `profiles`.
+- `services/devisService.ts` — `Record<string, unknown>` remplacé par
+  `TablesUpdate<'devis'>`.
+- `hooks/useAuthorization.ts`, `components/layout/MobileBottomNav.tsx`,
+  `components/dashboard/Sidebar.tsx` — chemins repris via `gestionPath()`,
+  redirection vers `/auth`.
+
+Éléments de la source volontairement **non repris**, sans perte
+fonctionnelle : `App.tsx`, `App.css`, `index.css`, `main.tsx`,
+`vite-env.d.ts`, `pages/Login.tsx` (remplacés par l'hôte),
+`components/LogoutButton.tsx` (plus référencé), et l'entrée `has_role` des
+types générés (référencée nulle part).
+
+### Rapatriements de cette opération
+
+| Élément | Origine → destination |
+|---|---|
+| Prototype HTML historique (30 fichiers) | `facturation/` |
+| Fonctions edge `apply-credit`, `send-payment-reminders` | `supabase/functions/` |
+| 16 migrations | `supabase/migrations/` |
+| Rapport de sécurité du 11/04/2026 | `docs/rapport-securite-2026-04-11.md` |
+| `SPEC_LOVABLE.md`, `RAPPORT_COMPARATIF_FICHES_CLIENT.md` | racine |
+| Hook `SessionStart` + `settings.json` | `.claude/` |
+| Conventions métier | fondues dans `CLAUDE.md` |
+
+### Écartés, et pourquoi
+
+| Élément | Motif |
+|---|---|
+| `netlify.toml` | Hébergement unique sur Vercel (`vercel.json`). |
+| `bun.lock`, `bun.lockb` | npm est le gestionnaire unique, épinglé dans `package.json`. |
+| `@playwright/test` | Dépendance orpheline : aucune configuration ni aucun fichier `.spec` n'a jamais existé. L'installation de Chromium a été retirée du hook `SessionStart` en conséquence. |
+| `index.html`, `vite.config.ts`, `vitest.config.ts`, `tailwind.config.ts`, `tsconfig*`, `.gitignore`, `supabase/config.toml`, `components.json`, `eslint.config.js`, `postcss.config.js` | Versions de l'hôte conservées (plus riches : CSP, PWA, découpage de chunks, alias `@gestion`). |
+| `public/favicon.ico`, `public/og-image.png` | Identité visuelle du site conservée. |
+| `.env.example` | Celui de l'hôte est un sur-ensemble. |
+| `AUDIT_STRATEGIE_COMMERCIALE.md`, `docs/Audit_*.pdf` | Fichiers identiques des deux côtés. |
+| `STRATEGIE_OFFRES_COMMERCIALES.md` | Version de l'hôte conservée (10 010 o contre 6 838 o). |
+
+---
+
+## 2. Migrations Supabase — état réel
+
+Dossier unique : `supabase/migrations/`, **30 fichiers**. La base compte
+**27 migrations enregistrées** dans `supabase_migrations.schema_migrations`.
+Les deux ensembles ne coïncident pas.
+
+### 2.1 Fichiers réalignés sur la base (10)
+
+Ces fichiers portaient un horodatage différent de celui réellement enregistré.
+Ils ont été renommés pour coïncider — **contenu inchangé**.
+
+| Ancien nom | Nouveau nom |
+|---|---|
+| `20250611172210-ffe28716-…` | `20250611052203_ffe28716-…` |
+| `20250613112732-39cdb05f-…` | `20250613112726_39cdb05f-…` |
+| `20260328204036_5f4f5a72-…` | `20260328204035_5f4f5a72-…` |
+| `20260403054344_cc00942c-…` | `20260403054343_cc00942c-…` |
+| `20260610062748_c26ef4c8-…` | `20260610062747_c26ef4c8-…` |
+| `20260612003409_fa40c4de-…` | `20260612003408_fa40c4de-…` |
+| `20260613034910_a3c27b4b-…` | `20260613034908_a3c27b4b-…` |
+| `20260701130343_4961549d-…` | `20260701130341_4961549d-…` |
+| `20260723120000_newsletter_subscribers` | `20260723101855_newsletter_subscribers` |
+| `20260725090000_blog_visuals_and_veille_content` | `20260725072137_blog_visuals_and_veille_content` |
+
+Le dernier renommage corrige aussi un **ordre faux** : `blog_visuals` précède
+`publish_veille_impots_articles` en base, alors que les horodatages locaux
+donnaient l'inverse.
+
+### 2.2 Appliquées en base, aucun fichier source (4)
+
+Antérieures à la sortie de Lovable ; leur SQL est perdu. Elles resteront
+absentes du dossier — **ne pas tenter de les reconstituer**, la base fait foi.
+
+| Version | Nom enregistré |
+|---|---|
+| `20250604092205` | `d7fdb675-4342-4a1a-bb04-d64331c62313` |
+| `20250606030214` | `13de540e-1d87-4b93-abf6-100dcf090db2` |
+| `20250607074032` | `6eb2cff3-5d29-4be8-acfd-10cdcc1140dc` |
+| `20250624103631` | `5432720c-ee1e-415c-a15d-690bde3b3e6b` |
+
+**Conséquence directe :** un `supabase db reset` ne reconstruira pas une base
+équivalente à la production. Ne pas s'en servir comme référence.
+
+### 2.3 Fichiers sans entrée en base (7) — état vérifié objet par objet
+
+Vérification faite le 01/08/2026 en lecture seule sur la production. Aucune
+n'a été appliquée ici : le tableau dit ce que la base contient **réellement**.
+
+| Fichier | État réel | Conduite à tenir |
+|---|---|---|
+| `20260325000000_fix-rls-policies.sql` | Obsolète. Les policies qu'il pose ont été remplacées depuis. | Ne pas rejouer. |
+| `20260411120000_create_comptable_user.sql` | **Jamais appliquée** — le compte `comptableprisma@gmail.com` n'existe pas. | Voir l'alerte § 4. |
+| `20260412000000_role_based_rls_policies.sql` (516 lignes) | **Obsolète et dangereuse.** Elle introduit `public.get_user_role` et réécrit les policies. Or `get_user_role` n'existe pas et **aucune** policy ne l'utilise : le modèle en vigueur est `private.has_role`, employée par **66 policies sur 84**. | **Ne jamais rejouer** — cela détruirait le modèle d'autorisation en production. Candidate à la suppression. |
+| `20260521000000_harmonize_facture_prestations.sql` | **Partiellement appliquée.** `facture_prestations` existe (43 lignes) avec `id, facture_id, description, type, quantite, prix_unitaire, montant, created_at` — mais **`updated_at` manque**. | Écart mineur à trancher : ajouter la colonne, ou retirer l'attente. |
+| `20260604051652_mission_documents.sql` | **Partiellement appliquée.** `courriers.task_id` et `courriers.mission_doc_type` existent, mais la table **`rapports_mission` est absente**. | **Bug latent actif** — voir § 3. |
+| `20260612000000_add_fiscal_columns_to_clients.sql` | Effet **présent** : les 6 colonnes (`civilite`, `chiffreaffaires`, `iscga`, `isvendeurboissons`, `modepaiementigs`, `modepaiementpsl`) existent. Appliquée hors du système de migration. | Rien à faire. |
+| `20260716190000_website_harden_input_constraints.sql` | Effet **présent** : 20 contraintes `CHECK` sur `contact_messages`, `quote_requests`, `appointments`. | Rien à faire. |
+
+### 2.4 Resynchroniser l'historique (non fait)
+
+Aligner `schema_migrations` sur le dossier demanderait des
+`supabase migration repair --status applied <version>`. **Volontairement non
+exécuté** : cela écrit dans la base de production. À décider séparément, en
+excluant les migrations du § 2.3 qui ne doivent pas être marquées appliquées.
+
+---
+
+## 3. Bug latent confirmé : `rapports_mission`
+
+`src/modules/gestion/services/missionDocumentService.ts` lit et écrit la table
+`rapports_mission` (lignes 537 et 577), et `integrations/supabase/extraTables.ts`
+en déclare le type. **Cette table n'existe pas en production.**
+
+Toute tentative d'enregistrer ou de relire un rapport de mission échoue donc.
+Le défaut préexiste à la fusion — il vient du dépôt taskplanner, où la
+migration `20260604051652_mission_documents.sql` n'a été appliquée qu'en
+partie. Deux issues : créer la table, ou retirer la fonctionnalité.
+
+Non corrigé ici : la consigne de cette opération était de ne pas écrire sur la
+base de production.
+
+---
+
+## 4. Sécurité — deux points ouverts
+
+**Identifiants en clair.** `supabase/migrations/20260411120000_create_comptable_user.sql`
+contient une adresse e-mail et un **mot de passe en clair**, ainsi qu'un
+`INSERT` direct dans `auth.users`. Le compte n'existe pas en base. Le hook
+`pre-commit` ne l'intercepte pas (il ne cible que les fichiers `.env`, les clés
+privées et les clés `service_role`). Recommandé : supprimer ce fichier et créer
+le compte via le dashboard Supabase ou l'API admin.
+
+**Données personnelles.** `facturation/clients_2026-01-28.csv` et son pendant
+`.json` contiennent **29 clients réels** : noms, NIU, téléphones, e-mails,
+numéros CNPS, centres de rattachement. Ils sont versionnés. **Le dépôt doit
+rester privé.** Un repassage en public exigerait au préalable une purge de
+l'historique (`git filter-repo`), le simple retrait des fichiers ne suffisant
+pas.
+
+---
+
+## 5. Reste à faire, hors périmètre de cette fusion
+
+- Décider du sort de `rapports_mission` (§ 3).
+- Décider du sort de `20260412000000_role_based_rls_policies.sql` (§ 2.3).
+- Retirer `create_comptable_user.sql` et recréer le compte proprement (§ 4).
+- Ajouter `facture_prestations.updated_at` ou retirer l'attente (§ 2.3).
+- Éventuellement dédupliquer les deux copies de shadcn/ui
+  (`src/components/ui/`, 53 fichiers, et `src/modules/gestion/components/ui/`,
+  55 fichiers). Coexistence volontaire à ce jour : elle garde le module
+  autonome.
+- Écrire des tests pour le site vitrine : les 13 fichiers de test existants
+  couvrent tous la console, aucun ne couvre l'hôte.
