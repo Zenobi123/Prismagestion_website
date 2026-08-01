@@ -81,12 +81,13 @@ types générés (référencée nulle part).
 
 ## 2. Migrations Supabase — état réel
 
-Dossier unique : `supabase/migrations/`, **31 fichiers**. La base compte
-**28 migrations enregistrées** dans `supabase_migrations.schema_migrations`.
+Dossier unique : `supabase/migrations/`, **32 fichiers**. La base compte
+**29 migrations enregistrées** dans `supabase_migrations.schema_migrations`.
 Les deux ensembles ne coïncident pas.
 
-La 31ᵉ / 28ᵉ est `20260801171728_creer_rapports_mission_et_bucket.sql`, écrite
-le 01/08/2026 et présente des deux côtés — voir § 3.
+Les deux dernières ont été écrites le 01/08/2026 et sont présentes des deux
+côtés : `20260801171728_creer_rapports_mission_et_bucket.sql` (§ 3) et
+`20260801172419_creer_bucket_documents.sql` (§ 3 bis).
 
 ### 2.1 Fichiers réalignés sur la base (10)
 
@@ -203,6 +204,37 @@ l'aurait fait avec `USING (true)`.
 Le fichier d'origine est conservé, annoté d'un avertissement en tête.
 
 ---
+
+## 3 bis. Le bucket `documents` (01/08/2026)
+
+Même classe de défaut, découverte en corrigeant la précédente : le bucket
+`documents` était appelé **cinq fois** dans le code sans exister en base.
+
+| Fichier | Fonctionnalité |
+|---|---|
+| `components/gestion/tabs/GestionDossier.tsx` | téléchargement des pièces du dossier client |
+| `components/gestion/tabs/hooks/useDocumentMutations.ts` | téléversement + URL signée |
+| `components/parametres/ProfileSettings.tsx` | photo de profil |
+
+La checklist documentaire du dossier client, mise en avant dans le README, ne
+pouvait donc pas fonctionner. Aucune donnée orpheline à reprendre :
+`documents_administratifs` était vide.
+
+Migration `20260801172419_creer_bucket_documents.sql`. Bucket **privé** (tous
+les accès passent par `createSignedUrl`), **10 Mo** — la plus large des deux
+limites appliquées côté client — et une liste de **7 types MIME** correspondant
+à l'union exacte des deux listes du code (PDF, Word, JPEG/JPG/PNG/WebP). La
+restriction existe déjà côté client ; la répéter au niveau du bucket est une
+défense en profondeur, le client pouvant être contourné. **Ajouter un type ici
+si le code en accepte un nouveau**, sinon l'envoi échouera côté serveur.
+
+Policies identiques au modèle en vigueur, avec `UPDATE` explicitement inclus :
+l'envoi d'un avatar utilise `upsert: true`.
+
+Limite connue : les policies exigent le rôle `admin`. C'est cohérent
+aujourd'hui — la console entière est derrière `ProtectedRoute requireAdmin` —
+mais **à revoir le jour où des collaborateurs non-admin y accéderont** : ils ne
+pourraient ni déposer une pièce, ni changer leur photo de profil.
 
 ## 4. Sécurité — deux points ouverts
 
