@@ -1,4 +1,25 @@
 -- Migration: Mission documents (ordres de mission + rapports de mission)
+--
+-- ┌──────────────────────────────────────────────────────────────────────────┐
+-- │ CONSERVEE POUR MEMOIRE — NE PAS REJOUER. Voir la migration               │
+-- │ 20260801171728_creer_rapports_mission_et_bucket.sql, qui la remplace.    │
+-- └──────────────────────────────────────────────────────────────────────────┘
+--
+-- Deux defauts, constates sur la base le 01/08/2026 :
+--
+--   1. Ligne « CREATE POLICY IF NOT EXISTS » (etape 4) : cette syntaxe n'existe
+--      pas en PostgreSQL. L'instruction echoue, et l'echec annule la creation
+--      de la table de l'etape 2. C'est pourquoi `rapports_mission` n'a jamais
+--      existe en base alors que ce fichier etait present depuis le 04/06/2026.
+--      Les colonnes `task_id` et `mission_doc_type` de `courriers` (etape 1)
+--      sont bien presentes : elles ont ete posees par un autre chemin.
+--
+--   2. Etape 3, « FOR ALL USING (true) WITH CHECK (true) » : accorde un acces
+--      total a tous les roles, anon compris, sur une table metier. Incompatible
+--      avec le durcissement du 29/07/2026 (private.has_role).
+--
+-- La migration de remplacement cree la table, l'index, le trigger et le bucket,
+-- avec des policies reservees au role authenticated et au role admin.
 
 -- 1. Ajouter les colonnes de liaison mission dans la table courriers
 ALTER TABLE courriers

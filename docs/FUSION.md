@@ -81,9 +81,12 @@ types générés (référencée nulle part).
 
 ## 2. Migrations Supabase — état réel
 
-Dossier unique : `supabase/migrations/`, **30 fichiers**. La base compte
-**27 migrations enregistrées** dans `supabase_migrations.schema_migrations`.
+Dossier unique : `supabase/migrations/`, **31 fichiers**. La base compte
+**28 migrations enregistrées** dans `supabase_migrations.schema_migrations`.
 Les deux ensembles ne coïncident pas.
+
+La 31ᵉ / 28ᵉ est `20260801171728_creer_rapports_mission_et_bucket.sql`, écrite
+le 01/08/2026 et présente des deux côtés — voir § 3.
 
 ### 2.1 Fichiers réalignés sur la base (10)
 
@@ -133,7 +136,7 @@ n'a été appliquée ici : le tableau dit ce que la base contient **réellement*
 | `20260411120000_create_comptable_user.sql` | **Jamais appliquée** — le compte `comptableprisma@gmail.com` n'existe pas. | Voir l'alerte § 4. |
 | `20260412000000_role_based_rls_policies.sql` (516 lignes) | **Obsolète et dangereuse.** Elle introduit `public.get_user_role` et réécrit les policies. Or `get_user_role` n'existe pas et **aucune** policy ne l'utilise : le modèle en vigueur est `private.has_role`, employée par **66 policies sur 84**. | **Ne jamais rejouer** — cela détruirait le modèle d'autorisation en production. Candidate à la suppression. |
 | `20260521000000_harmonize_facture_prestations.sql` | **Partiellement appliquée.** `facture_prestations` existe (43 lignes) avec `id, facture_id, description, type, quantite, prix_unitaire, montant, created_at` — mais **`updated_at` manque**. | Écart mineur à trancher : ajouter la colonne, ou retirer l'attente. |
-| `20260604051652_mission_documents.sql` | **Partiellement appliquée.** `courriers.task_id` et `courriers.mission_doc_type` existent, mais la table **`rapports_mission` est absente**. | **Bug latent actif** — voir § 3. |
+| `20260604051652_mission_documents.sql` | **Échouait entièrement** — voir § 3. Remplacée le 01/08/2026 par `20260801171728_creer_rapports_mission_et_bucket.sql`. | **Corrigé.** Ne pas rejouer le fichier d'origine, conservé annoté pour mémoire. |
 | `20260612000000_add_fiscal_columns_to_clients.sql` | Effet **présent** : les 6 colonnes (`civilite`, `chiffreaffaires`, `iscga`, `isvendeurboissons`, `modepaiementigs`, `modepaiementpsl`) existent. Appliquée hors du système de migration. | Rien à faire. |
 | `20260716190000_website_harden_input_constraints.sql` | Effet **présent** : 20 contraintes `CHECK` sur `contact_messages`, `quote_requests`, `appointments`. | Rien à faire. |
 
@@ -146,19 +149,58 @@ excluant les migrations du § 2.3 qui ne doivent pas être marquées appliquées
 
 ---
 
-## 3. Bug latent confirmé : `rapports_mission`
+## 3. `rapports_mission` — diagnostic et correction (01/08/2026)
 
-`src/modules/gestion/services/missionDocumentService.ts` lit et écrit la table
-`rapports_mission` (lignes 537 et 577), et `integrations/supabase/extraTables.ts`
-en déclare le type. **Cette table n'existe pas en production.**
+### Le symptôme
 
-Toute tentative d'enregistrer ou de relire un rapport de mission échoue donc.
-Le défaut préexiste à la fusion — il vient du dépôt taskplanner, où la
-migration `20260604051652_mission_documents.sql` n'a été appliquée qu'en
-partie. Deux issues : créer la table, ou retirer la fonctionnalité.
+`src/modules/gestion/services/missionDocumentService.ts` écrit dans la table
+`rapports_mission` (ligne 537) et la relit (ligne 577) ;
+`integrations/supabase/extraTables.ts` en déclare le type. **La table n'existait
+pas en production** : tout enregistrement de rapport de mission levait.
 
-Non corrigé ici : la consigne de cette opération était de ne pas écrire sur la
-base de production.
+### La cause
+
+La migration `20260604051652_mission_documents.sql` se terminait par :
+
+```sql
+CREATE POLICY IF NOT EXISTS "rapports_mission_storage_all" ON storage.objects
+```
+
+`CREATE POLICY` **n'accepte pas `IF NOT EXISTS`** en PostgreSQL. L'instruction
+échouait, et comme une migration s'exécute dans une transaction, l'échec
+annulait tout — y compris le `CREATE TABLE` de l'étape 2. Le fichier était donc
+présent depuis le 04/06/2026 sans avoir jamais produit d'effet.
+
+Les colonnes `courriers.task_id` et `courriers.mission_doc_type` de l'étape 1
+existent bel et bien : elles ont été posées par un autre chemin, ce qui donnait
+l'illusion d'une migration « à moitié appliquée ».
+
+Second défaut, plus discret : la policy de l'étape 3 était
+`FOR ALL USING (true) WITH CHECK (true)` — un accès total ouvert à tous les
+rôles, `anon` compris, sur une table métier.
+
+### La correction
+
+Migration `20260801171728_creer_rapports_mission_et_bucket.sql`, appliquée en
+production. Elle crée :
+
+- la table `rapports_mission`, dont les 10 colonnes correspondent exactement au
+  type déclaré dans `extraTables.ts` ;
+- l'index `(task_id, created_at desc)`, qui est l'accès exact de
+  `getRapportsMission` ;
+- le trigger `set_rapports_mission_updated_at` sur `public.handle_updated_at()` ;
+- le bucket privé `rapports-mission` (5 Mo), que l'upload du service attendait et
+  qui n'existait pas non plus — l'upload étant en « best-effort », il échouait
+  silencieusement et `file_path` restait nul ;
+- des policies **alignées sur le modèle en vigueur** :
+  `private.has_role(auth.uid(), 'admin')` réservé au rôle `authenticated`, pour
+  la table comme pour les quatre opérations sur le bucket.
+
+La policy permissive d'origine n'a pas été reprise. Contrôle après application :
+le linter de sécurité Supabase ne signale rien sur `rapports_mission` — il
+l'aurait fait avec `USING (true)`.
+
+Le fichier d'origine est conservé, annoté d'un avertissement en tête.
 
 ---
 
@@ -182,7 +224,6 @@ pas.
 
 ## 5. Reste à faire, hors périmètre de cette fusion
 
-- Décider du sort de `rapports_mission` (§ 3).
 - Décider du sort de `20260412000000_role_based_rls_policies.sql` (§ 2.3).
 - Retirer `create_comptable_user.sql` et recréer le compte proprement (§ 4).
 - Ajouter `facture_prestations.updated_at` ou retirer l'attente (§ 2.3).
