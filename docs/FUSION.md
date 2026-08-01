@@ -81,7 +81,7 @@ types générés (référencée nulle part).
 
 ## 2. Migrations Supabase — état réel
 
-Dossier unique : `supabase/migrations/`, **32 fichiers**. La base compte
+Dossier unique : `supabase/migrations/`, **31 fichiers**. La base compte
 **29 migrations enregistrées** dans `supabase_migrations.schema_migrations`.
 Les deux ensembles ne coïncident pas.
 
@@ -135,7 +135,7 @@ n'a été appliquée ici : le tableau dit ce que la base contient **réellement*
 |---|---|---|
 | `20260325000000_fix-rls-policies.sql` | Obsolète. Les policies qu'il pose ont été remplacées depuis. | Ne pas rejouer. |
 | `20260411120000_create_comptable_user.sql` | **Jamais appliquée** — le compte `comptableprisma@gmail.com` n'existe pas. | Voir l'alerte § 4. |
-| `20260412000000_role_based_rls_policies.sql` (516 lignes) | **Obsolète et dangereuse.** Elle introduit `public.get_user_role` et réécrit les policies. Or `get_user_role` n'existe pas et **aucune** policy ne l'utilise : le modèle en vigueur est `private.has_role`, employée par **66 policies sur 84**. | **Ne jamais rejouer** — cela détruirait le modèle d'autorisation en production. Candidate à la suppression. |
+| ~~`20260412000000_role_based_rls_policies.sql`~~ (516 lignes) | **Supprimée du dépôt le 01/08/2026.** Elle introduisait `public.get_user_role` et réécrivait les policies. Or cette fonction n'existe pas et aucune policy ne l'utilisait : le modèle en vigueur est `private.has_role`, employée par **78 policies**. | **Ne jamais la rejouer**, y compris en la récupérant de l'historique git — voir § 3 quater. |
 | `20260521000000_harmonize_facture_prestations.sql` | Effet **en place** (43 lignes), à l'exception d'`updated_at`. | **Tranché le 01/08/2026 : la colonne n'est pas ajoutée** — voir § 3 ter. Fichier annoté. |
 | `20260604051652_mission_documents.sql` | **Échouait entièrement** — voir § 3. Remplacée le 01/08/2026 par `20260801171728_creer_rapports_mission_et_bucket.sql`. | **Corrigé.** Ne pas rejouer le fichier d'origine, conservé annoté pour mémoire. |
 | `20260612000000_add_fiscal_columns_to_clients.sql` | Effet **présent** : les 6 colonnes (`civilite`, `chiffreaffaires`, `iscga`, `isvendeurboissons`, `modepaiementigs`, `modepaiementpsl`) existent. Appliquée hors du système de migration. | Rien à faire. |
@@ -257,6 +257,37 @@ colonne morte à maintenir, pour aucun gain.
 alors la colonne **et** un trigger sur `public.handle_updated_at()` — le modèle
 est dans `20260801171728`. Sans trigger, la colonne ne servirait à rien.
 
+## 3 quater. Suppression de `role_based_rls_policies.sql` (01/08/2026)
+
+Le fichier est retiré du dépôt. Vérifié juste avant, en production :
+
+| Contrôle | Résultat |
+|---|---|
+| Fonction `get_user_role` en base | **0** — n'existe pas |
+| Policies l'utilisant | **0** |
+| Policies sur `private.has_role` | **78** |
+| Migration enregistrée dans `schema_migrations` | **non** |
+
+Le fichier était donc entièrement inerte : sa suppression ne change rien à la
+base. Elle supprime en revanche un piège — 516 lignes prêtes à être « rejouées
+pour réparer », qui auraient réécrit les policies autour d'une fonction
+inexistante.
+
+**Il reste récupérable dans l'historique git. Ne pas le faire.** Si le besoin
+d'un contrôle d'accès plus fin que « admin ou rien » se présente, l'écrire à
+neuf sur `private.has_role`, pas en repartant de ce fichier.
+
+### Effet de bord traité
+
+`docs/rapport-securite-2026-04-11.md`, rapatrié du taskplanner, **recommandait
+d'exécuter cette migration à trois endroits** (§ 1, § 3 risque 2, § 5). Ces
+passages sont désormais barrés et annotés, et le document porte un avertissement
+en tête. Sans cela, la suppression du fichier aurait laissé une consigne
+dangereuse dans un document d'apparence officielle.
+
+Le même rapport recommandait aussi d'exécuter `create_comptable_user.sql` — le
+fichier au mot de passe en clair. Ce passage est également neutralisé.
+
 ## 4. Sécurité — deux points ouverts
 
 **Identifiants en clair.** `supabase/migrations/20260411120000_create_comptable_user.sql`
@@ -277,7 +308,6 @@ pas.
 
 ## 5. Reste à faire, hors périmètre de cette fusion
 
-- Décider du sort de `20260412000000_role_based_rls_policies.sql` (§ 2.3).
 - Retirer `create_comptable_user.sql` et recréer le compte proprement (§ 4).
 - Éventuellement dédupliquer les deux copies de shadcn/ui
   (`src/components/ui/`, 53 fichiers, et `src/modules/gestion/components/ui/`,

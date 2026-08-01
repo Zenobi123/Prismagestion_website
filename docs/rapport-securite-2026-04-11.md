@@ -1,5 +1,26 @@
 # Rapport d'analyse securite (v3 - corrections appliquees)
 
+> ## ⚠️ DOCUMENT HISTORIQUE — NE PAS EXECUTER LES ACTIONS QU'IL RECOMMANDE
+>
+> Conserve pour memoire. Ses constats d'avril 2026 restent instructifs, mais
+> **ses actions manuelles (§ 5) sont perimees et deux d'entre elles sont
+> dangereuses.** Mise a jour du 01/08/2026 :
+>
+> - **« Executer la migration RLS »** (`20260412000000_role_based_rls_policies.sql`)
+>   — **le fichier a ete supprime du depot.** Le modele qu'il installe,
+>   `public.get_user_role()` lisant `public.users`, a ete **abandonne** au profit
+>   de `private.has_role()`, sur laquelle reposent aujourd'hui **78 policies**.
+>   Rejouer cette migration, y compris en la recuperant de l'historique git,
+>   detruirait le modele d'autorisation en production.
+> - **« Executer la migration comptable »** (`20260411120000_create_comptable_user.sql`)
+>   — ce fichier contient un **mot de passe en clair** et un `INSERT` direct dans
+>   `auth.users`. Creer le compte via le dashboard Supabase ou l'API admin.
+> - Le projet audite, `prisma-taskmaster-planner`, a ete **fusionne** dans ce
+>   depot le 01/08/2026 ; ses chemins `src/...` correspondent desormais a
+>   `src/modules/gestion/...`.
+>
+> Reference : `docs/FUSION.md`.
+
 **Projet audite :** `prisma-taskmaster-planner`  
 **Date initiale :** 11 avril 2026  
 **Date de mise a jour :** 12 avril 2026 (v3)  
@@ -17,7 +38,9 @@ Depuis la v2 du rapport, **14 corrections** ont ete appliquees en deux passes :
 
 ### Risques restants
 - **1 risque moyen non corrige** : gestion des utilisateurs en memoire uniquement (pas connecte a Supabase Auth)
-- **1 migration SQL a appliquer** : `20260412000000_role_based_rls_policies.sql` doit etre executee manuellement dans le Supabase SQL Editor
+- ~~**1 migration SQL a appliquer** : `20260412000000_role_based_rls_policies.sql` doit etre executee manuellement dans le Supabase SQL Editor~~
+  → **CADUC (01/08/2026)** : migration supprimee, remplacee par le modele
+  `private.has_role`. Voir l'avertissement en tete de document.
 
 ---
 
@@ -54,7 +77,13 @@ Depuis la v2 du rapport, **14 corrections** ont ete appliquees en deux passes :
 
 #### Risque 2 — Politiques RLS "authenticated only" sans filtrage par role — CORRIGE (v3)
 
-**Fichier :** `supabase/migrations/20260412000000_role_based_rls_policies.sql`
+> **CADUC (01/08/2026).** Le risque a bien ete traite, mais **par une autre
+> voie** : le durcissement des 29 et 30/07/2026 a installe `private.has_role()`,
+> et la migration decrite ci-dessous n'a jamais ete appliquee. Elle a ete
+> supprimee du depot. Ce qui suit decrit une solution qui n'est pas celle en
+> production — ne pas s'en servir comme reference.
+
+**Fichier :** ~~`supabase/migrations/20260412000000_role_based_rls_policies.sql`~~ (supprime)
 
 **Correction appliquee :**
 - Creation d'une fonction `public.get_user_role()` (SECURITY DEFINER) qui recupere le role depuis `public.users`
@@ -243,9 +272,17 @@ Depuis la v2 du rapport, **14 corrections** ont ete appliquees en deux passes :
 
 ### A faire dans le Supabase Dashboard
 
-1. **Executer la migration RLS** : copier-coller le contenu de `supabase/migrations/20260412000000_role_based_rls_policies.sql` dans le SQL Editor et executer
-2. **Configurer le rate limiting Auth** : Auth > Rate Limits > definir les limites de tentatives de connexion
-3. **Executer la migration comptable** (si pas deja fait) : `supabase/migrations/20260411120000_create_comptable_user.sql`
+> **Revu le 01/08/2026.** Deux des trois actions ci-dessous ne doivent **pas**
+> etre executees. Voir l'avertissement en tete de document.
+
+1. ~~**Executer la migration RLS** : copier-coller le contenu de `supabase/migrations/20260412000000_role_based_rls_policies.sql` dans le SQL Editor et executer~~
+   → **NE PAS FAIRE.** Fichier supprime, modele abandonne au profit de
+   `private.has_role` (78 policies en production). L'executer, meme depuis
+   l'historique git, casserait les autorisations.
+2. **Configurer le rate limiting Auth** : Auth > Rate Limits > definir les limites de tentatives de connexion — *toujours valable*. Le linter Supabase signale par ailleurs la protection contre les mots de passe compromis et le MFA, tous deux desactives.
+3. ~~**Executer la migration comptable** (si pas deja fait) : `supabase/migrations/20260411120000_create_comptable_user.sql`~~
+   → **NE PAS FAIRE.** Ce fichier porte un mot de passe en clair et un `INSERT`
+   direct dans `auth.users`. Creer le compte via le dashboard ou l'API admin.
 
 ### A planifier dans une prochaine iteration
 
