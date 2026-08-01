@@ -32,8 +32,16 @@ Gestionnaire de paquets : **npm exclusivement** (`packageManager` est épinglé
 dans `package.json`, Node ≥ 22). Ne jamais introduire de `bun.lock` ni de
 `yarn.lock`.
 
-Tests : **vitest** en environnement `jsdom`. Les 13 fichiers de test vivent
-tous dans `src/modules/gestion/` — le site vitrine n'a pas encore de tests.
+Tests : **vitest** en environnement `jsdom`, avec `@testing-library/react` pour
+les composants. `src/test/setup.ts` charge les matchers de `jest-dom` et vide
+le DOM entre deux tests ; `vitest.config.ts` charge le plugin React, sans quoi
+le JSX des `.tsx` testés n'est pas transformé.
+
+Les tests de composants existent dans les deux styles, et c'est délibéré :
+`renderToStaticMarkup` (`react-dom/server`) suffit pour un composant de
+présentation pur — voir `PrintableDocuments.test.tsx` ; `render` +
+`userEvent` de testing-library est nécessaire dès qu'il y a un état ou une
+interaction — voir `IGSCalculatorForm.test.tsx`.
 
 ## Alias de chemins
 

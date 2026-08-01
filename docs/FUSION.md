@@ -410,8 +410,57 @@ attrape :
 
 ---
 
-## 7. Reste à faire
+## 7. Tests de composants React (01/08/2026)
+
+**Rectification.** La section précédente affirmait qu'aucun test ne couvrait
+les composants : c'était faux.
+`src/modules/gestion/components/printable/__tests__/PrintableDocuments.test.tsx`
+en couvrait déjà cinq, par rendu statique (`renderToStaticMarkup`), sans
+dépendance de test supplémentaire.
+
+Ce qui manquait, c'était de quoi tester les composants **interactifs**.
+
+### Outillage ajouté
+
+`@testing-library/react`, `@testing-library/user-event` et
+`@testing-library/jest-dom` en `devDependencies`. `vitest.config.ts` gagne le
+plugin React — sans lui le JSX des `.tsx` testés n'est pas transformé — et un
+`setupFiles` (`src/test/setup.ts`) qui charge les matchers DOM et vide le DOM
+entre deux tests.
+
+Aucune des vulnérabilités signalées par `npm audit` ne provient de ces
+paquets : elles viennent de dépendances transitives préexistantes (Babel,
+`brace-expansion`, `picomatch`).
+
+### Couverture ajoutée — 21 tests
+
+| Fichier | Ce qui est vérifié |
+|---|---|
+| `src/components/calculateur/__tests__/IGSCalculatorForm.test.tsx` | Chaînage saisie → conversion → calcul → remontée au parent : bouton désactivé à vide, montant de la tranche, séparateurs de milliers acceptés, saisie non numérique traitée comme zéro, recalcul après modification |
+| `src/components/calculateur/__tests__/TaxResultDisplay.test.tsx` | Les deux modes d'affichage et les quatre blocs conditionnels, chacun testé dans les deux sens : TDL, total, message hors barème, libellé de la première tranche |
+
+Le barème lui-même est couvert par `taxCalculations.test.ts` (§ 6). Ces tests
+couvrent ce que ces derniers ne peuvent pas voir : **un calcul juste dont le
+résultat n'arrive jamais à l'écran**.
+
+### Éprouvés par mutation
+
+| Régression simulée | Détectée |
+|---|---|
+| Bouton de calcul jamais désactivé | oui |
+| `amount !== undefined` remplacé par `amount` — un montant nul disparaît | oui |
+| Libellé de la première tranche appliqué à la mauvaise classe | oui |
+
+Deux assertions ont dû être resserrées en cours de route, le composant ayant
+raison contre le test : « TDL » figure aussi dans « Total à payer (IGS + TDL) »,
+et le chiffre d'affaires apparaît deux fois lorsqu'il coïncide avec une borne
+de tranche.
+
+---
+
+## 8. Reste à faire
 
 - Étendre la couverture du site vitrine aux services blog, `metadataService` et
   `seoService`, une fois le chantier en cours stabilisé.
-- Aucun test ne couvre les composants React, ni d'un côté ni de l'autre.
+- Les composants de mise en page et de contenu du site (sections d'accueil,
+  navigation, formulaires de contact et de devis) restent sans tests.
