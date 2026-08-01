@@ -373,7 +373,45 @@ implémentation et l'inscrire au tableau ci-dessus.
 
 ---
 
-## 6. Reste à faire
+## 6. Premiers tests du site vitrine (01/08/2026)
 
-- Écrire des tests pour le site vitrine : les 13 fichiers de test existants
-  couvrent tous la console, aucun ne couvre l'hôte.
+Aucun des 13 fichiers de test ne couvrait l'hôte. Trois modules sont désormais
+couverts, **82 tests** — la suite passe de 169 à **251**.
+
+| Fichier | Ce qui est vérifié |
+|---|---|
+| `src/utils/__tests__/taxCalculations.test.ts` | Calculateur d'IGS public : les 10 tranches, chaque borne des deux côtés, TDL à 10 %, sortie du barème au-delà de 49 999 999 F CFA |
+| `src/utils/__tests__/fraisMarche.test.ts` | Liquidation des frais d'enregistrement : droit à 7 %, CAC assis sur le droit, timbre par page, assiette de la pénalité de retard, bascule du barème CNE au 21/07/2026, refus de chiffrer hors barème |
+| `src/utils/__tests__/security.test.ts` | `hasPermission` et sa journalisation des refus, masquage de texte, force des mots de passe, caviardage récursif avant stockage, jetons CSRF |
+
+### Choix de périmètre
+
+Les cibles sont les **calculs exposés au public** et les **décisions de
+sécurité** : une tranche décalée d'un franc affiche un montant d'impôt faux à
+un visiteur, et un contrôle de rôle trop permissif ouvre l'administration.
+
+Les services du blog, `metadataService` et `seoService` sont volontairement
+laissés de côté : ils font l'objet d'un chantier en cours et des tests écrits
+maintenant porteraient sur un état transitoire.
+
+### Les tests ont été éprouvés
+
+Un test qui passe du premier coup ne prouve rien. Cinq régressions ont été
+introduites volontairement puis annulées, pour vérifier que la suite les
+attrape :
+
+| Régression simulée | Détectée par |
+|---|---|
+| Pénalité de retard assise aussi sur le timbre | 1 test |
+| Bascule du barème CNE décalée d'un jour (`<` → `<=`) | 1 test |
+| Borne d'une tranche IGS décalée d'un franc | 3 tests |
+| `hasPermission` accordant l'accès admin au rôle `user` | 2 tests |
+| Masquage laissant voir les chaînes courtes en clair | 1 test |
+
+---
+
+## 7. Reste à faire
+
+- Étendre la couverture du site vitrine aux services blog, `metadataService` et
+  `seoService`, une fois le chantier en cours stabilisé.
+- Aucun test ne couvre les composants React, ni d'un côté ni de l'autre.
