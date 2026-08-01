@@ -136,7 +136,7 @@ n'a été appliquée ici : le tableau dit ce que la base contient **réellement*
 | `20260325000000_fix-rls-policies.sql` | Obsolète. Les policies qu'il pose ont été remplacées depuis. | Ne pas rejouer. |
 | `20260411120000_create_comptable_user.sql` | **Jamais appliquée** — le compte `comptableprisma@gmail.com` n'existe pas. | Voir l'alerte § 4. |
 | `20260412000000_role_based_rls_policies.sql` (516 lignes) | **Obsolète et dangereuse.** Elle introduit `public.get_user_role` et réécrit les policies. Or `get_user_role` n'existe pas et **aucune** policy ne l'utilise : le modèle en vigueur est `private.has_role`, employée par **66 policies sur 84**. | **Ne jamais rejouer** — cela détruirait le modèle d'autorisation en production. Candidate à la suppression. |
-| `20260521000000_harmonize_facture_prestations.sql` | **Partiellement appliquée.** `facture_prestations` existe (43 lignes) avec `id, facture_id, description, type, quantite, prix_unitaire, montant, created_at` — mais **`updated_at` manque**. | Écart mineur à trancher : ajouter la colonne, ou retirer l'attente. |
+| `20260521000000_harmonize_facture_prestations.sql` | Effet **en place** (43 lignes), à l'exception d'`updated_at`. | **Tranché le 01/08/2026 : la colonne n'est pas ajoutée** — voir § 3 ter. Fichier annoté. |
 | `20260604051652_mission_documents.sql` | **Échouait entièrement** — voir § 3. Remplacée le 01/08/2026 par `20260801171728_creer_rapports_mission_et_bucket.sql`. | **Corrigé.** Ne pas rejouer le fichier d'origine, conservé annoté pour mémoire. |
 | `20260612000000_add_fiscal_columns_to_clients.sql` | Effet **présent** : les 6 colonnes (`civilite`, `chiffreaffaires`, `iscga`, `isvendeurboissons`, `modepaiementigs`, `modepaiementpsl`) existent. Appliquée hors du système de migration. | Rien à faire. |
 | `20260716190000_website_harden_input_constraints.sql` | Effet **présent** : 20 contraintes `CHECK` sur `contact_messages`, `quote_requests`, `appointments`. | Rien à faire. |
@@ -236,6 +236,27 @@ aujourd'hui — la console entière est derrière `ProtectedRoute requireAdmin` 
 mais **à revoir le jour où des collaborateurs non-admin y accéderont** : ils ne
 pourraient ni déposer une pièce, ni changer leur photo de profil.
 
+## 3 ter. `facture_prestations.updated_at` — écart fermé sans DDL
+
+La migration `20260521000000` déclare une colonne `updated_at` qui n'existe pas
+en base. Après analyse, **elle n'est pas ajoutée**, et l'écart est clos ainsi.
+
+Quatre constats convergents :
+
+| Constat | Détail |
+|---|---|
+| Le code ne modifie jamais ces lignes | 4 `delete`, 4 `insert`, 12 `select`, **zéro `update`** — les prestations sont remplacées en bloc |
+| La colonne serait donc figée | `updated_at` resterait éternellement égal à `created_at` : une traçabilité trompeuse, pire qu'une absence |
+| Les tables sœurs ne l'ont pas | ni `devis_prestations`, ni `prestations` — la base est cohérente, c'est le fichier qui est isolé |
+| Les types ne l'attendent pas | absente de `types.ts` comme d'`extraTables.ts` |
+
+Ajouter la colonne aurait créé une divergence avec `devis_prestations` et une
+colonne morte à maintenir, pour aucun gain.
+
+**Si le code évolue** vers une mise à jour en place des prestations, ajouter
+alors la colonne **et** un trigger sur `public.handle_updated_at()` — le modèle
+est dans `20260801171728`. Sans trigger, la colonne ne servirait à rien.
+
 ## 4. Sécurité — deux points ouverts
 
 **Identifiants en clair.** `supabase/migrations/20260411120000_create_comptable_user.sql`
@@ -258,7 +279,6 @@ pas.
 
 - Décider du sort de `20260412000000_role_based_rls_policies.sql` (§ 2.3).
 - Retirer `create_comptable_user.sql` et recréer le compte proprement (§ 4).
-- Ajouter `facture_prestations.updated_at` ou retirer l'attente (§ 2.3).
 - Éventuellement dédupliquer les deux copies de shadcn/ui
   (`src/components/ui/`, 53 fichiers, et `src/modules/gestion/components/ui/`,
   55 fichiers). Coexistence volontaire à ce jour : elle garde le module

@@ -13,6 +13,25 @@
 --     4. applique des politiques RLS identiques à celles de `prestations`.
 --   La migration est idempotente : elle peut être rejouée sans danger.
 -- =============================================================================
+--
+-- ÉTAT AU 01/08/2026 — jamais enregistrée dans schema_migrations, mais son
+-- effet est en place : facture_prestations existe et porte 43 lignes. Elle a
+-- donc été passée par un autre chemin (éditeur SQL), à un détail près.
+--
+-- `updated_at` (lignes 29 et 40) N'EST PAS EN BASE, et c'est volontairement
+-- laissé ainsi. Analyse du 01/08/2026 :
+--   - le code ne fait sur cette table que 4 delete, 4 insert et 12 select :
+--     aucun update. Les prestations sont remplacées, jamais modifiées ;
+--   - la colonne resterait donc éternellement égale à created_at, ce qui est
+--     pire qu'absent — une traçabilité qui n'en est pas une ;
+--   - ni `devis_prestations` ni `prestations`, ses tables sœurs, ne la
+--     possèdent : la base est cohérente, c'est ce fichier qui est isolé ;
+--   - `types.ts` et `extraTables.ts` ne la déclarent pas davantage.
+--
+-- Si un jour le code met à jour une prestation en place plutôt que de la
+-- remplacer, ajouter la colonne ET un trigger sur public.handle_updated_at()
+-- (voir 20260801171728 pour le modèle) — sans trigger, elle ne servirait à rien.
+-- =============================================================================
 
 -- -----------------------------------------------------------------------------
 -- 1. Table canonique : structure
