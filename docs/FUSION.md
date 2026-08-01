@@ -81,7 +81,7 @@ types générés (référencée nulle part).
 
 ## 2. Migrations Supabase — état réel
 
-Dossier unique : `supabase/migrations/`, **31 fichiers**. La base compte
+Dossier unique : `supabase/migrations/`, **30 fichiers**. La base compte
 **29 migrations enregistrées** dans `supabase_migrations.schema_migrations`.
 Les deux ensembles ne coïncident pas.
 
@@ -134,7 +134,7 @@ n'a été appliquée ici : le tableau dit ce que la base contient **réellement*
 | Fichier | État réel | Conduite à tenir |
 |---|---|---|
 | `20260325000000_fix-rls-policies.sql` | Obsolète. Les policies qu'il pose ont été remplacées depuis. | Ne pas rejouer. |
-| `20260411120000_create_comptable_user.sql` | **Jamais appliquée** — le compte `comptableprisma@gmail.com` n'existe pas. | Voir l'alerte § 4. |
+| ~~`20260411120000_create_comptable_user.sql`~~ | **Jamais appliquée** — le compte `comptableprisma@gmail.com` n'existe pas. **Supprimée du dépôt le 01/08/2026** (mot de passe en clair). | Voir § 4. |
 | ~~`20260412000000_role_based_rls_policies.sql`~~ (516 lignes) | **Supprimée du dépôt le 01/08/2026.** Elle introduisait `public.get_user_role` et réécrivait les policies. Or cette fonction n'existe pas et aucune policy ne l'utilisait : le modèle en vigueur est `private.has_role`, employée par **78 policies**. | **Ne jamais la rejouer**, y compris en la récupérant de l'historique git — voir § 3 quater. |
 | `20260521000000_harmonize_facture_prestations.sql` | Effet **en place** (43 lignes), à l'exception d'`updated_at`. | **Tranché le 01/08/2026 : la colonne n'est pas ajoutée** — voir § 3 ter. Fichier annoté. |
 | `20260604051652_mission_documents.sql` | **Échouait entièrement** — voir § 3. Remplacée le 01/08/2026 par `20260801171728_creer_rapports_mission_et_bucket.sql`. | **Corrigé.** Ne pas rejouer le fichier d'origine, conservé annoté pour mémoire. |
@@ -288,14 +288,30 @@ dangereuse dans un document d'apparence officielle.
 Le même rapport recommandait aussi d'exécuter `create_comptable_user.sql` — le
 fichier au mot de passe en clair. Ce passage est également neutralisé.
 
-## 4. Sécurité — deux points ouverts
+## 4. Sécurité
 
-**Identifiants en clair.** `supabase/migrations/20260411120000_create_comptable_user.sql`
-contient une adresse e-mail et un **mot de passe en clair**, ainsi qu'un
-`INSERT` direct dans `auth.users`. Le compte n'existe pas en base. Le hook
-`pre-commit` ne l'intercepte pas (il ne cible que les fichiers `.env`, les clés
-privées et les clés `service_role`). Recommandé : supprimer ce fichier et créer
-le compte via le dashboard Supabase ou l'API admin.
+**Identifiants en clair — fichier supprimé le 01/08/2026.**
+`20260411120000_create_comptable_user.sql` contenait une adresse e-mail, un
+**mot de passe en clair** et un `INSERT` direct dans `auth.users`. Contrôles
+avant suppression : le compte `comptableprisma@gmail.com` **n'existe pas** en
+base, et la migration n'était pas enregistrée dans `schema_migrations` — le
+fichier n'avait donc jamais rien produit.
+
+Le hook `pre-commit` ne l'avait pas intercepté : il ne cible que les fichiers
+`.env`, les clés privées et les valeurs de clé `service_role`. Un mot de passe
+applicatif dans un `INSERT` SQL passe au travers. C'est une limite connue et
+assumée du hook, pas un défaut à corriger dans l'urgence — le remède est de ne
+pas créer de comptes par migration.
+
+> **Le mot de passe reste dans l'historique git.** Supprimer le fichier ne
+> l'efface pas des commits antérieurs. Le risque est faible — le dépôt est
+> privé et ce mot de passe n'a jamais ouvert aucun compte, puisque le compte
+> n'a jamais été créé. Mais **s'il est réutilisé ailleurs, le changer.** Le
+> purger vraiment demanderait `git filter-repo` et une réécriture d'historique.
+
+Pour créer le compte comptable le jour venu : dashboard Supabase (Authentication
+→ Add user) ou API admin, puis attribution du rôle dans `public.user_roles`.
+Seul le rôle `admin` y est défini à ce jour.
 
 **Données personnelles.** `facturation/clients_2026-01-28.csv` et son pendant
 `.json` contiennent **29 clients réels** : noms, NIU, téléphones, e-mails,
@@ -308,7 +324,6 @@ pas.
 
 ## 5. Reste à faire, hors périmètre de cette fusion
 
-- Retirer `create_comptable_user.sql` et recréer le compte proprement (§ 4).
 - Éventuellement dédupliquer les deux copies de shadcn/ui
   (`src/components/ui/`, 53 fichiers, et `src/modules/gestion/components/ui/`,
   55 fichiers). Coexistence volontaire à ce jour : elle garde le module
