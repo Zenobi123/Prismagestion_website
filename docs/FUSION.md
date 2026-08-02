@@ -458,9 +458,50 @@ de tranche.
 
 ---
 
-## 8. Reste à faire
+## 8. Contact et devis (01/08/2026)
+
+51 tests de plus — la suite passe de 272 à **323**.
+
+| Fichier | Ce qui est vérifié |
+|---|---|
+| `src/utils/contact/__tests__/validation.test.ts` | Champs requis remontés **en une passe**, formats d'e-mail et de numéro WhatsApp acceptés/refusés, et surtout l'**alignement des bornes sur les contraintes de la base** |
+| `src/components/contact/__tests__/ContactForm.test.tsx` | Parcours complet : erreurs sous le bon champ, effacement à la correction, envoi, réinitialisation, verrouillage du bouton, échec réseau |
+| `src/components/quote/__tests__/QuoteForm.test.tsx` | Contrat du composant contrôlé, masquage du choix de service quand il est imposé, verrouillage pendant l'envoi, `SuccessMessage` |
+
+### Pourquoi les bornes de validation sont testées explicitement
+
+`CONTACT_FIELD_LIMITS` double les contraintes `CHECK` posées par
+`website_harden_input_constraints`. Si les deux divergent, le visiteur remplit
+un formulaire que le front accepte et que la base rejette, avec une erreur
+serveur incompréhensible.
+
+Un test fige donc les six valeurs en dur. Il n'est pas redondant avec les tests
+de longueur : ceux-ci lisent `CONTACT_FIELD_LIMITS` et **suivraient** une
+modification sans broncher. Vérifié par mutation — porter la limite de message
+à 50 000 ne fait tomber que ce test-là.
+
+### Une découverte sur la validation d'e-mail
+
+Le champ est `type="email"` : **le navigateur refuse lui-même** une adresse sans
+arobase, et la soumission n'a pas lieu — la validation applicative n'est jamais
+atteinte. Elle ne sert que pour ce que HTML5 laisse passer, `nathan@example`
+étant le cas type (accepté par le navigateur, refusé par la regex qui exige un
+point). Les deux barrières sont testées séparément.
+
+### Éprouvés par mutation
+
+| Régression simulée | Détectée |
+|---|---|
+| Sélecteur de service affiché même quand il est imposé | oui |
+| Bouton « Annuler » jamais verrouillé pendant l'envoi | oui |
+| `FormInput` n'affichant plus les messages d'erreur | oui — 5 tests, contact et devis |
+| Limite de message portée de 5 000 à 50 000 | oui |
+
+---
+
+## 9. Reste à faire
 
 - Étendre la couverture du site vitrine aux services blog, `metadataService` et
   `seoService`, une fois le chantier en cours stabilisé.
-- Les composants de mise en page et de contenu du site (sections d'accueil,
-  navigation, formulaires de contact et de devis) restent sans tests.
+- Les sections de contenu de la page d'accueil et la navigation restent sans
+  tests — plusieurs sont en cours de refonte.
