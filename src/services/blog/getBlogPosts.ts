@@ -118,174 +118,163 @@ export const DEFAULT_BLOG_POSTS: BlogPost[] = [
 
   {
     id: -10,
-    title: "Veille impots.cm : les actualités fiscales des 30 derniers jours (juin 2026)",
-    excerpt: "Sélection d'articles de qualité sur les dernières publications de la DGI (guide OTP, DSF de la DGE, nominations, taxe foncière, plan stratégique), avec liens officiels et documents à télécharger.",
+    title: "Veille impots.cm : les publications de la DGI à retenir (juillet 2026)",
+    excerpt: "Circulaire sur l'enregistrement en ligne de la commande publique, guide de transmission électronique des DSF, patentes, contribuables inactifs : le point sur les publications mises en avant par la DGI, avec les liens officiels.",
     content: `
-      <h2>Veille impots.cm — actualités fiscales du 1er au 30 juin 2026</h2>
+      <h2>Veille impots.cm — point arrêté au 31 juillet 2026</h2>
       <p>
-        Point de veille arrêté au 1er juillet 2026. Cette édition rassemble les publications les plus récentes
-        du portail officiel de la Direction Générale des Impôts du Cameroun (DGI) parues au cours des 30 derniers
-        jours, sous forme d'articles de synthèse. Chaque sujet est resitué dans son contexte, expliqué pour les
-        entreprises, particuliers, cabinets comptables et directions financières, puis accompagné des liens
-        officiels et des documents à télécharger.
+        Cette édition recense les publications actuellement mises en avant par la Direction Générale des Impôts
+        du Cameroun sur son portail officiel. Chaque sujet est resitué dans son contexte, expliqué pour les
+        entreprises, les particuliers, les cabinets comptables et les directions financières, puis accompagné du
+        lien permettant de consulter directement la source.
+      </p>
+      <p>
+        Une précision de méthode : les pages d'actualité du portail n'affichent pas de date de mise en ligne. La
+        date qui fait foi dans cette veille est donc celle de la consultation, le 31 juillet 2026. Nous invitons
+        le lecteur à se reporter aux documents officiels pour toute décision engageante.
       </p>
 
-      <h3>1. Guide OTP : payer ses impôts par ou pour un tiers (1er juillet 2026)</h3>
+      <h3>1. Circulaire sur l'enregistrement en ligne de la commande publique</h3>
       <p>
-        La DGI publie un guide dédié au module OTP (Online Tax Payment) de sa plateforme de télépaiement. L'OTP
-        permet de régler impôts et taxes en ligne par virement bancaire ; le nouveau guide détaille précisément
-        le cas du paiement « par autrui » ou « pour autrui ». Il s'adresse aux mandataires (experts-comptables,
-        conseils fiscaux, sociétés mères réglant pour une filiale) comme aux contribuables souhaitant faire régler
-        leur dette fiscale par un tiers.
+        La DGI publie une circulaire consacrée à l'enregistrement en ligne de la commande publique. Le sujet
+        prolonge la mise en service de la plateforme dédiée et concerne directement les entreprises attributaires
+        de marchés publics, de lettres-commandes et de bons de commande, ainsi que les administrations
+        contractantes et les cabinets qui les accompagnent.
       </p>
       <p>
-        Le document déroule tout le circuit : mise en place d'une convention de paiement par/pour un tiers,
-        initiation et soumission de la convention, acceptation et signature électronique, émission d'une demande
-        de paiement, puis traitement des demandes reçues. Pour les groupes et les cabinets, c'est un outil de
-        sécurisation et de traçabilité des règlements effectués au nom des clients.
+        L'enregistrement conditionne la régularité fiscale de l'opération : il est susceptible d'être exigé au
+        moment du suivi d'exécution, de la mise en paiement ou d'un contrôle. Le passage à une procédure en ligne
+        renforce la traçabilité de chaque acte, ce qui rend d'autant plus sensible la qualité des informations
+        saisies.
       </p>
       <ul>
-        <li><strong>À retenir :</strong> formaliser une convention avant tout paiement pour autrui, et rattacher la preuve de règlement au bon contribuable.</li>
-        <li><a href="https://impots.cm/fr/actualites/guide-otp-pour-le-paiement-des-impots-et-taxes-parpour-un-tiers" target="_blank" rel="noopener noreferrer">Actualité : Guide OTP pour le paiement des impôts et taxes par/pour un tiers</a></li>
-        <li><a href="https://impots.cm/sites/default/files/documents/guide_otp_paiement_pour_autrui_01032023%20.pdf" target="_blank" rel="noopener noreferrer">Document PDF : Guide OTP – paiement pour autrui</a></li>
+        <li><strong>À retenir :</strong> vérifier avant toute saisie la cohérence entre le contrat, l'identification fiscale de l'entreprise, le montant de la commande et les pièces justificatives ; conserver la preuve d'enregistrement dans le dossier du marché.</li>
+        <li><a href="https://impots.cm/fr/actualites/circulaire-enregistrement-en-ligne-de-la-commande-publique" target="_blank" rel="noopener noreferrer">Actualité : circulaire sur l'enregistrement en ligne de la commande publique</a></li>
+        <li><a href="https://impots.cm/sites/default/files/publications/VF%20circulaire%20enregistrement%20en%20ligne%20commande%20publique%20.pdf" target="_blank" rel="noopener noreferrer">Document PDF : texte intégral de la circulaire (19 pages)</a></li>
+        <li><a href="https://registrations.dgi.cm" target="_blank" rel="noopener noreferrer">Plateforme d'enregistrement de la commande publique</a></li>
       </ul>
 
-      <h3>2. DSF des contribuables de la DGE et nouveaux formats en ligne (28 juin 2026)</h3>
+      <h3>2. Guide de soumission de la DSF en ligne</h3>
       <p>
-        La DGI rappelle aux contribuables relevant de la Direction des Grandes Entreprises (DGE) que la Déclaration
-        Statistique et Fiscale (DSF) se transmet exclusivement par voie électronique, via le système d'information
-        accessible sur impots.cm. Cette communication s'accompagne de la mise à disposition des formats normalisés
-        de la DSF en ligne.
+        La DGI met à disposition un guide de transmission électronique de la Déclaration Statistique et Fiscale.
+        La DSF se transmet par voie dématérialisée via le système d'information accessible depuis le portail, sur
+        des gabarits normalisés selon le secteur et la taille de l'entreprise.
       </p>
       <p>
-        Quatre gabarits Excel verrouillés sont désormais imposés selon le secteur et la taille de l'entreprise :
-        DSF Normal, DSF SMT (système minimal de trésorerie), DSF Banque et DSF Assurance. Utiliser le bon format
-        conditionne l'acceptation de la déclaration : un dépôt réalisé sur un modèle inadapté est source de rejet
-        et de retard, avec un risque de pénalités.
+        Le choix du format conditionne l'acceptation de la déclaration : un dépôt effectué sur un modèle inadapté
+        expose au rejet, donc au retard et au risque de pénalité. Le guide constitue la référence à consulter
+        avant la campagne de dépôt.
       </p>
       <ul>
-        <li><strong>À retenir :</strong> télécharger le format correspondant à son activité, respecter le calendrier de dépôt (15 mars pour la DGE) et conserver l'accusé de télétransmission.</li>
-        <li><a href="https://www.impots.cm/fr/actualites/dsf-contribuables-dge" target="_blank" rel="noopener noreferrer">Actualité : DSF des contribuables de la DGE</a></li>
-        <li><a href="https://www.impots.cm/fr/actualites/formats-de-la-dsf-en-ligne" target="_blank" rel="noopener noreferrer">Actualité : Formats de la DSF en ligne (Normal, SMT, Banque, Assurance)</a></li>
-        <li><a href="https://www.impots.cm/sites/default/files/documents/GUIDE%20UTILISATEUR%20DSF%202025%20DU%2003-03-2025.pdf" target="_blank" rel="noopener noreferrer">Document PDF : Guide utilisateur DSF</a></li>
-        <li><a href="https://impots.cm/sites/default/files/documents/Tutoriel%20de%20t%C3%A9l%C3%A9d%C3%A9claration%20de%20la%20DSF.pdf" target="_blank" rel="noopener noreferrer">Document PDF : Tutoriel de télédéclaration de la DSF</a></li>
+        <li><strong>À retenir :</strong> télécharger le gabarit correspondant à son activité, respecter le calendrier de dépôt applicable à son centre de rattachement et conserver l'accusé de télétransmission.</li>
+        <li><a href="https://impots.cm/fr/actualites/guide-de-soumission-de-la-dsf-en-ligne" target="_blank" rel="noopener noreferrer">Actualité : guide de soumission de la DSF en ligne</a></li>
       </ul>
 
-      <h3>3. Nomination de responsables à la DGI (27 juin 2026)</h3>
+      <h3>3. Clarification du régime de la contribution des patentes</h3>
       <p>
-        Un arrêté du Ministre des Finances portant nomination de responsables à la Direction Générale des Impôts
-        a été publié. Ces mouvements concernent l'encadrement des structures centrales et opérationnelles (DGE,
-        CIME, CDI, centres spécialisés).
+        Une lettre circulaire précise le régime de la contribution des patentes applicable aux établissements
+        laïcs privés d'enseignement et de santé. Ces structures combinent mission sociale et activité économique,
+        ce qui rend la détermination du régime applicable délicate.
       </p>
       <p>
-        Pour les contribuables, l'enjeu est pratique : identifier ses interlocuteurs et vérifier la continuité du
-        suivi de ses dossiers (relances, demandes de renseignements, contentieux en cours) auprès du centre de
-        rattachement.
+        L'enjeu est double : une interprétation trop restrictive expose à un défaut de déclaration et à un
+        redressement ; une application excessive fait supporter une charge indue. La position retenue doit être
+        documentée — statuts, autorisations administratives, nature réelle des activités, recettes.
       </p>
       <ul>
-        <li><a href="https://www.impots.cm/fr/actualites/nomination-des-responsables-la-dgi" target="_blank" rel="noopener noreferrer">Actualité : Nomination des responsables à la DGI</a></li>
+        <li><a href="https://impots.cm/fr/actualites/lettre-circulaire-portant-clarification-du-regime-de-la-contribution-des-patentes" target="_blank" rel="noopener noreferrer">Actualité : lettre circulaire de clarification du régime des patentes</a></li>
       </ul>
 
-      <h3>4. Taxe foncière 2026 : échéance de paiement du 30 juin</h3>
+      <h3>4. Liste des contribuables inactifs</h3>
       <p>
-        La taxe sur la propriété foncière (TPF) est due au 1er janvier de l'exercice et se règle par paiement
-        spontané, au plus tard le 30 juin, sur la base de la déclaration du propriétaire. La Loi de finances 2026
-        a fait évoluer son régime, la cotisation étant assise sur la valeur de la propriété.
+        La DGI maintient la publication de la liste des contribuables inactifs. Y figurer n'est pas anodin : la
+        situation peut bloquer la délivrance d'une Attestation de Conformité Fiscale et fragiliser les relations
+        bancaires, commerciales et administratives, jusqu'à compromettre une candidature à un appel d'offres ou
+        le paiement d'une prestation.
       </p>
       <p>
-        L'échéance du 30 juin étant désormais dépassée, les propriétaires n'ayant pas encore réglé doivent
-        régulariser sans délai auprès de leur centre des impôts afin de limiter les pénalités et majorations de
-        retard. Un rappel utile pour les détenteurs de terrains bâtis et non bâtis, immeubles et locaux
-        professionnels.
+        La vérification est simple et doit être périodique. En cas d'inscription à tort, la régularisation passe
+        par le dépôt des déclarations manquantes, la mise à jour des informations administratives et une demande
+        auprès du centre des impôts de rattachement, preuves de démarche conservées.
       </p>
       <ul>
-        <li><a href="https://impots.cm/fr/taxe-fonciere" target="_blank" rel="noopener noreferrer">Page : Taxe foncière</a></li>
-        <li><a href="https://www.impots.cm/fr/calendrier-fiscal" target="_blank" rel="noopener noreferrer">Page : Calendrier fiscal</a></li>
+        <li><a href="https://impots.cm/fr/actualites/liste-des-contribuables-inactifs" target="_blank" rel="noopener noreferrer">Actualité : liste des contribuables inactifs</a></li>
       </ul>
 
-      <h3>5. Plan stratégique de la DGI 2026-2028 : le cap de la digitalisation</h3>
+      <h3>5. Circulaire d'application de la Loi de finances 2026</h3>
       <p>
-        La DGI diffuse son Plan stratégique 2026-2028, feuille de route qui structure la modernisation de
-        l'administration fiscale : dématérialisation des procédures (plus de 80 % des démarches réalisables en
-        ligne), déploiement du système Harmony DGI, élargissement de l'assiette et promotion du civisme fiscal.
-      </p>
-      <p>
-        Ce document aide les entreprises à anticiper l'évolution de leurs obligations déclaratives et de paiement,
-        et à intégrer la trajectoire « tout en ligne » dans leur organisation administrative et comptable.
+        La circulaire précisant les modalités d'application de la Loi de finances 2026 demeure le texte de
+        référence pour l'interprétation des mesures nouvelles : régimes d'imposition, obligations déclaratives,
+        dispositifs incitatifs. Elle reste incontournable pour sécuriser l'application des règles sur l'ensemble
+        de l'exercice.
       </p>
       <ul>
-        <li><a href="https://impots.cm/fr/document/plan-strategique-de-la-dgi-2026-2028" target="_blank" rel="noopener noreferrer">Document : Plan stratégique de la DGI 2026-2028</a></li>
-        <li><a href="https://www.impots.cm/sites/default/files/documents/PLAN%20STRAGTEGIQUE%20AU%2026%20De%CC%81c%202026.pdf" target="_blank" rel="noopener noreferrer">Document PDF : Plan stratégique de la DGI 2026-2028</a></li>
+        <li><a href="https://impots.cm/fr/actualites/circulaire-lf-2026" target="_blank" rel="noopener noreferrer">Actualité : circulaire d'application de la LF 2026</a></li>
       </ul>
 
-      <h3>6. Rappel de référence : circulaire d'application de la Loi de finances 2026</h3>
-      <p>
-        La circulaire précisant les modalités d'application de la Loi de finances 2026 reste le texte de référence
-        pour l'interprétation des mesures nouvelles (régimes d'imposition, obligations déclaratives, dispositifs
-        incitatifs). Publiée fin mai, elle demeure incontournable pour sécuriser l'application des règles durant
-        tout l'exercice.
-      </p>
+      <h3>Ressources permanentes à conserver sous la main</h3>
       <ul>
-        <li><a href="https://www.impots.cm/fr/actualites/circulaire-lf-2026" target="_blank" rel="noopener noreferrer">Actualité : Circulaire d'application de la LF 2026</a></li>
-      </ul>
-
-      <h3>Documents de référence à télécharger</h3>
-      <ul>
-        <li><a href="https://impots.cm/sites/default/files/documents/guide_otp_paiement_pour_autrui_01032023%20.pdf" target="_blank" rel="noopener noreferrer">Guide OTP – paiement des impôts pour autrui (PDF)</a></li>
-        <li><a href="https://www.impots.cm/sites/default/files/documents/GUIDE%20UTILISATEUR%20DSF%202025%20DU%2003-03-2025.pdf" target="_blank" rel="noopener noreferrer">Guide utilisateur DSF (PDF)</a></li>
-        <li><a href="https://impots.cm/sites/default/files/documents/Tutoriel%20de%20t%C3%A9l%C3%A9d%C3%A9claration%20de%20la%20DSF.pdf" target="_blank" rel="noopener noreferrer">Tutoriel de télédéclaration de la DSF (PDF)</a></li>
-        <li><a href="https://www.impots.cm/sites/default/files/documents/PLAN%20STRAGTEGIQUE%20AU%2026%20De%CC%81c%202026.pdf" target="_blank" rel="noopener noreferrer">Plan stratégique de la DGI 2026-2028 (PDF)</a></li>
+        <li><a href="https://impots.cm/fr/calendrier-fiscal" target="_blank" rel="noopener noreferrer">Calendrier fiscal</a></li>
+        <li><a href="https://impots.cm/fr/taxe-fonciere" target="_blank" rel="noopener noreferrer">Taxe foncière — échéance de paiement au 30 juin</a></li>
+        <li><a href="https://impots.cm/fr/document/plan-strategique-de-la-dgi-2026-2028" target="_blank" rel="noopener noreferrer">Plan stratégique de la DGI 2026-2028</a></li>
+        <li><a href="https://impots.cm/sites/default/files/documents/guide_otp_paiement_pour_autrui_01032023%20.pdf" target="_blank" rel="noopener noreferrer">Guide OTP — paiement des impôts par ou pour un tiers (PDF)</a></li>
       </ul>
 
       <h3>Priorités d'action pour les contribuables</h3>
       <ol>
+        <li>Lire la circulaire sur l'enregistrement en ligne de la commande publique si l'entreprise travaille avec le secteur public, et adapter sa procédure interne.</li>
+        <li>Vérifier le gabarit DSF applicable à son activité avant tout dépôt, et conserver l'accusé de télétransmission.</li>
+        <li>Pour les établissements privés d'enseignement et de santé, documenter la position retenue en matière de patente.</li>
+        <li>Contrôler son statut sur la liste des contribuables inactifs avant toute démarche sensible.</li>
         <li>Régulariser la taxe foncière si le paiement du 30 juin n'a pas été effectué.</li>
-        <li>Vérifier le format DSF applicable (DGE, secteur bancaire ou assurance) avant tout dépôt.</li>
-        <li>Mettre en place une convention OTP pour les paiements réalisés par ou pour un tiers.</li>
-        <li>Actualiser ses interlocuteurs à la DGI après les nouvelles nominations.</li>
-        <li>Relire la circulaire LF 2026 et le plan stratégique pour anticiper les prochaines échéances.</li>
       </ol>
 
       <p>
-        <em>Sources : publications officielles du portail impots.cm (rubriques Actualités et Documents),
-        pour la période du 1er au 30 juin 2026. Les liens renvoient aux pages et fichiers de la Direction
-        Générale des Impôts. Cette veille est fournie à titre d'information et ne se substitue pas à un conseil
-        personnalisé ; les équipes de Prisma Gestion restent disponibles pour l'accompagnement de vos
-        démarches.</em>
+        <em>Sources : portail officiel de la Direction Générale des Impôts (impots.cm), rubriques Actualités et
+        Documents, consultées le 31 juillet 2026. Cette veille est fournie à titre d'information et ne se
+        substitue pas à un conseil personnalisé ; les équipes de PRISMA GESTION restent disponibles pour
+        l'accompagnement de vos démarches.</em>
       </p>
     `,
     author: "PRISMA GESTION",
-    publishDate: "2026-07-01",
+    publishDate: "2026-07-31",
     status: "Publié",
     image: "/blog-images/veille-impots.jpg",
     slug: "veille-impots-cm-actualites-fiscales-juin-2026",
-    tags: ["Veille réglementaire", "Fiscalité", "DSF", "OTP", "Taxe foncière", "DGI"],
-    seoTitle: "Veille impots.cm : actualités fiscales de juin 2026",
-    seoDescription: "Les dernières actualités de la DGI (impots.cm) sur 30 jours : guide OTP, DSF de la DGE, formats DSF, nominations, taxe foncière et plan stratégique, avec liens et documents officiels."
+    tags: ["Veille réglementaire", "Fiscalité", "DSF", "Commande publique", "Patente", "DGI"],
+    seoTitle: "Veille impots.cm : publications de la DGI à retenir en juillet 2026",
+    seoDescription: "Veille fiscale impots.cm arrêtée au 31 juillet 2026 : circulaire commande publique, DSF en ligne, clarification des patentes, contribuables inactifs et circulaire LF 2026."
   },
   {
     id: -11,
-    title: "Veille cnps.cm : dernières actualités sociales",
-    excerpt: "Retrouvez le dernier élément publié sur cnps.cm : communiqué, document ou news officielle.",
+    title: "Veille cnps.cm : les actualités sociales à retenir (juillet 2026)",
+    excerpt: "Gratuité des prestations et mise en garde contre les paiements indus, gouvernance, note d'information : les dernières publications de la CNPS relevées au 31 juillet 2026, et la méthode pour en tirer parti.",
     content: `
-      <h2>Pourquoi suivre les publications de la CNPS</h2>
+      <h2>Point de veille CNPS — arrêté au 31 juillet 2026</h2>
       <p>La Caisse Nationale de Prévoyance Sociale est l'organisme en charge de la protection sociale des travailleurs au Cameroun : prestations familiales, réparation des risques professionnels, pensions de vieillesse, d'invalidité et de décès. Toute entreprise qui emploie du personnel est en relation directe avec elle, à travers l'immatriculation de ses salariés, ses déclarations périodiques et le versement de ses cotisations.</p>
-      <p>Les communiqués, notes et documents diffusés sur cnps.cm ont donc un effet immédiat sur la gestion sociale d'une entreprise : évolution d'une procédure de déclaration, ouverture ou fermeture d'un téléservice, campagne de régularisation, calendrier de dépôt, précision sur une pièce justificative. Une information manquée se traduit fréquemment par un retard, une pénalité ou un dossier de prestation bloqué du côté du salarié.</p>
+      <p>Les communiqués, notes et documents diffusés sur cnps.cm ont un effet immédiat sur la gestion sociale d'une entreprise : évolution d'une procédure de déclaration, ouverture ou fermeture d'un téléservice, campagne de régularisation, calendrier de dépôt, précision sur une pièce justificative. Une information manquée se traduit fréquemment par un retard, une pénalité ou un dossier de prestation bloqué du côté du salarié.</p>
 
-      <h2>Ce que l'on trouve sur cnps.cm</h2>
+      <h3>Les dernières publications relevées</h3>
+      <p>Relevé effectué le 31 juillet 2026 dans la rubrique actualités du site officiel :</p>
       <ul>
-        <li><strong>Communiqués officiels</strong> : annonces de portée générale adressées aux employeurs, aux assurés sociaux ou au public.</li>
-        <li><strong>Actualités institutionnelles</strong> : événements, partenariats, rencontres, ouverture de nouveaux services ou de nouvelles agences.</li>
-        <li><strong>Documentation</strong> : formulaires, guides, notices explicatives et supports téléchargeables utiles au montage des dossiers.</li>
-        <li><strong>Informations pratiques</strong> : coordonnées des centres de prévoyance sociale et modalités de contact.</li>
+        <li><strong>Gouvernance de la CNPS</strong> — 31 juillet 2026</li>
+        <li><strong>Visite de la CNPS au projet LAFTA</strong> — 30 juillet 2026</li>
+        <li><strong>La gratuité des services</strong> — 29 juillet 2026</li>
+        <li><strong>Note d'information</strong> — 24 juillet 2026</li>
+        <li><strong>L'électrocardiogramme</strong> — 24 juillet 2026</li>
       </ul>
+
+      <h3>Le sujet à retenir : la gratuité des services et les paiements indus</h3>
+      <p>La publication du 29 juillet mérite l'attention de tous les employeurs et de leurs salariés. La CNPS y rappelle que ses principales prestations sont entièrement gratuites : le dépôt des dossiers, la délivrance des attestations et certificats, la prise de rendez-vous, l'accès aux services numériques et l'information des usagers. Seul l'envoi de documents par courrier express peut être facturé, et uniquement lorsque l'usager le demande.</p>
+      <p>La Caisse avertit explicitement qu'aucun paiement ne peut être exigé pour accélérer le traitement d'un dossier, obtenir une priorité ou accéder à un service, et que toute sollicitation de ce type est contraire à ses règles. Un dispositif confidentiel de signalement des pratiques irrégulières est mis à disposition, avec protection des personnes qui agissent de bonne foi.</p>
+      <p>La portée pratique est directe pour les entreprises : un salarié ou un mandataire à qui l'on réclamerait un paiement pour une attestation ou un rendez-vous doit refuser et signaler. Il est utile de relayer cette information en interne, en particulier auprès des collaborateurs chargés des démarches sociales.</p>
 
       <div class="bg-gray-50">
         <h3>Accès rapide</h3>
         <ul>
           <li><a href="https://www.cnps.cm/" target="_blank" rel="noopener noreferrer">Page d'accueil cnps.cm</a></li>
           <li><a href="https://www.cnps.cm/actualites/" target="_blank" rel="noopener noreferrer">Rubrique actualités</a></li>
-          <li><a href="https://www.cnps.cm/documentation/" target="_blank" rel="noopener noreferrer">Rubrique documentation</a></li>
+          <li><a href="https://www.cnps.cm/fr/component/content/article/la-gratuit%C3%A9-des-services.html?catid=25&amp;Itemid=203" target="_blank" rel="noopener noreferrer">Publication : la gratuité des services</a></li>
         </ul>
       </div>
 
@@ -315,30 +304,36 @@ export const DEFAULT_BLOG_POSTS: BlogPost[] = [
       <h2>Recommandation PRISMA GESTION</h2>
       <p>Nous recommandons une consultation hebdomadaire des rubriques actualités et documentation de cnps.cm, et une vérification systématique avant chaque échéance déclarative. Toute publication ayant un effet sur les obligations de l'employeur doit être archivée avec sa date de consultation, puis transformée en brève ou en alerte selon son importance.</p>
       <p>Nos équipes accompagnent les entreprises sur l'ensemble de la chaîne : immatriculation, déclarations, contrôle de cohérence entre paie et cotisations, et traitement des dossiers de prestations. En cas de doute sur la portée d'une publication, n'hésitez pas à nous solliciter.</p>
+
+      <p><em>Sources : site officiel de la Caisse Nationale de Prévoyance Sociale (cnps.cm), rubrique actualités, consultée le 31 juillet 2026.</em></p>
     `,
     author: "PRISMA GESTION",
-    publishDate: "2026-04-10",
+    publishDate: "2026-07-31",
     status: "Publié",
     image: "/blog-images/veille-cnps.jpg",
     slug: "veille-cnps-cm-dernieres-actualites",
-    tags: ["Veille réglementaire", "Social"],
-    seoTitle: "Veille cnps.cm : dernières actualités sociales",
-    seoDescription: "Accédez rapidement aux dernières actualités et documents publiés sur cnps.cm."
+    tags: ["Veille réglementaire", "Social", "CNPS", "Employeurs"],
+    seoTitle: "Veille cnps.cm : actualités sociales de juillet 2026",
+    seoDescription: "Veille sociale cnps.cm arrêtée au 31 juillet 2026 : gratuité des services de la CNPS, dispositif de signalement, dernières publications et méthode de veille pour les employeurs."
   },
   {
     id: -12,
-    title: "Veille legecam.cm : nouveaux documents et annonces",
-    excerpt: "Un point d'accès direct vers la dernière publication visible sur legecam.cm.",
+    title: "Veille legecam.cm : suivre le GECAM et le pouls du patronat camerounais",
+    excerpt: "Commissions sectorielles, bulletins économiques, mercuriales, cliniques fiscales, médiation CMAG : ce que publie le GECAM et comment en faire un indicateur avancé pour son entreprise.",
     content: `
-      <h2>Pourquoi surveiller legecam.cm</h2>
-      <p>La veille institutionnelle ne se limite pas aux administrations fiscales et sociales. Les organisations patronales publient elles aussi des documents, des positions et des annonces qui éclairent l'environnement dans lequel évoluent les entreprises camerounaises. Le site legecam.cm fait partie de ces sources à consulter régulièrement.</p>
-      <p>L'intérêt de cette source est différent de celui d'un site administratif : elle ne crée pas d'obligation, mais elle signale les sujets qui montent, les difficultés remontées par les entreprises et les échanges en cours avec les pouvoirs publics. Pour un dirigeant, c'est un indicateur avancé : un thème qui apparaît dans le débat patronal se retrouve souvent, quelques mois plus tard, dans un texte réglementaire.</p>
+      <h2>Qui publie sur legecam.cm</h2>
+      <p>Le site legecam.cm est celui du GECAM, le Groupement des Entreprises du Cameroun, principale organisation patronale du pays. Basée à Bonanjo (Douala), la structure revendique plus de soixante années d'existence et plus d'un millier d'entreprises membres, sous la devise « Plus forts ensemble ».</p>
+      <p>L'intérêt de cette source est d'une nature différente de celle d'un site administratif : elle ne crée aucune obligation, mais elle signale les sujets qui montent, les difficultés remontées par les entreprises et les échanges en cours avec les pouvoirs publics. Pour un dirigeant, c'est un indicateur avancé : un thème qui apparaît dans le débat patronal se retrouve souvent, quelques mois plus tard, dans un texte réglementaire.</p>
 
       <h2>Ce que l'on trouve sur legecam.cm</h2>
+      <p>Relevé effectué le 31 juillet 2026 :</p>
       <ul>
-        <li><strong>Actualités</strong> : comptes rendus d'événements, rencontres institutionnelles, prises de parole publiques.</li>
-        <li><strong>Documents</strong> : notes, études, supports de travail et publications mises à disposition en téléchargement.</li>
-        <li><strong>Annonces</strong> : invitations, appels à participation, sessions de formation et rendez-vous professionnels.</li>
+        <li><strong>Sept commissions de travail</strong> : compétitivité industrielle, agriculture, fiscalité et douanes, affaires juridiques et contentieux, questions sociales et emploi, financement des PME, économie numérique et innovation. La commission fiscalité et douanes est celle à suivre en priorité pour les sujets qui nous occupent.</li>
+        <li><strong>Publications économiques régulières</strong> : mercuriales hebdomadaires sur les prix des matières premières et bulletins économiques mensuels — utiles pour objectiver une évolution de coûts dans une négociation commerciale ou une révision tarifaire.</li>
+        <li><strong>Documentation juridique</strong> : modèles et références réglementaires couvrant notamment le règlement des différends, la propriété intellectuelle, le secteur bancaire, le droit du travail, l'environnement et les marchés publics.</li>
+        <li><strong>Le CMAG</strong>, mécanisme de médiation et d'arbitrage, alternative à la voie judiciaire pour les litiges commerciaux entre entreprises.</li>
+        <li><strong>Événements et formations</strong> : cliniques fiscales, programmes de formation au leadership, rencontres institutionnelles et partenariats — un accord-cadre avec CAMTEL sur la transformation numérique des entreprises figure parmi les initiatives récentes.</li>
+        <li><strong>Bureau de la diaspora</strong> : dépôt en ligne de propositions d'investissement et d'offres d'expertise professionnelle.</li>
       </ul>
 
       <div class="bg-gray-50">
@@ -352,9 +347,9 @@ export const DEFAULT_BLOG_POSTS: BlogPost[] = [
 
       <h2>Une méthode de veille en cinq étapes</h2>
       <ol>
-        <li><strong>Balayer les trois rubriques.</strong> Actualités, documents et annonces ne se recoupent pas : un document de travail peut être mis en ligne sans faire l'objet d'une actualité, et inversement.</li>
+        <li><strong>Balayer les rubriques séparément.</strong> Actualités, documents et annonces ne se recoupent pas : un document de travail peut être mis en ligne sans faire l'objet d'une actualité, et inversement.</li>
         <li><strong>Distinguer la position de la norme.</strong> Une prise de position patronale n'est pas une règle applicable. Cette distinction doit être explicite dans toute reprise, au risque d'induire un lecteur en erreur.</li>
-        <li><strong>Identifier le secteur visé.</strong> Certaines publications concernent l'ensemble des entreprises, d'autres une filière précise. Le tri en amont évite d'alerter inutilement des clients non concernés.</li>
+        <li><strong>Identifier le secteur visé.</strong> Certaines publications concernent l'ensemble des entreprises, d'autres une filière précise ou une seule commission. Le tri en amont évite d'alerter inutilement des clients non concernés.</li>
         <li><strong>Conserver le document source.</strong> Les documents mis en ligne peuvent être retirés ou remplacés. Télécharger le fichier et noter la date de consultation garantit la traçabilité de l'analyse.</li>
         <li><strong>Croiser avec les sources officielles.</strong> Un sujet repéré ici gagne à être recoupé avec les publications de l'administration avant toute conclusion opérationnelle.</li>
       </ol>
@@ -370,77 +365,89 @@ export const DEFAULT_BLOG_POSTS: BlogPost[] = [
       </ol>
 
       <h2>Articuler cette veille avec les autres sources</h2>
-      <p>Cette veille prend tout son sens en complément des suivis réglementaires. Les publications de l'administration fiscale indiquent ce qui s'applique ; celles de la Caisse Nationale de Prévoyance Sociale, ce qui s'impose en matière sociale ; les sources patronales, elles, indiquent ce qui se discute. Les trois ensemble donnent une lecture complète de l'environnement des entreprises.</p>
+      <p>Cette veille prend tout son sens en complément des suivis réglementaires. Les publications de la Direction Générale des Impôts indiquent ce qui s'applique ; celles de la Caisse Nationale de Prévoyance Sociale, ce qui s'impose en matière sociale ; le GECAM, lui, indique ce qui se discute. Les trois ensemble donnent une lecture complète de l'environnement des entreprises.</p>
       <p>Concrètement, un sujet qui apparaît simultanément dans deux de ces trois canaux mérite une attention renforcée : c'est le signe qu'il quitte le champ du débat pour entrer dans celui de la mise en œuvre.</p>
 
       <h2>Recommandation PRISMA GESTION</h2>
-      <p>Nous recommandons une consultation hebdomadaire des rubriques actualités et documents, avec archivage systématique des fichiers téléchargeables et de leur date de consultation. Chaque sujet identifié comme structurant doit être suivi dans la durée plutôt que traité comme une information isolée.</p>
+      <p>Nous recommandons une consultation hebdomadaire des rubriques actualités et documents, avec archivage systématique des fichiers téléchargeables et de leur date de consultation. Les travaux de la commission fiscalité et douanes, ainsi que les cliniques fiscales, méritent un suivi particulier : ils annoncent souvent les points de friction qui feront l'objet d'arbitrages ultérieurs.</p>
       <p>Nos équipes assurent ce suivi pour le compte de leurs clients et le restituent sous forme de notes de synthèse adaptées à leur secteur d'activité.</p>
+
+      <p><em>Sources : site officiel du Groupement des Entreprises du Cameroun (legecam.cm), consulté le 31 juillet 2026.</em></p>
     `,
     author: "PRISMA GESTION",
-    publishDate: "2026-04-10",
+    publishDate: "2026-07-31",
     status: "Publié",
     image: "/blog-images/veille-legecam.jpg",
     slug: "veille-legecam-cm-documents-annonces",
-    tags: ["Veille", "Institutionnel"],
-    seoTitle: "Veille legecam.cm : nouveaux documents et annonces",
-    seoDescription: "Suivi des dernières publications de legecam.cm (documents, actualités, annonces)."
+    tags: ["Veille", "Institutionnel", "GECAM", "Patronat"],
+    seoTitle: "Veille legecam.cm : suivre les publications du GECAM",
+    seoDescription: "Veille sur legecam.cm, site du Groupement des Entreprises du Cameroun (GECAM) : commissions, publications économiques, documentation juridique et méthode de veille patronale."
   },
   {
     id: -13,
-    title: "Veille DGICAM Facebook : dernière publication",
-    excerpt: "Suivez la dernière publication postée sur la page Facebook officielle DGICAM.",
+    title: "Veille DGICAM : suivre la page Facebook officielle de la DGI",
+    excerpt: "La page @DGICAM est le compte Facebook officiel de la Direction Générale des Impôts. Pourquoi la suivre, comment vérifier son authenticité et quelles précautions prendre avant de reprendre une publication.",
     content: `
-      <h2>Une source institutionnelle qui passe par les réseaux sociaux</h2>
-      <p>La veille institutionnelle ne se limite plus aux communiqués publiés sur les sites web officiels. De nombreuses organisations professionnelles utilisent également les réseaux sociaux pour relayer des informations, annoncer des événements, diffuser des prises de position ou attirer l'attention des entreprises sur un sujet d'actualité. La page Facebook officielle de la DGICAM fait partie de ces canaux à surveiller régulièrement.</p>
-      <p>Pour les dirigeants, responsables administratifs, experts-comptables, fiscalistes et juristes d'entreprise, suivre cette page permet de capter rapidement les signaux utiles à la vie économique camerounaise. Une publication peut annoncer une rencontre institutionnelle, une position patronale, une alerte sectorielle, un événement, un partenariat ou une information susceptible d'intéresser les entreprises.</p>
+      <h2>DGICAM : le compte Facebook officiel de l'administration fiscale</h2>
+      <p>La page Facebook <strong>@DGICAM</strong> est le compte officiel de la <strong>Direction Générale des Impôts du Cameroun</strong>. Il ne s'agit ni d'une page patronale, ni d'un relais privé : c'est l'administration fiscale elle-même qui y communique, en complément de son portail impots.cm.</p>
+      <p>Cette précision n'est pas un détail. Elle détermine le statut de ce que l'on y lit : une publication émanant de ce compte est une communication de l'administration, et non une opinion sectorielle. Pour le versant patronal — positions des entreprises, débats en cours avec les pouvoirs publics — la source pertinente est le GECAM, traitée dans une autre veille de ce blog.</p>
+
+      <h2>Pourquoi suivre ce canal</h2>
+      <p>L'administration utilise ce réseau pour diffuser rapidement ce qui, sur le portail, apparaît parfois plus tard ou de manière moins visible : rappels d'échéances déclaratives, communiqués, campagnes de sensibilisation au civisme fiscal, annonces d'ouverture ou d'indisponibilité de téléservices, tutoriels d'utilisation des plateformes en ligne, couverture d'événements institutionnels.</p>
+      <p>Pour un dirigeant, un responsable administratif, un expert-comptable ou un fiscaliste, l'intérêt est celui de la réactivité : une interruption de service sur une plateforme de télédéclaration ou un rappel d'échéance à quelques jours de la date limite se repère souvent d'abord ici.</p>
 
       <div class="bg-gray-50">
         <h3>Lien direct</h3>
         <ul>
-          <li><a href="https://www.facebook.com/DGICAM" target="_blank" rel="noopener noreferrer">Page Facebook officielle DGICAM</a></li>
+          <li><a href="https://www.facebook.com/DGICAM" target="_blank" rel="noopener noreferrer">Page Facebook officielle de la DGI Cameroun (@DGICAM)</a></li>
+          <li><a href="https://impots.cm/fr" target="_blank" rel="noopener noreferrer">Portail officiel impots.cm — source de référence</a></li>
         </ul>
       </div>
 
-      <h2>1. Vérifier la source</h2>
-      <p>La première étape d'une bonne veille consiste à vérifier la source. L'information doit provenir de la page officielle identifiée, et non d'une republication isolée ou d'une capture d'écran sortie de son contexte. Cette vérification est essentielle avant toute reprise dans une note, une alerte client ou un article de blog.</p>
+      <h2>1. Vérifier l'authenticité avant toute chose</h2>
+      <p>C'est la précaution la plus importante, et elle est loin d'être théorique. En octobre 2022, la Direction Générale des Impôts avait fait état de <strong>dix-sept faux comptes et pages Facebook</strong> créés en son nom à des fins d'escroquerie, fermés à sa demande par l'ANTIC. L'usurpation d'identité de l'administration fiscale sur les réseaux sociaux est un risque avéré.</p>
+      <p>Avant de reprendre une information, il faut donc s'assurer qu'elle provient bien du compte officiel — identifiable par son adresse <em>facebook.com/DGICAM</em> et son badge de certification — et non d'une page homonyme ou d'une capture d'écran circulant hors contexte.</p>
+      <p>Deux règles en découlent, à diffuser en interne : l'administration fiscale ne réclame jamais de paiement par messagerie sociale, et aucune donnée fiscale confidentielle ne doit être transmise par ce canal. Toute sollicitation de ce type doit être considérée comme frauduleuse.</p>
 
-      <h2>2. Qualifier la publication</h2>
-      <p>Il faut ensuite déterminer s'il s'agit d'une simple annonce, d'un communiqué à portée générale, d'une information sectorielle, d'une prise de position, d'une invitation à un événement ou d'un sujet susceptible d'avoir des conséquences fiscales, sociales, économiques ou réglementaires. Cette qualification permet de choisir le bon format éditorial.</p>
+      <h2>2. Ne jamais confondre le relais et le texte</h2>
+      <p>Une publication sur un réseau social n'a pas de valeur juridique. Elle signale, elle annonce, elle rappelle — mais elle ne fait pas foi. Une décision engageante ne se prend jamais sur cette seule base : l'information doit être recoupée avec le portail impots.cm, une circulaire, un texte de loi ou le Code Général des Impôts avant toute application.</p>
+      <p>Cette exigence de recoupement est la contrepartie de la rapidité du canal. Elle protège autant le cabinet que son client.</p>
 
-      <h2>3. Analyser l'impact pour les entreprises</h2>
-      <p>Une publication DGICAM peut intéresser les membres d'une organisation patronale, les PME, les grandes entreprises, les investisseurs, les prestataires, les cabinets de conseil ou les partenaires institutionnels. L'article de veille doit donc répondre à une question simple : pourquoi cette publication mérite-t-elle l'attention des entreprises ?</p>
-      <p>Lorsque la publication est essentiellement informative, une brève de veille peut suffire. Lorsqu'elle soulève un enjeu économique, fiscal, social ou réglementaire, il est préférable de produire un article plus complet, avec contexte, analyse, conséquences pratiques et recommandations. Cette distinction évite de surcharger le blog tout en conservant une veille utile.</p>
+      <h2>3. Qualifier la publication</h2>
+      <p>Il faut ensuite déterminer la nature de ce qui est publié : rappel d'échéance, communiqué à portée générale, information sur un téléservice, campagne de sensibilisation, couverture d'un événement ou mise en garde. Cette qualification commande le format de restitution et le degré d'urgence.</p>
+      <p>Lorsque la publication est essentiellement informative, une brève de veille suffit. Lorsqu'elle touche une obligation déclarative, une échéance ou le fonctionnement d'une plateforme, elle justifie une alerte adressée aux clients concernés.</p>
 
       <h2>4. Tenir compte de la volatilité du support</h2>
-      <p>La veille sur les réseaux sociaux impose une précaution supplémentaire : les publications peuvent être modifiées, commentées, masquées ou difficiles à retrouver dans le fil. Il est donc recommandé de conserver la date de consultation, le lien direct vers la publication lorsqu'il est disponible, une capture interne à usage documentaire et une synthèse des points clés. Cette méthode sécurise le travail éditorial.</p>
+      <p>Les publications d'un réseau social peuvent être modifiées, masquées ou devenir difficiles à retrouver dans le fil. Il est donc recommandé de conserver la date de consultation, le lien direct vers la publication lorsqu'il est disponible, une capture à usage documentaire interne et une synthèse des points clés. Cette méthode sécurise le travail éditorial et permet de justifier ultérieurement une alerte envoyée à un client.</p>
 
       <h2>Modèle de traitement éditorial recommandé</h2>
       <p>Pour chaque publication jugée pertinente, l'équipe éditoriale peut utiliser la grille suivante :</p>
       <ol>
-        <li><strong>Source</strong> : page Facebook officielle DGICAM.</li>
-        <li><strong>Date de consultation</strong> : date à laquelle la publication a été vérifiée.</li>
-        <li><strong>Nature de l'information</strong> : annonce, communiqué, événement, position, alerte ou information sectorielle.</li>
-        <li><strong>Public concerné</strong> : PME, grandes entreprises, fiscalistes, RH, juristes, dirigeants, investisseurs ou secteurs spécifiques.</li>
-        <li><strong>Impact potentiel</strong> : fiscal, social, économique, réglementaire, commercial ou institutionnel.</li>
-        <li><strong>Format conseillé</strong> : brève de veille, article d'analyse, alerte pratique ou note interne.</li>
-        <li><strong>Action recommandée</strong> : suivre, relayer, analyser, contacter un conseil ou préparer une mise en conformité.</li>
+        <li><strong>Source</strong> : page Facebook officielle @DGICAM, authenticité vérifiée.</li>
+        <li><strong>Date de consultation</strong> : date à laquelle la publication a été relevée.</li>
+        <li><strong>Nature de l'information</strong> : rappel d'échéance, communiqué, téléservice, campagne, événement ou mise en garde.</li>
+        <li><strong>Public concerné</strong> : entreprises du réel, contribuables relevant de l'IGS, particuliers, secteurs spécifiques.</li>
+        <li><strong>Recoupement effectué</strong> : référence trouvée sur impots.cm ou dans un texte officiel, ou absence de confirmation.</li>
+        <li><strong>Format conseillé</strong> : brève de veille, alerte pratique ou note interne.</li>
+        <li><strong>Action recommandée</strong> : suivre, relayer, vérifier auprès du centre de rattachement ou préparer une mise en conformité.</li>
       </ol>
 
-      <h2>Une rubrique complémentaire des autres veilles</h2>
-      <p>Pour PRISMA GESTION, la veille DGICAM constitue un complément aux veilles fiscales et sociales. Elle permet de suivre l'environnement des entreprises au-delà de la fiscalité stricte, en intégrant les signaux patronaux, économiques et institutionnels. Un même sujet repéré à la fois sur ce canal et dans une publication administrative mérite systématiquement un traitement approfondi.</p>
+      <h2>Une rubrique complémentaire de la veille impots.cm</h2>
+      <p>Cette veille et celle consacrée au portail impots.cm ont le même émetteur mais deux temporalités : le réseau social diffuse vite et signale, le portail publie les textes et fait référence. Les suivre ensemble permet de capter l'information tôt tout en la fondant sur la source qui l'établit.</p>
 
       <h2>Recommandation PRISMA GESTION</h2>
-      <p>Nous recommandons de consulter la page Facebook DGICAM au moins une fois par semaine, et à chaque période d'actualité économique importante. Toute publication ayant un impact potentiel sur les entreprises doit être archivée, qualifiée, puis transformée en brève ou en article selon son importance.</p>
+      <p>Nous recommandons de consulter la page au moins une fois par semaine, et quotidiennement à l'approche des échéances déclaratives. Toute publication ayant un effet potentiel sur les obligations des contribuables doit être archivée, qualifiée, recoupée avec la source officielle, puis transformée en brève ou en alerte selon son importance.</p>
+
+      <p><em>Sources : page Facebook officielle de la Direction Générale des Impôts du Cameroun (@DGICAM) et portail impots.cm, consultés le 31 juillet 2026. L'épisode des dix-sept faux comptes fermés par l'ANTIC est documenté par la presse spécialisée en octobre 2022.</em></p>
     `,
     author: "PRISMA GESTION",
-    publishDate: "2026-04-10",
+    publishDate: "2026-07-31",
     status: "Publié",
     image: "/blog-images/veille-dgicam.jpg",
     slug: "veille-facebook-dgicam-derniere-publication",
-    tags: ["Veille", "Réseaux sociaux"],
-    seoTitle: "Veille DGICAM Facebook : dernière publication",
-    seoDescription: "Accès rapide à la dernière publication de la page Facebook DGICAM."
+    tags: ["Veille", "Réseaux sociaux", "DGI", "Fiscalité"],
+    seoTitle: "Veille DGICAM : la page Facebook officielle de la DGI Cameroun",
+    seoDescription: "Veille sur la page Facebook officielle de la Direction Générale des Impôts du Cameroun (@DGICAM) : intérêt, vérification de l'authenticité et méthode de traitement éditorial."
   },
   {
     id: -20,
@@ -666,23 +673,25 @@ export const DEFAULT_BLOG_POSTS: BlogPost[] = [
   }
 ];
 
-async function seedDefaultBlogPosts(existingSlugs: string[]) {
-  for (const post of DEFAULT_BLOG_POSTS) {
-    if (!existingSlugs.includes(post.slug)) {
-      await supabase.from("blog_posts").insert([{
-        title: post.title,
-        excerpt: post.excerpt,
-        content: post.content,
-        author: post.author,
-        publish_date: post.publishDate,
-        status: post.status,
-        image: post.image,
-        slug: post.slug,
-        tags: post.tags,
-        seo_title: post.seoTitle,
-        seo_description: post.seoDescription
-      }]);
-    }
+async function seedDefaultBlogPosts() {
+  const { error } = await supabase.from("blog_posts").insert(
+    DEFAULT_BLOG_POSTS.map((post) => ({
+      title: post.title,
+      excerpt: post.excerpt,
+      content: post.content,
+      author: post.author,
+      publish_date: post.publishDate,
+      status: post.status,
+      image: post.image,
+      slug: post.slug,
+      tags: post.tags,
+      seo_title: post.seoTitle,
+      seo_description: post.seoDescription
+    }))
+  );
+
+  if (error) {
+    console.error("Amorçage des articles par défaut impossible:", error);
   }
 }
 
@@ -691,20 +700,27 @@ let defaultBlogPostsSeedPromise: Promise<void> | null = null;
 async function ensureDefaultBlogPostsSeeded(): Promise<void> {
   if (!defaultBlogPostsSeedPromise) {
     defaultBlogPostsSeedPromise = (async () => {
-      const { data: slugRows, error } = await supabase
+      // L'amorçage ne concerne qu'une base vierge. La politique RLS
+      // `blog_posts_public_read` ne renvoie que les articles « Publié » aux
+      // non-administrateurs : comparer les slugs présents ferait passer tout
+      // article mis en brouillon pour un article manquant et relancerait, à
+      // chaque chargement, une insertion vouée à échouer sur la contrainte
+      // d'unicité `blog_posts_slug_key`. Un article retiré depuis
+      // l'administration doit le rester.
+      const { count, error } = await supabase
         .from("blog_posts")
-        .select("slug");
+        .select("id", { count: "exact", head: true });
 
       if (error) {
         console.error("Impossible de vérifier les articles par défaut:", error);
         return;
       }
 
-      const existingSlugs = (slugRows || [])
-        .map((row) => row.slug)
-        .filter((slug): slug is string => typeof slug === "string");
+      if ((count ?? 0) > 0) {
+        return;
+      }
 
-      await seedDefaultBlogPosts(existingSlugs);
+      await seedDefaultBlogPosts();
     })().catch((error) => {
       defaultBlogPostsSeedPromise = null;
       throw error;
