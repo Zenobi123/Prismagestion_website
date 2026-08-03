@@ -17,7 +17,7 @@ export class MetadataService {
     title: "PRISMA GESTION | Cabinet de services professionnels",
     description: "PRISMA GESTION - Cabinet de services en comptabilité, finance, fiscalité, ressources humaines, génie logiciel et intelligence artificielle basé à Yaoundé, Cameroun.",
     keywords: ["expertise comptable", "fiscalité", "conseil financier", "PRISMA", "Yaoundé", "Cameroun"],
-    ogImage: "/lovable-uploads/f19d1ca3-7f15-4ee6-8188-e43c7316e586.png",
+    ogImage: "/og-image.jpg",
     ogType: "website"
   };
 
@@ -55,7 +55,7 @@ export class MetadataService {
           "name": "PRISMA GESTION",
           "logo": {
             "@type": "ImageObject",
-            "url": "/lovable-uploads/f19d1ca3-7f15-4ee6-8188-e43c7316e586.png"
+            "url": "/logo-prisma.png"
           }
         },
         "datePublished": post.publishDate,
@@ -71,7 +71,7 @@ export class MetadataService {
       "name": "PRISMA GESTION",
       "description": this.DEFAULT_METADATA.description,
       "url": window.location.origin,
-      "logo": `${window.location.origin}/lovable-uploads/f19d1ca3-7f15-4ee6-8188-e43c7316e586.png`,
+      "logo": `${window.location.origin}/logo-prisma.png`,
       "address": {
         "@type": "PostalAddress",
         "addressLocality": "Yaoundé",

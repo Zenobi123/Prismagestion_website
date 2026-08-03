@@ -16,7 +16,7 @@ export interface SEOConfig {
 export class SEOService {
   private static readonly DEFAULT_SITE_NAME = 'PRISMA GESTION';
   private static readonly DEFAULT_DESCRIPTION = 'Cabinet d\'expertise comptable, fiscale et financière pour entreprises et indépendants';
-  private static readonly DEFAULT_OG_IMAGE = '/lovable-uploads/f19d1ca3-7f15-4ee6-8188-e43c7316e586.png';
+  private static readonly DEFAULT_OG_IMAGE = '/og-image.jpg';
 
   static generatePageTitle(title: string): string {
     return title.includes(this.DEFAULT_SITE_NAME) ? title : `${title} | ${this.DEFAULT_SITE_NAME}`;
