@@ -29,6 +29,8 @@ export interface Offer {
 export interface PoleDefinition {
   id: OfferPole;
   title: string;
+  /** Libellé court, utilisé par le sélecteur de pôle de la page d'accueil. */
+  shortTitle: string;
   subtitle: string;
 }
 
@@ -36,12 +38,14 @@ export const OFFER_POLES: PoleDefinition[] = [
   {
     id: 'gestion',
     title: 'Gestion, comptabilité & fiscalité',
+    shortTitle: 'Gestion & chiffre',
     subtitle:
       "Tenir vos obligations, sécuriser vos déclarations et piloter vos chiffres au quotidien.",
   },
   {
     id: 'numerique',
     title: 'Génie logiciel & intelligence artificielle',
+    shortTitle: 'Numérique & IA',
     subtitle:
       "Choisir les bons outils, développer ce qui manque et mettre l'IA au travail sur vos propres données.",
   },

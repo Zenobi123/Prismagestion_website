@@ -17,13 +17,18 @@ const ServicesSection = () => {
       <div className="container mx-auto px-0 xs:px-2 sm:px-4">
         <div className="text-center max-w-3xl mx-auto mb-8 xs:mb-12 md:mb-16">
           <h2 className="heading-lg mb-4 text-prisma-purple">
-            Nos domaines d'<span className="text-gradient">expertise</span>
+            Nos domaines d'<span className="text-highlight">expertise</span>
           </h2>
-          <p className="text-gray-600">
-            Découvrez notre gamme complète de services destinés à répondre aux besoins
-            spécifiques de votre entreprise, quelle que soit sa taille ou son secteur d'activité.
+          {/*
+            Cette section répond à « que savez-vous faire ? ». Les offres, plus
+            haut, répondent à « que puis-je acheter ? ». Les chapeaux disent
+            explicitement l'angle de chacune pour éviter au lecteur l'impression
+            de relire la même chose sous un autre titre.
+          */}
+          <p className="text-gray-600 measure mx-auto">
+            Le détail de chaque métier : ce que nous prenons concrètement en charge dans les
+            six domaines où nous intervenons, et les livrables que vous recevez.
           </p>
-          
         </div>
 
         {loading ? (

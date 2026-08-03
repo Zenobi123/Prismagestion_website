@@ -75,7 +75,7 @@ const HeroSection = () => {
               heroData.title
             )}
           </h1>
-          <p className="text-prisma-white/80 text-sm xs:text-base sm:text-lg md:text-xl mb-6 sm:mb-8 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+          <p className="text-prisma-white/80 text-sm xs:text-base sm:text-lg md:text-xl mb-6 sm:mb-8 measure animate-fade-in" style={{ animationDelay: '0.2s' }}>
             {heroData.description}
           </p>
           <div className="flex flex-wrap gap-4 animate-fade-in" style={{ animationDelay: '0.4s' }}>

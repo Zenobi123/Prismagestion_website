@@ -64,7 +64,7 @@ const AboutSection = () => {
             {aboutData.title.includes("PRISMA GESTION") ? (
               <>
                 {aboutData.title.split("PRISMA GESTION")[0]}
-                <span className="text-gradient">PRISMA GESTION</span>
+                <span className="text-highlight">PRISMA GESTION</span>
                 {aboutData.title.split("PRISMA GESTION")[1]}
               </>
             ) : (
@@ -72,11 +72,11 @@ const AboutSection = () => {
             )}
           </h2>
           
-          <p className="text-gray-700 mb-4 md:mb-6">
+          <p className="text-gray-700 mb-4 md:mb-6 measure">
             {aboutData.paragraph1}
           </p>
 
-          <p className="text-gray-700 mb-6 md:mb-8">
+          <p className="text-gray-700 mb-6 md:mb-8 measure">
             {aboutData.paragraph2}
           </p>
           

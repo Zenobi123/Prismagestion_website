@@ -13,7 +13,7 @@ export const ServiceInfo = ({ service }: ServiceInfoProps) => {
   return (
     <div>
       <h3 className="heading-md mb-2 md:mb-3 text-prisma-purple">{service.title}</h3>
-      <p className="text-gray-700 mb-4 md:mb-6 text-sm md:text-base">{service.description}</p>
+      <p className="text-gray-700 mb-4 md:mb-6 text-sm md:text-base measure">{service.description}</p>
       <ul className="space-y-1 md:space-y-2">
         {service.items?.map((item, index) => (
           <li key={index} className="flex items-center">
