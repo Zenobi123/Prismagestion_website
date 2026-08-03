@@ -2,8 +2,63 @@ import { defineConfig, loadEnv, type HtmlTagDescriptor, type Plugin } from "vite
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { createHash } from "node:crypto";
+import { readFile, writeFile } from "node:fs/promises";
 import { componentTagger } from "lovable-tagger";
 import { VitePWA } from "vite-plugin-pwa";
+
+// Domaine canonique du site.
+//
+// Les robots des réseaux sociaux (Facebook, LinkedIn, WhatsApp) et des moteurs
+// de recherche lisent `index.html` tel qu'il est servi, sans exécuter React :
+// les URLs absolues qu'il contient — og:image, og:url, canonical, JSON-LD —
+// doivent désigner un domaine qui résout, faute de quoi l'aperçu de partage
+// reste vide. Les sources portent donc le domaine réellement servi, et non un
+// domaine espéré : l'ancien `prismagestion.site` a été perdu, et le site vit
+// sur son adresse Vercel jusqu'à l'achat du prochain nom de domaine.
+//
+// `VITE_SITE_URL` prend alors le relais sans retoucher les sources : définie
+// dans Vercel, elle remplace le domaine par défaut partout où il apparaît —
+// `index.html`, `sitemap.xml`, `robots.txt` — et dans `src/config/site.ts`,
+// qui applique la même règle aux balises rendues par React (SEOHead).
+// Les deux constantes doivent rester alignées.
+const DEFAULT_SITE_URL = "https://prismagestionsite.vercel.app";
+
+// Fichiers de `public/` copiés tels quels par Vite : ils portent eux aussi le
+// domaine et doivent rester cohérents avec l'URL canonique du HTML.
+const STATIC_FILES_WITH_DOMAIN = ["sitemap.xml", "robots.txt"];
+
+const siteUrlPlugin = (env: Record<string, string>): Plugin => {
+  const siteUrl = (env.VITE_SITE_URL || DEFAULT_SITE_URL).replace(/\/+$/, "");
+  let outDir = "dist";
+
+  return {
+    name: "site-url",
+    configResolved(config) {
+      outDir = path.isAbsolute(config.build.outDir)
+        ? config.build.outDir
+        : path.resolve(config.root, config.build.outDir);
+    },
+    transformIndexHtml: {
+      // Avant cspPlugin : les hashes sha256 doivent porter sur le JSON-LD
+      // définitif, domaine substitué compris.
+      order: "pre",
+      handler: (html) => html.replaceAll(DEFAULT_SITE_URL, siteUrl),
+    },
+    // publicDir est copié après le bundle : la réécriture vient donc en dernier.
+    async closeBundle() {
+      if (siteUrl === DEFAULT_SITE_URL) return;
+      for (const nom of STATIC_FILES_WITH_DOMAIN) {
+        const fichier = path.join(outDir, nom);
+        try {
+          const contenu = await readFile(fichier, "utf8");
+          await writeFile(fichier, contenu.replaceAll(DEFAULT_SITE_URL, siteUrl));
+        } catch {
+          // Fichier absent du build : rien à réécrire.
+        }
+      }
+    },
+  };
+};
 
 // Injecte la Content-Security-Policy en meta au moment du build uniquement
 // (le serveur de dev Vite utilise des scripts inline incompatibles avec une
@@ -108,8 +163,10 @@ export default defineConfig(({ mode }) => {
           clientsClaim: true,
         }
       }),
-      // Après VitePWA pour que les scripts injectés par les autres plugins
-      // soient pris en compte dans les hashes CSP.
+      siteUrlPlugin(env),
+      // Après VitePWA et siteUrlPlugin pour que les scripts injectés ou
+      // réécrits par les autres plugins soient pris en compte dans les
+      // hashes CSP.
       cspPlugin(env)
     ].filter(Boolean),
     build: {

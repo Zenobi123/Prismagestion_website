@@ -7,32 +7,32 @@
 -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://prismagestion.site/</loc>
+    <loc>https://prismagestionsite.vercel.app/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://prismagestion.site/blog</loc>
+    <loc>https://prismagestionsite.vercel.app/blog</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://prismagestion.site/expertise/ia-et-genie-logiciel</loc>
+    <loc>https://prismagestionsite.vercel.app/expertise/ia-et-genie-logiciel</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://prismagestion.site/outils</loc>
+    <loc>https://prismagestionsite.vercel.app/outils</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://prismagestion.site/outils/calculateur-impots</loc>
+    <loc>https://prismagestionsite.vercel.app/outils/calculateur-impots</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://prismagestion.site/outils/calculateur-frais-marche</loc>
+    <loc>https://prismagestionsite.vercel.app/outils/calculateur-frais-marche</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

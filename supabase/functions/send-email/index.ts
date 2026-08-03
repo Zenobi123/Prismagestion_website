@@ -10,9 +10,13 @@
 // - Limitation de débit par IP (best effort, mémoire de l'instance).
 // - Taille de requête plafonnée.
 
+// Domaine réellement servi. Un domaine que le cabinet ne contrôle plus n'a
+// rien à faire ici : s'il est racheté, son nouveau propriétaire hériterait du
+// droit d'appeler cette fonction. Ajouter le prochain nom de domaine à cette
+// liste — ou le poser dans le secret ALLOWED_ORIGINS, qui la remplace — au
+// moment de son branchement.
 const DEFAULT_ALLOWED_ORIGINS = [
-  'https://prismagestion.site',
-  'https://www.prismagestion.site',
+  'https://prismagestionsite.vercel.app',
 ]
 
 const ALLOWED_ORIGINS = (Deno.env.get('ALLOWED_ORIGINS') ?? '')

@@ -5,8 +5,20 @@
 // d'images relatives : toute image de partage doit être absolue, d'où
 // `absoluteUrl` ci-dessous.
 
-/** Domaine canonique du site, sans barre oblique finale. */
-export const SITE_URL = 'https://prismagestion.site';
+// Domaine réellement servi. Doit rester identique à `DEFAULT_SITE_URL` de
+// vite.config.ts, qui applique la même valeur aux URLs absolues d'index.html,
+// de sitemap.xml et de robots.txt.
+const DOMAINE_PAR_DEFAUT = 'https://prismagestionsite.vercel.app';
+
+/**
+ * Domaine canonique du site, sans barre oblique finale.
+ *
+ * Surchargeable au build par `VITE_SITE_URL` : une image de partage hébergée
+ * sur un domaine qui ne résout pas n'est pas récupérable par les robots
+ * sociaux, et l'aperçu reste vide. Au branchement du prochain nom de domaine,
+ * poser `VITE_SITE_URL=https://<nouveau-domaine>` dans Vercel suffit.
+ */
+export const SITE_URL = (import.meta.env.VITE_SITE_URL || DOMAINE_PAR_DEFAUT).replace(/\/+$/, '');
 
 /**
  * Rend une URL absolue sur le domaine canonique.

@@ -17,4 +17,4 @@ Allow: /
 Disallow: /admin
 Disallow: /auth
 
-Sitemap: https://prismagestion.site/sitemap.xml
+Sitemap: https://prismagestionsite.vercel.app/sitemap.xml

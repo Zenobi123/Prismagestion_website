@@ -13,12 +13,11 @@ import Footer from '@/components/Footer';
 import Chatbot from '@/components/chatbot/Chatbot';
 import { setupStorageListener } from '@/utils/contact/supabase';
 import { useHomeContentManager } from '@/hooks/useHomeContentManager';
-import { BlogManagementService } from '@/services/blogManagementService';
 import { AnalyticsService } from '@/services/analyticsService';
 import { usePageMetadata } from '@/hooks/usePageMetadata';
 
 const Index = () => {
-  const { initializeContentManager, cleanup, dispatchUpdateEvent } = useHomeContentManager();
+  const { initializeContentManager, cleanup } = useHomeContentManager();
 
   usePageMetadata({
     title: "PRISMA GESTION | Cabinet de services professionnels",
@@ -33,29 +32,18 @@ const Index = () => {
 
     const cleanupStorage = setupStorageListener();
 
-    const initializeApp = async () => {
-      // Perform blog maintenance tasks
-      await BlogManagementService.performMaintenanceTasks();
-      
-      // Ensure required articles exist
-      const articleCreated = await BlogManagementService.ensureRequiredArticles();
-      
-      // Initialize content manager
-      initializeContentManager();
-      
-      // If new article was created, trigger immediate update
-      if (articleCreated) {
-        dispatchUpdateEvent();
-      }
-    };
-
-    initializeApp();
+    // Aucune écriture en base au chargement de la page d'accueil : le contenu
+    // du blog est administré depuis /admin. Les « tâches de maintenance » qui
+    // vivaient ici étaient des correctifs de données ponctuels, rejoués à
+    // chaque visite — sans effet pour un visiteur (RLS admin) et réellement
+    // destructeurs pour un administrateur de passage.
+    initializeContentManager();
 
     return () => {
       cleanupStorage();
       cleanup();
     };
-  }, [initializeContentManager, cleanup, dispatchUpdateEvent]);
+  }, [initializeContentManager, cleanup]);
 
   return (
     <div className="min-h-screen">

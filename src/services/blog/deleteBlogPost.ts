@@ -19,37 +19,6 @@ export const deleteBlogPost = async (postId: number): Promise<void> => {
   window.dispatchEvent(new CustomEvent('blogPostsUpdated'));
 };
 
-// Supprime tous les posts trouvés par titre (fragment)
-export const deleteBlogPostByTitle = async (titleToDelete: string): Promise<void> => {
-  console.log("Suppression des articles avec le titre :", titleToDelete);
-
-  const { data: posts, error: fetchError } = await supabase
-    .from('blog_posts')
-    .select('id, title')
-    .ilike('title', `%${titleToDelete}%`);
-
-  if (fetchError) {
-    console.error("Erreur lors de la recherche du post à supprimer:", fetchError);
-    throw fetchError;
-  }
-
-  if (!posts || posts.length === 0) {
-    console.log("Aucun post trouvé pour le titre :", titleToDelete);
-    return;
-  }
-
-  const ids = posts.map(p => p.id);
-
-  const { error: deleteError } = await supabase
-    .from('blog_posts')
-    .delete()
-    .in('id', ids);
-
-  if (deleteError) {
-    console.error("Erreur lors de la suppression des posts:", deleteError);
-    throw deleteError;
-  }
-
-  console.log("Articles supprimés avec succès :", ids);
-  window.dispatchEvent(new CustomEvent('blogPostsUpdated'));
-};
+// La suppression par fragment de titre (`ilike '%…%'`) a été retirée : elle
+// supprimait en une requête tous les articles dont le titre contenait le
+// fragment. Supprimer un article passe par son identifiant, depuis /admin.

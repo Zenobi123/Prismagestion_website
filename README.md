@@ -12,8 +12,11 @@ La console provenait d'un second dépôt (`prisma-taskmaster-planner`),
 désormais archivé. Le détail de la fusion et les écarts de migrations
 subsistants sont consignés dans [`docs/FUSION.md`](docs/FUSION.md).
 
-**En production :** https://prismagestion.site — hébergement Vercel,
-déploiement automatique depuis la branche `main`.
+**En production :** https://prismagestionsite.vercel.app — hébergement Vercel,
+déploiement automatique depuis la branche `main`. Le domaine
+`prismagestion.site` a été perdu ; au branchement du prochain nom de domaine,
+la variable de build `VITE_SITE_URL` suffit à basculer toutes les URLs
+absolues (Open Graph, canonical, sitemap, robots).
 Marche à suivre complète : [`docs/DEPLOIEMENT.md`](docs/DEPLOIEMENT.md).
 
 > **Dépôt privé.** `facturation/` contient des exports de données clients
