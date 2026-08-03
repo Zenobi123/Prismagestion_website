@@ -300,8 +300,42 @@ préalable purgé ces fichiers de l'historique.
 Un hook `pre-commit` bloque les fichiers `.env` et les clés privées. Les clés
 `VITE_*` publiables sont tolérées : elles sont publiques par conception.
 
-## Workflow Git
+## Workflow Git et mise en production
 
-Travail en solo, historique linéaire : local → `main` → production. Les
-commits sur `main` sont la norme ici, et tout push sur `main` déclenche un
-déploiement Vercel en production. Vérifier le build avant de pousser.
+Travail en solo, historique linéaire : **local → `main` → production**. Les
+commits sur `main` sont la norme ici, et **tout push sur `main` déclenche un
+déploiement Vercel en production** — il n'y a pas d'étape intermédiaire.
+
+### Deux garde-fous locaux
+
+Tous deux vivent dans `.git/hooks/`, donc **non versionnés** : ils ne suivront
+pas sur une autre machine, et sont à réinstaller le cas échéant.
+
+| Hook | Ce qu'il vérifie |
+|---|---|
+| `pre-commit` | Fichiers `.env`, clés privées, valeurs de clé `service_role` ou `sb_secret_`. Ne voit pas un mot de passe applicatif écrit dans un `INSERT` SQL — voir `docs/FUSION.md` § 4 |
+| `pre-push` | `npm test` puis `npx tsc --noEmit`. Refuse le push si l'un échoue |
+
+Le `pre-push` ne relance pas le build : Vercel le refait de toute façon, et un
+build cassé laisse la production sur la version précédente. Il couvre ce que le
+déploiement **ne voit pas** :
+
+- Vercel **ne lance pas** la suite de tests ;
+- Vite compile avec **SWC, qui ne vérifie pas les types** — une erreur de
+  typage passe le build et arrive en production sans le moindre signal.
+
+Contournement assumé dans les deux cas : `--no-verify`.
+
+### Ce que Vercel apporte déjà
+
+- Un build en échec **ne remplace pas** la production.
+- Chaque branche poussée obtient une **URL de préversion** automatique. Pour un
+  chantier d'ampleur, travailler sur une branche puis fusionner dans `main`
+  permet de valider en conditions réelles avant la mise en ligne.
+
+### Les migrations Supabase sont hors de ce circuit
+
+La base est unique et partagée entre le site et la console : il n'y a ni base
+de test, ni préversion. Une migration appliquée touche **immédiatement la
+production**, sans build ni retour arrière. Lire `docs/FUSION.md` avant toute
+opération sur le schéma.
