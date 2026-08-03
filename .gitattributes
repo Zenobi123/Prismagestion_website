@@ -1,0 +1,8 @@
+# Les hooks Git sont des scripts sh. `core.autocrlf` vaut true sur la machine
+# de developpement (Windows) : sans cette regle, le checkout leur donnerait des
+# fins de ligne CRLF, et le shebang deviendrait "#!/bin/sh\r" — introuvable
+# pour le noyau, qui refuserait de les executer. On force donc LF.
+.githooks/** text eol=lf
+
+# Meme raison pour tout script shell du depot.
+*.sh text eol=lf

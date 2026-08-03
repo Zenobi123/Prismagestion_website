@@ -306,15 +306,28 @@ Travail en solo, historique linéaire : **local → `main` → production**. Les
 commits sur `main` sont la norme ici, et **tout push sur `main` déclenche un
 déploiement Vercel en production** — il n'y a pas d'étape intermédiaire.
 
-### Deux garde-fous locaux
-
-Tous deux vivent dans `.git/hooks/`, donc **non versionnés** : ils ne suivront
-pas sur une autre machine, et sont à réinstaller le cas échéant.
+### Deux garde-fous, versionnés dans `.githooks/`
 
 | Hook | Ce qu'il vérifie |
 |---|---|
 | `pre-commit` | Fichiers `.env`, clés privées, valeurs de clé `service_role` ou `sb_secret_`. Ne voit pas un mot de passe applicatif écrit dans un `INSERT` SQL — voir `docs/FUSION.md` § 4 |
 | `pre-push` | `npm test` puis `npx tsc --noEmit`. Refuse le push si l'un échoue |
+
+**Éditer les hooks dans `.githooks/`, jamais dans `.git/hooks/`** : ce dernier
+dossier est ignoré tant que `core.hooksPath` est défini, et les fichiers qu'on
+y placerait ne s'exécuteraient jamais.
+
+Git n'active aucun hook tout seul au clone — c'est une protection, un dépôt
+ne doit pas pouvoir exécuter du code à la première commande. L'activation est
+donc portée par le script `prepare` de `package.json`, que npm exécute après
+chaque `npm install` :
+
+```bash
+npm install          # active les hooks au passage
+npm run hooks:install  # pour les réactiver seuls, si besoin
+```
+
+Vérifier l'état : `git config core.hooksPath` doit répondre `.githooks`.
 
 Le `pre-push` ne relance pas le build : Vercel le refait de toute façon, et un
 build cassé laisse la production sur la version précédente. Il couvre ce que le

@@ -1,0 +1,54 @@
+#!/bin/sh
+# Garde-fou local : refuse de pousser du code qui casse les tests ou le typage.
+# Installe le 02/08/2026.
+#
+# Pourquoi ces deux verifications precisement, et pas le build complet :
+#
+#   - Vercel reconstruit de toute facon a chaque push. Si le build casse, le
+#     deploiement echoue et la production reste sur la version precedente :
+#     ce cas est deja couvert, le refaire ici ne ferait qu'allonger l'attente.
+#
+#   - En revanche Vercel ne lance PAS la suite de tests, et Vite compile avec
+#     SWC, qui ne verifie pas les types. Une regression fonctionnelle ou une
+#     erreur de typage passe donc le build et arrive en production sans le
+#     moindre signal. C'est exactement ce trou que ce hook comble.
+#
+# Contournement ponctuel et assume : git push --no-verify
+
+# Rien a verifier si aucun commit n'est pousse (suppression de branche, etc.).
+if [ -z "$(git rev-list --count @{u}..HEAD 2>/dev/null)" ]; then
+  exit 0
+fi
+if [ "$(git rev-list --count @{u}..HEAD 2>/dev/null)" = "0" ]; then
+  exit 0
+fi
+
+echo "[pre-push] Verification avant envoi vers la production..."
+
+echo "[pre-push] 1/2 - suite de tests"
+if ! npm test --silent; then
+  echo ""
+  echo "PUSH REFUSE : la suite de tests echoue."
+  echo ""
+  echo "  Pousser malgre tout deploierait ce code en production, Vercel"
+  echo "  ne lancant pas les tests de son cote."
+  echo ""
+  echo "  Rejouer en detail :  npm test"
+  echo "  Contourner (assume): git push --no-verify"
+  exit 1
+fi
+
+echo "[pre-push] 2/2 - verification des types"
+if ! npx tsc --noEmit -p tsconfig.app.json; then
+  echo ""
+  echo "PUSH REFUSE : erreur(s) de typage."
+  echo ""
+  echo "  Vite compile avec SWC, qui ignore les types : ce code passerait le"
+  echo "  build Vercel et arriverait en production malgre l'erreur."
+  echo ""
+  echo "  Contourner (assume): git push --no-verify"
+  exit 1
+fi
+
+echo "[pre-push] OK - envoi autorise."
+exit 0

@@ -1,0 +1,44 @@
+#!/bin/sh
+# Garde-fou local : empeche de versionner un fichier d'environnement ou une cle privee.
+# Installe le 31/07/2026, apres la decouverte d'un .env versionne sur main.
+# Contournement ponctuel et assume : git commit --no-verify
+
+interdits=$(git diff --cached --name-only --diff-filter=AM | grep -E '(^|/)\.env($|\..*)|\.pem$|\.p12$|\.pfx$|(^|/)id_rsa$' | grep -v '\.env\.example$')
+
+if [ -n "$interdits" ]; then
+  echo "COMMIT REFUSE : fichier(s) d'environnement ou cle(s) privee(s) dans l'index :"
+  echo "$interdits" | sed 's/^/  /'
+  echo ""
+  echo "  Retirer de l'index :  git restore --staged <fichier>"
+  echo "  Cesser de le suivre : git rm --cached <fichier>"
+  exit 1
+fi
+
+# Cles reellement secretes (les cles VITE_ publiables sont volontairement tolerees).
+#
+# Affine le 01/08/2026 : le motif d'origine cherchait la simple mention de
+# "service_role", ce qui refusait trois usages parfaitement legitimes et
+# frequents dans ce depot :
+#   - GRANT ALL ON <table> TO service_role;          (nom de role Postgres)
+#   - Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')      (lecture d'une variable)
+#   - toute phrase de documentation citant la cle
+# On cible desormais une VALEUR affectee, pas une mention : un JWT (eyJ...)
+# assigne a un nom contenant SERVICE_ROLE, ou une cle secrete Supabase au
+# format sb_secret_. La classe [^A-Za-z0-9]{0,4} absorbe guillemets, deux-points
+# et espaces sans qu'il faille echapper de quotes dans le motif.
+motif='SERVICE_ROLE[A-Za-z_]*[^A-Za-z0-9]{0,4}[:=][^A-Za-z0-9]{0,4}eyJ'
+motif="$motif|sb_secret_[A-Za-z0-9_-]{10,}"
+motif="$motif|sk_live_[A-Za-z0-9]"
+motif="$motif|BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY"
+
+secrets=$(git diff --cached -U0 --diff-filter=AM | grep -E '^\+' | grep -Ei "$motif" | head -3)
+
+if [ -n "$secrets" ]; then
+  echo "COMMIT REFUSE : secret potentiel detecte dans les lignes ajoutees :"
+  echo "$secrets" | cut -c1-90 | sed 's/^/  /'
+  echo ""
+  echo "  Si c'est un faux positif : git commit --no-verify"
+  exit 1
+fi
+
+exit 0

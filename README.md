@@ -108,12 +108,18 @@ GitHub fait désormais seule référence. Prérequis : Node.js & npm
 git clone https://github.com/Zenobi123/Prismagestion_website.git
 cd Prismagestion_website
 
-npm install
+npm install            # installe les dépendances ET active les hooks Git
 cp .env.example .env   # renseigner les variables Supabase (facultatif :
                        # sans elles, le backend local prend le relais)
 
 npm run dev            # serveur de développement sur http://localhost:8080
 ```
+
+Les hooks Git sont versionnés dans `.githooks/` et activés par `npm install`
+(via le script `prepare`). Le hook `pre-commit` refuse les secrets, le hook
+`pre-push` lance les tests et la vérification des types — Vercel ne faisant
+ni l'un ni l'autre. Vérification : `git config core.hooksPath` doit répondre
+`.githooks`.
 
 Autres commandes :
 
