@@ -29,12 +29,30 @@ const PageLoader = () => (
   </div>
 );
 
-// Prefetch important routes
+/**
+ * Préchargement des routes que le visiteur a des chances d'ouvrir ensuite.
+ *
+ * Le module d'administration était précédemment préchargé pour tout le monde :
+ * avec ses dépendances (graphiques, génération de PDF), cela représentait plus
+ * d'un mégaoctet téléchargé par des visiteurs qui n'y ont pas accès. Il est
+ * désormais chargé à la demande, au moment où la route est ouverte — les
+ * administrateurs authentifiés paient une attente d'une fraction de seconde,
+ * le public ne paie plus rien.
+ *
+ * Le blog reste préchargé : c'est une destination publique plausible depuis
+ * l'accueil. Le préchargement est abandonné si le navigateur signale un forfait
+ * limité ou une connexion lente.
+ */
 const prefetchRoutes = () => {
-  // Prefetch Admin module in background after 3 seconds on homepage
+  const connection = (navigator as Navigator & {
+    connection?: { saveData?: boolean; effectiveType?: string };
+  }).connection;
+
+  if (connection?.saveData) return;
+  if (connection?.effectiveType && /(^|-)2g$/.test(connection.effectiveType)) return;
+
   setTimeout(() => {
-    const prefetchAdmin = import('./pages/Admin');
-    const prefetchBlog = import('./pages/Blog');
+    void import('./pages/Blog');
   }, 3000);
 };
 

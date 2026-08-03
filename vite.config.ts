@@ -112,6 +112,22 @@ export default defineConfig(({ mode }) => {
       // soient pris en compte dans les hashes CSP.
       cspPlugin(env)
     ].filter(Boolean),
+    build: {
+      rollupOptions: {
+        output: {
+          // Sans découpage explicite, Vite regroupe tout le code partagé dans
+          // un chunk d'entrée unique (~760 ko). Isoler les dépendances lourdes
+          // et stables permet au navigateur de les mettre en cache une fois
+          // pour toutes : une mise à jour du site ne réinvalide plus que le
+          // code applicatif, et les téléchargements se parallélisent.
+          manualChunks: {
+            'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+            'vendor-supabase': ['@supabase/supabase-js'],
+            'vendor-icons': ['lucide-react'],
+          },
+        },
+      },
+    },
     resolve: {
       alias: {
         // L'ordre compte : "@gestion" doit précéder "@" pour que Vite ne
