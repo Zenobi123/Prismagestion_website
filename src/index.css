@@ -1,5 +1,10 @@
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+/*
+  Les polices ne sont plus chargées par @import : celui-ci ne part qu'une fois
+  la feuille de styles téléchargée et analysée, ce qui met la requête Google
+  Fonts en cascade derrière le CSS et retarde le premier rendu du texte. Elles
+  sont désormais déclarées en <link rel="preconnect"> + <link rel="stylesheet">
+  dans index.html, où le navigateur les découvre dès l'analyse du <head>.
+*/
 
 @tailwind base;
 @tailwind components;
@@ -13,8 +18,11 @@
     --card-foreground: 224 71.4% 4.1%;
     --popover: 0 0% 100%;
     --popover-foreground: 224 71.4% 4.1%;
-    --primary: 262.1 83.3% 57.8%;
-    --primary-foreground: 210 20% 98%;
+    /* Violet de marque #2E1A47. Auparavant 262.1 83.3% 57.8% (#7C3AED), la
+       valeur livrée par défaut avec shadcn/ui : tous les composants d'interface
+       affichaient donc un violet qui n'était pas celui du cabinet. */
+    --primary: 266.7 46.4% 19%;
+    --primary-foreground: 0 0% 100%;
     --secondary: 220 14.3% 95.9%;
     --secondary-foreground: 220.9 39.3% 11%;
     --muted: 220 14.3% 95.9%;
@@ -25,7 +33,7 @@
     --destructive-foreground: 210 20% 98%;
     --border: 220 13% 91%;
     --input: 220 13% 91%;
-    --ring: 262.1 83.3% 57.8%;
+    --ring: 266.7 46.4% 19%;
     --radius: 0.5rem;
     
     /* Sidebar colors */
@@ -46,8 +54,9 @@
     --card-foreground: 210 20% 98%;
     --popover: 224 71.4% 4.1%;
     --popover-foreground: 210 20% 98%;
-    --primary: 263.4 70% 50.4%;
-    --primary-foreground: 210 20% 98%;
+    /* Même teinte que la marque, éclaircie pour rester lisible sur fond sombre. */
+    --primary: 266.7 46.4% 72%;
+    --primary-foreground: 266.7 46.4% 12%;
     --secondary: 215 27.9% 16.9%;
     --secondary-foreground: 210 20% 98%;
     --muted: 215 27.9% 16.9%;
@@ -58,7 +67,7 @@
     --destructive-foreground: 210 20% 98%;
     --border: 215 27.9% 16.9%;
     --input: 215 27.9% 16.9%;
-    --ring: 263.4 70% 50.4%;
+    --ring: 266.7 46.4% 72%;
   }
 }
 
@@ -84,14 +93,35 @@
     @apply text-2xl sm:text-3xl md:text-4xl font-heading font-bold leading-tight break-words;
   }
   
+  /*
+    L'échelle doit rester strictement décroissante à chaque palier. Auparavant
+    heading-md démarrait comme heading-lg (text-2xl) et heading-sm comme
+    heading-md : deux niveaux de titre censés se distinguer s'affichaient à la
+    même taille sur mobile et sur petites tablettes. Chaque niveau descend
+    désormais d'un cran :
+      mobile  xl 30 · lg 24 · md 20 · sm 18
+      ≥640px  xl 36 · lg 30 · md 24 · sm 20
+      ≥768px  xl 48 · lg 36 · md 30 · sm 24
+  */
   .heading-md {
-    @apply text-2xl md:text-3xl font-heading font-bold leading-tight;
+    @apply text-xl sm:text-2xl md:text-3xl font-heading font-bold leading-tight;
   }
-  
+
   .heading-sm {
-    @apply text-xl md:text-2xl font-heading font-semibold leading-tight;
+    @apply text-lg sm:text-xl md:text-2xl font-heading font-semibold leading-tight;
   }
   
+  /*
+    Largeur de lecture confortable pour un chapeau ou un paragraphe courant.
+    La valeur n'est pas 65ch : l'unité `ch` vaut la largeur du chiffre « 0 »,
+    sensiblement plus large que la lettre moyenne d'un texte français. Mesuré
+    sur le contenu réel du site, 65ch donne 89 caractères par ligne ; 53ch en
+    donne environ 73, dans la fourchette de lisibilité de 45 à 75.
+  */
+  .measure {
+    max-width: 53ch;
+  }
+
   .btn-primary {
     @apply bg-prisma-purple hover:bg-prisma-purple/90 text-white px-5 py-3 rounded-md font-medium transition-colors;
   }
@@ -100,8 +130,19 @@
     @apply bg-prisma-chartreuse hover:bg-prisma-chartreuse/90 text-prisma-purple px-5 py-3 rounded-md font-medium transition-colors;
   }
   
-  .text-gradient {
-    @apply bg-gradient-to-r from-prisma-purple to-prisma-chartreuse bg-clip-text text-transparent;
+  /*
+    Emphase dans un titre.
+    L'ancienne version peignait le texte d'un dégradé violet → chartreuse :
+    la fin du mot virait au chartreuse, dont le contraste sur blanc plafonne
+    à 1,48:1 — très en dessous du minimum WCAG de 4,5:1. Le mot reste
+    désormais en violet de marque (15,5:1) et le chartreuse passe derrière,
+    en surlignage : il redevient un élément graphique, jamais de la couleur
+    de texte sur fond clair.
+  */
+  .text-highlight {
+    @apply text-prisma-purple;
+    background-image: linear-gradient(transparent 62%, rgba(214, 221, 0, 0.45) 62%);
+    padding-inline: 0.08em;
   }
 }
 
