@@ -8,6 +8,7 @@ import PrintableCourrier, { type CourrierPrintData } from '../PrintableCourrier'
 import { DEFAULT_CABINET_CONFIG } from '@gestion/lib/spec/cabinetConfig';
 import {
   PAGE_STYLE_FACTURE,
+  RECU_PRINT_CSS,
   PAGE_STYLE_RECU,
   PAGE_STYLE_DEVIS,
   PAGE_STYLE_PROPOSITION,
@@ -75,11 +76,14 @@ describe('Rendus imprimables fidèles au vanilla', () => {
     expect(txt).toContain('TOTAL À PAYER');
     // Bloc paiement (libellé fidèle, pas « Mode : »).
     expect(txt).toContain('Mode de paiement :');
-    // Ligne info au-dessus du tableau.
-    expect(txt).toContain('Facture N° 0001/2026/06');
-    // Montant ligne en « F », total/sous-totaux en « F CFA ».
-    expect(txt).toContain('50 000 F');
+    // displayFacture() : montants de ligne nus, totaux et sous-totaux en
+    // « F CFA ». Le numéro n'apparaît que dans sa carte, pas au-dessus du
+    // tableau (ce bandeau n'existe que dans printFacture()).
+    expect(txt).not.toContain('Facture N° 0001/2026/06');
+    expect(txt).toContain('Numéro de facture N° 0001/2026/06');
+    expect(txt).toContain('1 50 000 50 000');
     expect(txt).toContain('150 000 F CFA');
+    expect(txt).toContain('50 000 F CFA');
     expect(txt).toContain('Impôt');
     expect(txt).toContain('Honoraire');
   });
@@ -119,11 +123,11 @@ describe('Rendus imprimables fidèles au vanilla', () => {
     expect(txt).toContain('Conditions du devis');
     expect(txt).toContain('10 juin 2026');
     expect(txt).toContain('200 000 F CFA');
-    // Zone destinataire : la ligne contact est toujours présente (comme la facture).
+    // Zone destinataire : la ligne contact est rendue dès qu'un contact existe.
     expect(txt).toContain('Contact : 690000000');
   });
 
-  it('Devis : la ligne contact se replie sur le nom si le contact principal est vide', () => {
+  it("Devis : pas de ligne contact quand le contact principal est vide (comme devis.html)", () => {
     const data: DevisPrintData = {
       number: 'DEVIS-0002/2026/06',
       date: '2026-06-10',
@@ -135,7 +139,10 @@ describe('Rendus imprimables fidèles au vanilla', () => {
       total: 200000,
     };
     const txt = text(<PrintableDevis data={data} config={cfg} />);
-    expect(txt).toContain('Contact : ENTREPRISE TEST SARL');
+    // Le devis de référence n'affiche la ligne que si clientData.contact existe :
+    // pas de repli sur le nom, qui figure déjà juste au-dessus.
+    expect(txt).not.toContain('Contact :');
+    expect(txt).toContain('ENTREPRISE TEST SARL');
   });
 
   it('Proposition : titre et colonnes fidèles', () => {
@@ -234,17 +241,30 @@ describe('Géométrie des marges (conteneurs « printArea » et @page du vanilla
     total: 1,
   };
 
-  it('Facture : carte max-w-4xl/p-8 (.prisma-print-page print-area) + @page 12/20mm', () => {
+  it('Facture : carte max-w-4xl/p-8 (.prisma-print-page print-area) + @page du module', () => {
     const html = renderToStaticMarkup(<PrintableFacture data={factureData} config={cfg} />);
     expect(html).toContain('prisma-print-page print-area');
     // facture-app.html : <div class="max-w-4xl mx-auto bg-white p-8 print-area">
     expect(PRINT_PAGE_FRAME_CSS).toContain('max-width: 56rem');
     expect(PRINT_PAGE_FRAME_CSS).toContain('padding: 2rem');
-    // printFacture() : @page 20mm 12mm 15mm 12mm, première page 12mm en haut.
-    expect(PAGE_STYLE_FACTURE).toContain('@page { size: A4; margin: 20mm 12mm 15mm 12mm; }');
-    expect(PAGE_STYLE_FACTURE).toContain('@page :first { margin: 12mm 12mm 15mm 12mm; }');
+    // Bloc print du <head> de facture-app.html : 10 mm en première page,
+    // 20 mm en haut des suivantes (et non les marges de printFacture()).
+    expect(PAGE_STYLE_FACTURE).toContain('@page { size: A4; margin: 20mm 10mm 10mm 10mm; }');
+    expect(PAGE_STYLE_FACTURE).toContain('@page :first { margin: 10mm 10mm; }');
     // prisma-print.css : reset .print-area à l'impression.
     expect(PAGE_STYLE_FACTURE).toContain('--print-blue-strong: #c9dcfb');
+  });
+
+  it("Facture : rendu de l'aperçu vanilla, pas du document printFacture()", () => {
+    const html = renderToStaticMarkup(<PrintableFacture data={factureData} config={cfg} />);
+    // displayFacture() : « Quantité » en toutes lettres, montants de ligne sans
+    // unité, et aucun des marqueurs propres à printFacture().
+    expect(html).toContain('Quantité');
+    expect(html).not.toContain('Qté');
+    expect(html).not.toContain('fct-');
+    expect(html).not.toContain('&nbsp;·&nbsp;');
+    // Groupe insécable recherché par documentExport.ts pour éviter la coupure.
+    expect(html).toContain('invoice-payment-signature-group');
   });
 
   it('Reçu : conteneur max-w-3xl p-8 + double bordure + @page 10mm', () => {
@@ -256,15 +276,37 @@ describe('Géométrie des marges (conteneurs « printArea » et @page du vanilla
     expect(PAGE_STYLE_RECU).toContain('@page { size: A4; margin: 10mm 10mm; }');
   });
 
+  it('Reçu : le bandeau reste lisible et pleine largeur à l\'impression', () => {
+    const html = renderToStaticMarkup(<PrintableRecu data={recuData} config={cfg} />);
+    expect(html).toContain('prisma-recu-banner');
+    // Sans héritage, le `h1 { color: #1e3a8a }` de prisma-print.css peignait le
+    // titre en bleu marine sur le bandeau bleu marine (illisible en Ctrl+P).
+    expect(RECU_PRINT_CSS).toContain('color: inherit !important');
+    // Padding rendu au conteneur : les marges négatives du bandeau redeviennent
+    // cohérentes et il ne déborde plus à droite.
+    expect(RECU_PRINT_CSS).toContain('.prisma-printable.print-area { padding: 2rem !important; }');
+    // Le correctif vaut aussi pour l'iframe d'impression du dialogue.
+    expect(PAGE_STYLE_RECU).toContain('prisma-recu-banner');
+  });
+
   it('Devis : conteneur A4 responsive + ligne total-row + @page 10mm', () => {
     const html = renderToStaticMarkup(<PrintableDevis data={devisData} config={cfg} />);
     expect(html).toContain('print-area');
     expect(html).toContain('prisma-devis-page');
     expect(html).toContain('devis-table-wrap');
     expect(html).toContain('total-row');
-    expect(DEVIS_PRINT_CSS).toContain('width: min(100%, 210mm)');
     expect(DEVIS_PRINT_CSS).toContain('.devis-table { width: 100%; min-width: 620px;');
     expect(PAGE_STYLE_DEVIS).toContain('@page { size: A4; margin: 10mm 10mm; }');
+  });
+
+  it('Devis : géométrie de capture identique à devis.html (max-w-4xl, p-5, sans min-height)', () => {
+    // html2canvas capture le nœud tel qu'affiché puis jsPDF l'étire sur 190 mm :
+    // une largeur autre que 896 px donnerait un document zoomé, et un
+    // min-height A4 ajouterait une seconde page vide sur un devis court.
+    expect(DEVIS_PRINT_CSS).toContain('width: 56rem');
+    expect(DEVIS_PRINT_CSS).toContain('padding: 1.25rem');
+    expect(DEVIS_PRINT_CSS).not.toContain('min-height: 297mm');
+    expect(DEVIS_PRINT_CSS).not.toContain('width: min(100%, 210mm)');
   });
 
   it('Proposition : conteneur max-w-4xl p-8 + sections bg-section + @page 10mm', () => {

@@ -3,6 +3,7 @@ import { forwardRef } from 'react';
 import type { ClientSpec } from '@gestion/lib/spec/fiscal';
 import { numberToWordsFr } from '@gestion/utils/numberToWords';
 import type { CabinetConfig } from '@gestion/lib/spec/cabinetConfig';
+import { RECU_PRINT_CSS } from '@gestion/lib/spec/printStyles';
 
 export type RecuPaymentMode = 'Espèces' | 'Virement bancaire' | 'Mobile Money' | 'Chèque';
 
@@ -43,9 +44,10 @@ const PrintableRecu = forwardRef<HTMLDivElement, Props>(({ data, config }, ref) 
       className="prisma-printable print-area max-w-3xl mx-auto bg-white p-8 shadow-xl"
       style={{ border: '3px double #1e3a8a', fontFamily: "'Inter', sans-serif", color: '#111827' }}
     >
+      <style dangerouslySetInnerHTML={{ __html: RECU_PRINT_CSS }} />
       {/* Bandeau dégradé pleine largeur */}
       <div
-        className="text-center mb-6"
+        className="prisma-recu-banner text-center mb-6"
         style={{
           background: 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)',
           color: 'white',

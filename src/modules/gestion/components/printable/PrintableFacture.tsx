@@ -1,10 +1,18 @@
-// Rendu imprimable de la FACTURE — PORT FIDÈLE de facture-app.html / printFacture().
-// Le markup et les classes `.fct-*` reproduisent à l'identique le document vanilla.
+// Rendu de la FACTURE — PORT FIDÈLE de facture-app.html / displayFacture().
+//
+// Pourquoi displayFacture() et non printFacture() : le module vanilla porte deux
+// rendus distincts. `printFacture()` fabrique un document A4 compact réservé à
+// l'impression navigateur (classes .fct-*, colonne « Qté », montants suffixés
+// « F », bandeau récapitulatif au-dessus du tableau). `downloadPDF()`, lui,
+// capture `#printArea` — c'est-à-dire l'aperçu écran peint par displayFacture().
+// Le PDF de référence remis par le cabinet est donc celui de l'aperçu : c'est ce
+// rendu-là qui fait foi, et il sert ici aux trois usages (aperçu, PDF, impression)
+// pour que les trois donnent le même document.
 import { forwardRef } from 'react';
 import type { ClientSpec } from '@gestion/lib/spec/fiscal';
 import type { Prestation } from '@gestion/lib/spec/facturePrestations';
 import type { CabinetConfig } from '@gestion/lib/spec/cabinetConfig';
-import { FACTURE_PRINT_CSS, PRINT_PAGE_FRAME_CSS } from '@gestion/lib/spec/printStyles';
+import { PRINT_PAGE_FRAME_CSS } from '@gestion/lib/spec/printStyles';
 
 export interface FacturePrintData {
   number: string;
@@ -21,10 +29,18 @@ interface Props {
   config: CabinetConfig;
 }
 
-// Formatage monétaire identique au vanilla : « F » sur les lignes, « F CFA »
-// sur les totaux et sous-totaux.
-const fShort = (n: number) => `${Math.round(n || 0).toLocaleString('fr-FR')} F`;
-const fCFA = (n: number) => `${Math.round(n || 0).toLocaleString('fr-FR')} F CFA`;
+// Vanilla : montants de ligne sans unité, totaux et sous-totaux en « F CFA ».
+const fr = (n: number) => Math.round(n || 0).toLocaleString('fr-FR');
+const fCFA = (n: number) => `${fr(n)} F CFA`;
+
+// Styles répétés du bandeau TOTAL : le vanilla les pose en inline sur la ligne
+// ET sur chaque cellule, pour que le fond bleu survive à l'impression.
+const TOTAL_CELL: React.CSSProperties = {
+  backgroundColor: '#1e3a8a',
+  color: 'white',
+  WebkitPrintColorAdjust: 'exact',
+  printColorAdjust: 'exact',
+};
 
 const PrintableFacture = forwardRef<HTMLDivElement, Props>(({ data, config }, ref) => {
   let dateStr = 'N/A';
@@ -39,157 +55,199 @@ const PrintableFacture = forwardRef<HTMLDivElement, Props>(({ data, config }, re
   }
 
   const c = data.client;
-  const villeLine = [c.ville, c.quartier].filter(Boolean).join(' - ');
 
   return (
     <div ref={ref} className="prisma-printable">
-      <style dangerouslySetInnerHTML={{ __html: PRINT_PAGE_FRAME_CSS + FACTURE_PRINT_CSS }} />
+      <style dangerouslySetInnerHTML={{ __html: PRINT_PAGE_FRAME_CSS }} />
       {/* Réplique du conteneur vanilla : <div class="max-w-4xl mx-auto bg-white p-8 print-area" id="printArea"> */}
       <div className="prisma-print-page print-area">
         {/* En-tête */}
-        <div className="fct-header-top">
+        <div className="flex justify-between items-start mb-6">
           <div>
-            <div className="fct-company-name">{config.nomCabinet}</div>
-            <div className="fct-company-sub">{config.slogan}</div>
-            <div className="fct-company-info">
-              Siège Social : {config.siege}
-              <br />
-              Tél : {config.telephone}
-              <br />
-              N.I.U : {config.niu}
+            <h1 className="text-2xl font-bold text-blue-900">{config.nomCabinet}</h1>
+            <p className="text-xs text-gray-600 uppercase tracking-widest">{config.slogan}</p>
+            <div className="text-xs mt-2 text-gray-700">
+              <p>Siège Social : {config.siege}</p>
+              <p>Tél : {config.telephone}</p>
+              <p>N.I.U : {config.niu}</p>
             </div>
           </div>
-          <div>
-            <div className="fct-title-facture">FACTURE</div>
-            <div className="fct-header-date">Date : {dateStr}</div>
+          <div className="text-right">
+            <div className="text-4xl font-bold text-blue-900">FACTURE</div>
+            <p className="text-sm text-gray-600 mt-2">Date : {dateStr}</p>
           </div>
         </div>
-        <div className="fct-divider" />
+
+        <div style={{ borderBottom: '3px solid #1e3a8a', marginBottom: '2rem' }} />
 
         {/* Numéro + Facturé à */}
-        <div className="fct-meta">
-          <div className="fct-meta-num">
-            <div className="fct-meta-num-label">Numéro de facture</div>
-            <div className="fct-meta-num-value">{data.number}</div>
+        <div className="grid grid-cols-2 gap-6 mb-6">
+          <div
+            style={{
+              background: 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)',
+              color: 'white',
+              padding: '1rem',
+              borderRadius: '8px',
+            }}
+          >
+            <p className="text-sm opacity-90">Numéro de facture</p>
+            <p className="text-2xl font-bold">{data.number}</p>
           </div>
-          <div className="fct-meta-client">
-            <div className="fct-meta-client-label">Facturé à :</div>
-            <div className="fct-meta-client-name">{c.name || 'Client'}</div>
-            {c.niu && <div className="fct-meta-client-info">NIU : {c.niu}</div>}
-            {villeLine && <div className="fct-meta-client-info">{villeLine}</div>}
-            {c.contact && <div className="fct-meta-client-info">Contact : {c.contact}</div>}
+          <div
+            style={{
+              backgroundColor: '#f9fafb',
+              padding: '1rem',
+              borderRadius: '8px',
+              border: '2px solid #e5e7eb',
+            }}
+          >
+            <p className="text-xs font-semibold text-gray-600 uppercase mb-2">Facturé à :</p>
+            <p className="font-bold text-lg">{c.name || 'Client'}</p>
+            {c.niu && <p className="text-sm text-gray-700">NIU : {c.niu}</p>}
+            {/* Vanilla : la ligne n'existe que si la ville est renseignée ; le
+                quartier n'apparaît jamais seul. */}
+            {c.ville && (
+              <p className="text-sm text-gray-700">
+                {c.ville}
+                {c.quartier ? ` - ${c.quartier}` : ''}
+              </p>
+            )}
+            {c.contact && <p className="text-sm text-gray-700 mt-1">Contact : {c.contact}</p>}
           </div>
         </div>
 
-        {/* Tableau prestations */}
-        <table className="fct-table">
+        {/* Tableau des prestations */}
+        <table className="w-full border-collapse mb-6">
           <thead>
-            <tr className="fct-thead-info">
-              <td colSpan={5}>
-                {config.nomCabinet} &nbsp;·&nbsp; Facture {data.number} &nbsp;·&nbsp; {c.name} &nbsp;·&nbsp; {dateStr}
-              </td>
-            </tr>
-            <tr>
-              <th style={{ width: '8%', textAlign: 'center' }}>N°</th>
-              <th style={{ width: '48%', textAlign: 'left' }}>Désignation</th>
-              <th style={{ width: '10%', textAlign: 'center' }}>Qté</th>
-              <th style={{ width: '17%', textAlign: 'right' }}>Prix Unitaire</th>
-              <th style={{ width: '17%', textAlign: 'right' }}>Montant</th>
+            <tr style={{ backgroundColor: '#1e3a8a', color: 'white' }}>
+              <th className="px-4 py-3 text-center" style={{ width: '10%' }}>N°</th>
+              <th className="px-4 py-3 text-left" style={{ width: '45%' }}>Désignation</th>
+              <th className="px-4 py-3 text-center" style={{ width: '15%' }}>Quantité</th>
+              <th className="px-4 py-3 text-right" style={{ width: '15%' }}>Prix Unitaire</th>
+              <th className="px-4 py-3 text-right" style={{ width: '15%' }}>Montant</th>
             </tr>
           </thead>
           <tbody>
-            {data.prestations.map((p, i) => {
-              const isImpot = p.type === 'Impôt';
-              return (
-                <tr key={i} style={{ borderBottom: '1px solid #e5e7eb' }}>
-                  <td style={{ textAlign: 'center', padding: '6px 8px' }}>{i + 1}</td>
-                  <td style={{ padding: '6px 8px' }}>
-                    <span
-                      style={{
-                        display: 'inline-block',
-                        padding: '2px 6px',
-                        borderRadius: '4px',
-                        fontSize: '8pt',
-                        fontWeight: 600,
-                        backgroundColor: isImpot ? '#dbeafe' : '#d1fae5',
-                        color: isImpot ? '#1d4ed8' : '#059669',
-                      }}
-                    >
-                      {p.type}
-                    </span>
-                    <span style={{ marginLeft: '4px' }}>{p.designation}</span>
-                  </td>
-                  <td style={{ textAlign: 'center', padding: '6px 8px' }}>{p.qty}</td>
-                  <td style={{ textAlign: 'right', padding: '6px 8px' }}>{fShort(p.price)}</td>
-                  <td style={{ textAlign: 'right', padding: '6px 8px', fontWeight: 600, color: '#1e3a8a' }}>
-                    {fShort(p.total)}
-                  </td>
-                </tr>
-              );
-            })}
+            {data.prestations.map((p, i) => (
+              <tr key={i} className="border-b">
+                <td className="px-4 py-3 text-center">{i + 1}</td>
+                <td className="px-4 py-3">
+                  <span
+                    className={`inline-block px-2 py-1 text-xs font-semibold rounded ${
+                      p.type === 'Impôt' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'
+                    }`}
+                  >
+                    {p.type}
+                  </span>
+                  <span className="ml-1">{p.designation}</span>
+                </td>
+                <td className="px-4 py-3 text-center">{p.qty}</td>
+                <td className="px-4 py-3 text-right">{fr(p.price)}</td>
+                <td className="px-4 py-3 text-right font-semibold text-blue-900">{fr(p.total)}</td>
+              </tr>
+            ))}
           </tbody>
           <tfoot>
-            <tr>
-              <td colSpan={4} style={{ textAlign: 'right', fontSize: '11pt', padding: '9px 8px' }}>
+            <tr className="total-row" style={{ ...TOTAL_CELL, fontWeight: 'bold', fontSize: '1.1rem' }}>
+              <td colSpan={4} className="px-4 py-3 text-right text-lg" style={TOTAL_CELL}>
                 TOTAL À PAYER
               </td>
-              <td style={{ textAlign: 'right', fontSize: '13pt', padding: '9px 8px' }}>{fCFA(data.total)}</td>
+              <td className="px-4 py-3 text-right text-xl" style={TOTAL_CELL}>
+                {fCFA(data.total)}
+              </td>
             </tr>
           </tfoot>
         </table>
 
-        {/* Sous-totaux + paiement + signature (groupe insécable) */}
-        <div className="fct-bottom-table">
-          <div className="fct-summary-wrap">
-            <div className="fct-summary">
-              <div className="fct-box-impots">
-                <div className="fct-box-impots-title">Total Impôts</div>
-                <div className="fct-box-impots-amount">{fCFA(data.totalImpots)}</div>
-              </div>
-              <div className="fct-box-honoraires">
-                <div className="fct-box-honoraires-title">Total Honoraires</div>
-                <div className="fct-box-honoraires-amount">{fCFA(data.totalHonoraires)}</div>
-              </div>
+        {/* Sous-totaux */}
+        <div className="mt-6 mb-6 grid grid-cols-2 gap-4">
+          <div style={{ backgroundColor: '#dbeafe', borderLeft: '4px solid #3b82f6', padding: '1rem' }}>
+            <p className="text-sm text-blue-900 font-semibold">Total Impôts</p>
+            <p className="text-2xl font-bold text-blue-900">{fCFA(data.totalImpots)}</p>
+          </div>
+          <div style={{ backgroundColor: '#d1fae5', borderLeft: '4px solid #10b981', padding: '1rem' }}>
+            <p className="text-sm text-green-900 font-semibold">Total Honoraires</p>
+            <p className="text-2xl font-bold text-green-900">{fCFA(data.totalHonoraires)}</p>
+          </div>
+        </div>
+
+        {/* Paiement + signature + pied : groupe insécable. La classe est celle que
+            documentExport.ts recherche pour repousser le bloc en page suivante
+            plutôt que de le couper — d'où les 2 pages du PDF de référence. */}
+        <div
+          className="invoice-payment-signature-group"
+          style={{ display: 'flow-root', pageBreakInside: 'avoid', breakInside: 'avoid' }}
+        >
+          <div
+            style={{
+              backgroundColor: '#f0f9ff',
+              borderLeft: '4px solid #1e3a8a',
+              padding: '1rem',
+              marginTop: '2rem',
+            }}
+          >
+            <h3 className="font-bold text-blue-900 mb-2" style={{ fontSize: '0.875rem', lineHeight: '1.25rem' }}>
+              Informations de paiement
+            </h3>
+            <div className="text-sm" style={{ fontSize: '0.8125rem', lineHeight: 1.45 }}>
+              <p>
+                <strong>Mode de paiement :</strong> {config.modePaiement}
+              </p>
+              <p>
+                <strong>Numéros :</strong> {config.numerosPaiement}
+              </p>
+              <p>
+                <strong>Échéance :</strong> {config.echeanceFacture}
+              </p>
             </div>
           </div>
-          <div className="fct-payment-signature-group">
-            <div className="fct-payment">
-              <div className="fct-payment-title">Informations de paiement</div>
-              <div className="fct-payment-info">
-                <strong>Mode de paiement :</strong> {config.modePaiement}
-                <br />
-                <strong>Numéros :</strong> {config.numerosPaiement}
-                <br />
-                <strong>Échéance :</strong> {config.echeanceFacture}
-              </div>
-            </div>
-            <div className="fct-sig-wrap">
-              <div className="fct-signature-block">
-                {config.cachet && (
-                  <div className="fct-sig-cachet-wrap">
-                    <img src={config.cachet} alt="Cachet" style={{ maxHeight: '65px', display: 'block' }} />
-                  </div>
+
+          <div className="mt-8 flex justify-end">
+            <div className="flex items-center gap-4">
+              {config.cachet && (
+                <img src={config.cachet} alt="Cachet" style={{ maxHeight: '70px', display: 'block' }} />
+              )}
+              <div className="text-center">
+                <p
+                  className="font-bold text-blue-900"
+                  style={{ fontSize: '0.875rem', lineHeight: '1.25rem', margin: 0 }}
+                >
+                  Pour {config.nomCabinet}
+                </p>
+                {config.signature && (
+                  <img
+                    src={config.signature}
+                    alt="Signature"
+                    style={{ maxHeight: '50px', display: 'block', margin: '0.5rem auto' }}
+                  />
                 )}
-                <div className="fct-sig-inner">
-                  <div className="fct-sig-label">Pour {config.nomCabinet}</div>
-                  {config.signature && (
-                    <img
-                      src={config.signature}
-                      alt="Signature"
-                      style={{ maxHeight: '45px', display: 'block', margin: '4px auto' }}
-                    />
-                  )}
-                  <div className="fct-sig-line">
-                    <div className="fct-sig-name">{config.signataireNom}</div>
-                    <div className="fct-sig-title">{config.signataireTitre}</div>
-                  </div>
+                <div style={{ borderTop: '2px solid #9ca3af', paddingTop: '0.5rem', marginTop: '0.5rem' }}>
+                  <p className="font-bold" style={{ fontSize: '0.875rem', lineHeight: '1.25rem', margin: 0 }}>
+                    {config.signataireNom}
+                  </p>
+                  <p
+                    className="text-sm text-gray-600"
+                    style={{ fontSize: '0.8125rem', lineHeight: '1.2rem', margin: 0 }}
+                  >
+                    {config.signataireTitre}
+                  </p>
                 </div>
               </div>
             </div>
-            <div className="fct-footer">
-              <strong style={{ color: '#1e3a8a' }}>PRISMA Manager</strong> — PRISMA GESTION : L'expertise qui
-              sécurise votre gestion.
-            </div>
+          </div>
+
+          <div
+            style={{
+              marginTop: '2rem',
+              paddingTop: '0.75rem',
+              borderTop: '1px solid #e5e7eb',
+              textAlign: 'center',
+            }}
+          >
+            <p style={{ fontSize: '0.75rem', color: '#6b7280', margin: 0 }}>
+              <span style={{ fontWeight: 600, color: '#1e3a8a' }}>PRISMA Manager</span> — PRISMA GESTION :
+              L'expertise qui sécurise votre gestion.
+            </p>
           </div>
         </div>
       </div>

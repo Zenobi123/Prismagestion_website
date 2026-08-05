@@ -7,8 +7,8 @@ import { useClientDetails } from "../client-details-context";
 import { Paiement } from "@gestion/types/paiement";
 import type { ClientPayment } from "@gestion/types/clientFinancial";
 import PaymentsTable from "../PaymentsTable";
-import PaymentReceiptDialog from "../../../paiements/dialog/PaymentReceiptDialog";
 import PaiementDialog from "@gestion/components/facturation/paiements/PaiementDialog";
+import { useReceiptPreview } from "@gestion/hooks/facturation/factureActions/hooks/useReceiptPreview";
 // usePaiementActions plutôt que usePaiements : ce dernier recharge la
 // totalité des paiements du cabinet à son montage, alors qu'on n'a besoin
 // ici que de la fonction d'ajout.
@@ -16,10 +16,9 @@ import { usePaiementActions } from "@gestion/hooks/facturation/paiementActions/u
 
 const PaymentsTab = () => {
   const { clientDetails } = useClientDetails();
-  const [selectedPaiement, setSelectedPaiement] = useState<Paiement | null>(null);
-  const [isPaymentReceiptDialogOpen, setIsPaymentReceiptDialogOpen] = useState(false);
   const [isAddPaiementDialogOpen, setIsAddPaiementDialogOpen] = useState(false);
   const { addPaiement } = usePaiementActions();
+  const { handleVoirRecu } = useReceiptPreview();
   const queryClient = useQueryClient();
 
   if (!clientDetails) return null;
@@ -52,8 +51,7 @@ const PaymentsTab = () => {
       est_credit: payment.est_credit,
     };
 
-    setSelectedPaiement(paiementForReceipt);
-    setIsPaymentReceiptDialogOpen(true);
+    handleVoirRecu(paiementForReceipt);
   };
 
   return (
@@ -72,14 +70,6 @@ const PaymentsTab = () => {
         payments={clientDetails.paiements}
         onViewReceipt={handleViewReceipt}
       />
-
-      {selectedPaiement && (
-        <PaymentReceiptDialog
-          open={isPaymentReceiptDialogOpen}
-          onOpenChange={setIsPaymentReceiptDialogOpen}
-          paiement={selectedPaiement}
-        />
-      )}
 
       <PaiementDialog
         open={isAddPaiementDialogOpen}

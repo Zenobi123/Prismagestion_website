@@ -1,5 +1,4 @@
 
-import { useState } from "react";
 import { ClientInvoice } from "@gestion/types/clientFinancial";
 import { ClientPayment } from "@gestion/types/clientFinancial";
 import { Facture } from "@gestion/types/facture";
@@ -8,7 +7,6 @@ import useFactureViewActions from "@gestion/hooks/facturation/factureActions/use
 import InvoiceTableHeader from "./invoice-table/InvoiceTableHeader";
 import InvoiceTableRow from "./invoice-table/InvoiceTableRow";
 import InvoiceTableEmpty from "./invoice-table/InvoiceTableEmpty";
-import InvoicePreviewDialog from "../dialogs/InvoicePreviewDialog";
 
 interface InvoicesTableProps {
   invoices: ClientInvoice[];
@@ -26,8 +24,6 @@ const InvoicesTable = ({
   clientName
 }: InvoicesTableProps) => {
   const { handleVoirFacture, handleTelechargerFacture } = useFactureViewActions();
-  const [previewInvoice, setPreviewInvoice] = useState<Facture | null>(null);
-  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   const convertToFacture = (invoice: ClientInvoice): Facture => {
     return {
@@ -50,12 +46,9 @@ const InvoicesTable = ({
     };
   };
 
+  // Aperçu : document identique au modèle de référence (facture-app.html),
+  // servi par le rendu unique du DocumentPreviewProvider.
   const handlePreviewClick = (invoice: ClientInvoice) => {
-    setPreviewInvoice(convertToFacture(invoice));
-    setIsPreviewOpen(true);
-  };
-
-  const handleViewInNewTab = (invoice: ClientInvoice) => {
     handleVoirFacture(convertToFacture(invoice));
   };
 
@@ -81,7 +74,6 @@ const InvoicesTable = ({
                 availableCredits={hasCreditAvailable}
                 clientName={clientName}
                 onPreviewClick={handlePreviewClick}
-                onViewInNewTab={handleViewInNewTab}
                 onDownloadClick={handleDownloadClick}
                 onOpenApplyCreditDialog={onOpenApplyCreditDialog}
                 onOpenReminderDialog={onOpenReminderDialog}
@@ -91,12 +83,6 @@ const InvoicesTable = ({
         </TableBody>
       </Table>
       </div>
-
-      <InvoicePreviewDialog 
-        invoice={previewInvoice}
-        open={isPreviewOpen}
-        onOpenChange={setIsPreviewOpen}
-      />
     </>
   );
 };

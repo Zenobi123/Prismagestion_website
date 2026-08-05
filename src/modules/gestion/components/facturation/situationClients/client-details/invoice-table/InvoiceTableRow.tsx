@@ -10,7 +10,6 @@ interface InvoiceTableRowProps {
   availableCredits: boolean;
   clientName: string;
   onPreviewClick: (invoice: ClientInvoice) => void;
-  onViewInNewTab: (invoice: ClientInvoice) => void;
   onDownloadClick: (invoice: ClientInvoice) => void;
   onOpenApplyCreditDialog: (invoiceId: string) => void;
   onOpenReminderDialog: (invoiceId: string) => void;
@@ -21,7 +20,6 @@ const InvoiceTableRow = ({
   availableCredits,
   clientName,
   onPreviewClick,
-  onViewInNewTab,
   onDownloadClick,
   onOpenApplyCreditDialog,
   onOpenReminderDialog
@@ -48,7 +46,6 @@ const InvoiceTableRow = ({
           showApplyCredit={showApplyCredit}
           showReminder={showReminder}
           onPreviewClick={onPreviewClick}
-          onViewInNewTab={onViewInNewTab}
           onDownloadClick={onDownloadClick}
           onApplyCreditClick={onOpenApplyCreditDialog}
           onReminderClick={onOpenReminderDialog}

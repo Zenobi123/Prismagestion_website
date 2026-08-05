@@ -40,16 +40,30 @@ export interface ChangelogEntry {
 }
 
 /** Version courante de l'application telle qu'affichée dans l'aide. */
-export const APP_VERSION = "1.5.0";
+export const APP_VERSION = "1.5.1";
 
 /** Date de la dernière mise à jour de l'aide (AAAA-MM-JJ). */
-export const LAST_UPDATED = "2026-07-16";
+export const LAST_UPDATED = "2026-08-05";
 
 /**
  * Journal des nouveautés : la première entrée est la plus récente.
  * Ajoutez une entrée à chaque changement majeur.
  */
 export const changelog: ChangelogEntry[] = [
+  {
+    version: "1.5.1",
+    date: "2026-08-05",
+    title: "Un seul et même document pour la facture, le devis et le reçu",
+    changes: [
+      "La facture reprend la présentation exacte de l'application locale : colonne « Quantité », montants de ligne sans unité, espacements aérés, et plus de bandeau récapitulatif au-dessus du tableau. Le PDF téléchargé depuis le web est désormais identique à celui généré localement.",
+      "Devis : le PDF n'est plus agrandi et ne comporte plus de seconde page vide. Le document est mis en page à la même largeur que celui de l'application locale.",
+      "Reçu : à l'impression, le titre « REÇU DE PAIEMENT » restait sombre sur le bandeau bleu, au point d'être illisible, et le bandeau débordait à droite. Les deux sont corrigés, quelle que soit la façon d'imprimer.",
+      "Situation clients → onglet Factures : l'aperçu affiche désormais la facture complète — en-tête du cabinet, numéro, destinataire, détail des prestations, sous-totaux Impôts et Honoraires, informations de paiement, cachet et signature — au lieu du résumé simplifié qui s'affichait jusqu'ici.",
+      "Situation clients → onglet Factures : les deux boutons d'aperçu qui coexistaient sur chaque ligne sont fusionnés en un seul.",
+      "Paiements et Situation clients → onglet Paiements : « Voir le reçu » ouvre directement le reçu officiel ; le bouton « Aperçu fidèle », qui faisait doublon, disparaît.",
+      "Devis : la ligne « Contact » n'apparaît plus que si un contact principal est renseigné, comme sur la facture — le nom du client ne s'y répète plus inutilement.",
+    ],
+  },
   {
     version: "1.5.0",
     date: "2026-07-16",

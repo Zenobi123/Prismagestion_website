@@ -87,8 +87,8 @@ const PrintableDevis = forwardRef<HTMLDivElement, Props>(({ data, config }, ref)
           <p className="font-bold text-sm">{c.name}</p>
           {c.niu && <p className="text-xs text-gray-700">NIU : {c.niu}</p>}
           {villeLine && <p className="text-xs text-gray-700">{villeLine}</p>}
-          {/* Toujours affichée (repli sur le nom), comme sur la facture. */}
-          <p className="text-xs text-gray-700">Contact : {c.contact || c.name}</p>
+          {/* Conditionnelle, comme le devis de référence et la facture. */}
+          {c.contact && <p className="text-xs text-gray-700">Contact : {c.contact}</p>}
         </div>
       </div>
 

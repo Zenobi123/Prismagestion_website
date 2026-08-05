@@ -1,10 +1,9 @@
 
-import { useState } from "react";
 import { Table, TableHeader, TableRow, TableHead, TableBody } from "@gestion/components/ui/table";
 import PaiementTableRow from "./PaiementTableRow";
 import { Card, CardContent } from "@gestion/components/ui/card";
 import { Paiement } from "@gestion/types/paiement";
-import PaymentReceiptDialog from "./dialog/PaymentReceiptDialog";
+import { useReceiptPreview } from "@gestion/hooks/facturation/factureActions/hooks/useReceiptPreview";
 
 interface PaiementsListProps {
   paiements: Paiement[];
@@ -12,14 +11,11 @@ interface PaiementsListProps {
 }
 
 const PaiementsList = ({ paiements, onDelete }: PaiementsListProps) => {
-  const [viewReceiptDialogOpen, setViewReceiptDialogOpen] = useState(false);
-  const [selectedPaiement, setSelectedPaiement] = useState<Paiement | null>(null);
-  
-  const handleViewReceipt = (paiement: Paiement) => {
-    setSelectedPaiement(paiement);
-    setViewReceiptDialogOpen(true);
-  };
-  
+  // Reçu identique au modèle de référence (recu-app.html) : rendu unique
+  // servi par le DocumentPreviewProvider, ventilation Impôts / Honoraires
+  // comprise.
+  const { handleVoirRecu } = useReceiptPreview();
+
   return (
     <>
       <Card>
@@ -51,7 +47,7 @@ const PaiementsList = ({ paiements, onDelete }: PaiementsListProps) => {
                       key={paiement.id}
                       paiement={paiement}
                       onDelete={onDelete}
-                      onViewReceipt={handleViewReceipt}
+                      onViewReceipt={handleVoirRecu}
                     />
                   ))
                 )}
@@ -60,12 +56,6 @@ const PaiementsList = ({ paiements, onDelete }: PaiementsListProps) => {
           </div>
         </CardContent>
       </Card>
-      
-      <PaymentReceiptDialog 
-        paiement={selectedPaiement}
-        open={viewReceiptDialogOpen}
-        onOpenChange={setViewReceiptDialogOpen}
-      />
     </>
   );
 };

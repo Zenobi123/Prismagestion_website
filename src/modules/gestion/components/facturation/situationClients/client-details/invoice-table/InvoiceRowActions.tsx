@@ -14,7 +14,6 @@ interface InvoiceRowActionsProps {
   showApplyCredit: boolean;
   showReminder: boolean;
   onPreviewClick: (invoice: ClientInvoice) => void;
-  onViewInNewTab: (invoice: ClientInvoice) => void;
   onDownloadClick: (invoice: ClientInvoice) => void;
   onApplyCreditClick: (invoiceId: string) => void;
   onReminderClick: (invoiceId: string) => void;
@@ -26,7 +25,6 @@ const InvoiceRowActions = ({
   showApplyCredit,
   showReminder,
   onPreviewClick,
-  onViewInNewTab,
   onDownloadClick,
   onApplyCreditClick,
   onReminderClick
@@ -40,14 +38,6 @@ const InvoiceRowActions = ({
         onClick={() => onPreviewClick(invoice)}
       >
         <Eye className="h-4 w-4" />
-      </Button>
-      <Button
-        variant="outline"
-        size="icon"
-        title="Aperçu complet"
-        onClick={() => onViewInNewTab(invoice)}
-      >
-        <Eye className="h-4 w-4 text-blue-500" />
       </Button>
       <Button
         variant="outline"

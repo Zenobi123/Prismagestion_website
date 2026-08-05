@@ -550,9 +550,10 @@ const MODULE_PRINT_CSS_STANDARD = `
 
 /* ------------------------------------------------------------------ */
 /* FACTURE — facture-app.html.                                         */
-/* Cascade vanilla à l'impression : prisma-print.css → bloc print du   */
-/* module → style injecté par printFacture() (dernier, gagne sur       */
-/* @page : 12mm 12mm 15mm 12mm en première page, 20mm ensuite).        */
+/* Le document rendu par PrintableFacture est l'aperçu (displayFacture),*/
+/* celui que downloadPDF() capture. Sa cascade d'impression est donc    */
+/* celle du module : prisma-print.css → bloc print du <head>. Les       */
+/* règles .fct-* qu'injectait printFacture() ne s'appliquent plus.      */
 /* ------------------------------------------------------------------ */
 
 // Bloc print du module facture (head, lignes 12-26) — port verbatim.
@@ -572,117 +573,15 @@ const FACTURE_MODULE_PRINT_CSS = `
 }
 `;
 
-// Style injecté par printFacture() (lignes 1514-1632) — règles visuelles .fct-*.
-export const FACTURE_PRINT_CSS = `
-.fct-header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
-.fct-company-name { font-size: 17pt; font-weight: bold; color: #1e3a8a; }
-.fct-company-sub { font-size: 8pt; color: #6b7280; text-transform: uppercase; letter-spacing: 0.08em; }
-.fct-company-info { font-size: 9pt; color: #374151; margin-top: 5px; line-height: 1.5; }
-.fct-title-facture { font-size: 30pt; font-weight: bold; color: #1e3a8a; text-align: right; line-height: 1; }
-.fct-header-date { font-size: 9pt; color: #374151; text-align: right; margin-top: 5px; }
-.fct-divider { border: none; border-top: 3px solid #1e3a8a; margin: 8px 0 12px; }
-
-.fct-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
-.fct-meta-num { background: linear-gradient(135deg, #1e3a8a, #3b82f6) !important; color: white !important; padding: 10px 14px; border-radius: 6px; }
-.fct-meta-num-label { font-size: 9pt; opacity: 0.85; }
-.fct-meta-num-value { font-size: 20pt; font-weight: bold; line-height: 1.2; }
-.fct-meta-client { background: #f9fafb !important; border: 2px solid #e5e7eb; padding: 10px 14px; border-radius: 6px; }
-.fct-meta-client-label { font-size: 8pt; font-weight: 700; color: #6b7280; text-transform: uppercase; margin-bottom: 4px; }
-.fct-meta-client-name { font-size: 13pt; font-weight: bold; }
-.fct-meta-client-info { font-size: 9pt; color: #374151; margin-top: 2px; }
-
-.fct-table { width: 100%; border-collapse: collapse; margin-bottom: 0; }
-.fct-thead-info td {
-    background-color: #eef2ff !important;
-    color: #3730a3 !important;
-    font-size: 8pt;
-    padding: 4px 8px;
-    border-bottom: 1px solid #c7d2fe;
-    font-style: italic;
-    border-top: 2px solid #1e3a8a;
-}
-.fct-table th {
-    background-color: #1e3a8a !important;
-    color: white !important;
-    padding: 7px 8px;
-    font-size: 9pt;
-    border: 1px solid #1e3a8a;
-    text-align: left;
-}
-.fct-table td { padding: 6px 8px; border: 1px solid #e5e7eb; font-size: 9.5pt; vertical-align: middle; }
-.fct-table tbody tr:nth-child(even) td { background-color: #f8fafc !important; }
-.fct-table tfoot td {
-    background-color: #1e3a8a !important;
-    color: white !important;
-    font-weight: bold;
-    font-size: 11pt;
-    padding: 9px 8px;
-    border: 1px solid #1e3a8a;
-}
-
-.fct-bottom-table { width: 100%; margin-top: 14px; }
-.fct-summary-wrap { page-break-inside: avoid !important; break-inside: avoid !important; }
-.fct-payment-signature-group {
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-    break-inside: avoid-page !important;
-}
-
-.fct-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
-.fct-box-impots { background-color: #dbeafe !important; border-left: 4px solid #3b82f6; padding: 10px 12px; }
-.fct-box-impots-title { font-size: 9pt; color: #1e3a8a; font-weight: 600; }
-.fct-box-impots-amount { font-size: 16pt; font-weight: bold; color: #1e3a8a; }
-.fct-box-honoraires { background-color: #d1fae5 !important; border-left: 4px solid #10b981; padding: 10px 12px; }
-.fct-box-honoraires-title { font-size: 9pt; color: #065f46; font-weight: 600; }
-.fct-box-honoraires-amount { font-size: 16pt; font-weight: bold; color: #065f46; }
-
-.fct-payment { background-color: #f0f9ff !important; border-left: 4px solid #1e3a8a; padding: 10px 12px; margin-bottom: 14px; }
-.fct-payment-title { font-weight: bold; color: #1e3a8a; font-size: 9.5pt; margin-bottom: 5px; }
-.fct-payment-info { font-size: 9pt; color: #374151; line-height: 1.6; }
-
-.fct-sig-wrap {
-    text-align: right;
-    margin-bottom: 12px;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-    break-inside: avoid-page !important;
-}
-.fct-signature-block {
-    display: inline-table;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-    break-inside: avoid-page !important;
-}
-.fct-sig-cachet-wrap { display: table-cell; vertical-align: middle; padding-right: 12px; }
-.fct-sig-inner {
-    display: table-cell;
-    vertical-align: middle;
-    text-align: center;
-    min-width: 58mm;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-    break-inside: avoid-page !important;
-}
-.fct-sig-label { font-weight: bold; color: #1e3a8a; font-size: 9pt; }
-.fct-sig-line { border-top: 2px solid #9ca3af; padding-top: 4px; margin-top: 4px; }
-.fct-sig-name { font-weight: bold; font-size: 9.5pt; }
-.fct-sig-title { font-size: 8.5pt; color: #6b7280; }
-
-.fct-footer { border-top: 1px solid #e5e7eb; padding-top: 6px; text-align: center; font-size: 8pt; color: #6b7280; }
-.fct-force-page-break-before { page-break-before: always !important; break-before: page !important; }
-`;
-
-// Style de page de la facture, dans l'ordre de cascade du vanilla.
+// Style de page de la facture, dans l'ordre de cascade du vanilla : la feuille
+// partagée, puis le bloc print du <head> du module (qui fixe les marges papier
+// à 10 mm en première page et 20 mm en haut des suivantes).
 export const PAGE_STYLE_FACTURE = `
 ${PRISMA_PRINT_CSS}
-${FACTURE_MODULE_PRINT_CSS}
-@page { size: A4; margin: 20mm 12mm 15mm 12mm; }
-@page :first { margin: 12mm 12mm 15mm 12mm; }
-* { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; box-sizing: border-box; }
-body { font-family: Arial, sans-serif !important; margin: 0 !important; padding: 0 !important; font-size: 10.5pt; color: #111; background: #fff !important; }
+body { font-family: 'Inter', Arial, sans-serif !important; margin: 0 !important; padding: 0 !important; background: #fff !important; }
 @media print { body { display: block !important; } }
 .no-print { display: none !important; }
-${FACTURE_PRINT_CSS}
+${FACTURE_MODULE_PRINT_CSS}
 `;
 
 /* ------------------------------------------------------------------ */
@@ -710,8 +609,14 @@ export const DEVIS_PRINT_CSS = `
 .prisma-devis-page {
     background: #fff;
     color: #111827;
-    width: min(100%, 210mm);
-    min-height: 297mm;
+    /* devis.html : <div class="max-w-4xl mx-auto bg-white p-5 print-area">.
+       Largeur fixée à 56rem (896 px) parce que html2canvas capture le nœud
+       tel qu'affiché : une largeur plus étroite serait ensuite étirée sur les
+       190 mm utiles de la page et donnerait un document zoomé. Pas de
+       min-height non plus — un devis court tenait sinon sur une pleine page
+       A4 de DOM et débordait sur une seconde page vide. */
+    width: 56rem;
+    max-width: 100%;
     margin: 0 auto;
     padding: 1.25rem;
     box-sizing: border-box;
@@ -741,7 +646,7 @@ export const DEVIS_PRINT_CSS = `
 .devis-footer { margin-top: 1.5rem; padding-top: 0.5rem; border-top: 1px solid #e5e7eb; text-align: center; }
 
 @media (max-width: 768px) {
-    .prisma-devis-page { width: 100%; min-height: auto; padding: 1rem; }
+    .prisma-devis-page { width: 100%; padding: 1rem; }
     .devis-header, .devis-signatures { display: grid; grid-template-columns: 1fr; align-items: start; }
     .devis-title { text-align: left; }
     .devis-summary, .devis-totals { grid-template-columns: 1fr; }
@@ -769,11 +674,34 @@ export const DEVIS_PRINT_CSS = `
 /* REÇU — recu-app.html : @page 10mm + reset .print-area.              */
 /* ------------------------------------------------------------------ */
 
+// Deux correctifs d'impression du bandeau, embarqués par PrintableRecu lui-même
+// pour valoir quel que soit le chemin d'impression (bouton du dialogue, ou
+// Ctrl+P du navigateur où prisma-print.css n'est pas chargé) :
+//
+//  1. `h1 { color: #1e3a8a !important }` de prisma-print.css coupe l'héritage et
+//     peignait le titre en bleu marine SUR le bandeau bleu marine. En rendant
+//     l'héritage, le titre suit la couleur du bandeau dans les deux cas : blanc
+//     sur fond foncé, bleu foncé sur le fond clair du mode économie d'encre.
+//  2. Le bandeau compense le padding du conteneur par des marges négatives
+//     (-2rem) ; à l'impression `.print-area` passe à padding 0 et le bandeau
+//     débordait alors à droite. On rend son padding au conteneur du reçu plutôt
+//     que de neutraliser les marges : le bandeau touche les bords du cadre comme
+//     sur le PDF de référence, que prisma-print.css soit chargé ou non.
+//     `.prisma-printable.print-area` (0,2,0) l'emporte sur `.print-area` (0,1,0).
+export const RECU_PRINT_CSS = `
+@media print {
+    .prisma-recu-banner h1,
+    .prisma-recu-banner p { color: inherit !important; }
+    .prisma-printable.print-area { padding: 2rem !important; }
+}
+`;
+
 export const PAGE_STYLE_RECU = `
 ${PRISMA_PRINT_CSS}
 body { font-family: 'Inter', Arial, sans-serif !important; margin: 0 !important; padding: 0 !important; background: #fff !important; }
 @media print { body { display: block !important; } }
 ${MODULE_PRINT_CSS_STANDARD}
+${RECU_PRINT_CSS}
 `;
 
 /* ------------------------------------------------------------------ */

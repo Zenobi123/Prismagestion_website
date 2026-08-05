@@ -1,16 +1,11 @@
 
-import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Facture } from "@gestion/types/facture";
 import { useClientDetails } from "../client-details-context";
 import InvoicesTable from "../InvoicesTable";
-import InvoicePreviewDialog from "../../dialogs/InvoicePreviewDialog";
 import CreateFactureDialog from "@gestion/components/facturation/factures/CreateFactureDialog";
 
 const InvoicesTab = () => {
   const { clientDetails, onOpenApplyCreditDialog, onOpenReminderDialog } = useClientDetails();
-  const [selectedInvoice, setSelectedInvoice] = useState<Facture | null>(null);
-  const [isInvoicePreviewDialogOpen, setIsInvoicePreviewDialogOpen] = useState(false);
   const queryClient = useQueryClient();
 
   // Le formulaire de facture a besoin de la liste des clients pour son
@@ -55,14 +50,6 @@ const InvoicesTab = () => {
         onOpenReminderDialog={onOpenReminderDialog}
         clientName={clientName}
       />
-
-      {selectedInvoice && (
-        <InvoicePreviewDialog
-          open={isInvoicePreviewDialogOpen}
-          onOpenChange={setIsInvoicePreviewDialogOpen}
-          invoice={selectedInvoice}
-        />
-      )}
     </div>
   );
 };
