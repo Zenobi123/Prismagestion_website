@@ -35,7 +35,34 @@
     --input: 220 13% 91%;
     --ring: 266.7 46.4% 19%;
     --radius: 0.5rem;
-    
+
+    /*
+      Échelle typographique fluide du site vitrine.
+      Elle remplace les paliers `text-3xl sm:text-4xl md:text-5xl` : entre deux
+      points de rupture, un titre gardait la même taille, si bien qu'il occupait
+      la moitié de l'écran à 640px et paraissait maigre à 1023px. `clamp()`
+      interpole en continu — le titre est toujours proportionné à la fenêtre.
+      Les bornes sont calées sur 375px (plancher) et 1440px (plafond), les deux
+      largeurs qui couvrent l'essentiel du trafic.
+    */
+    --pas-xl: clamp(2.125rem, 1.55rem + 2.45vw, 3.75rem);   /* 34 → 60 px */
+    --pas-lg: clamp(1.625rem, 1.35rem + 1.17vw, 2.25rem);   /* 26 → 36 px */
+    --pas-md: clamp(1.3rem, 1.16rem + 0.6vw, 1.75rem);      /* 21 → 28 px */
+    --pas-sm: clamp(1.125rem, 1.06rem + 0.28vw, 1.375rem);  /* 18 → 22 px */
+
+    /*
+      Profondeur. Le site n'avait aucune ombre portée : toutes les valeurs
+      calculées étaient transparentes, seul le `ring` de Tailwind subsistait.
+      Les ombres sont teintées du violet de marque plutôt que du noir pur —
+      une ombre noire sur un fond coloré grise la surface qu'elle touche.
+    */
+    --ombre-sm: 0 1px 2px -1px rgb(46 26 71 / 0.10), 0 1px 3px rgb(46 26 71 / 0.06);
+    --ombre-md: 0 2px 4px -2px rgb(46 26 71 / 0.10), 0 6px 16px -4px rgb(46 26 71 / 0.10);
+    --ombre-lg: 0 4px 8px -4px rgb(46 26 71 / 0.10), 0 16px 32px -8px rgb(46 26 71 / 0.14);
+
+    /* Hauteur de la barre fixe : sert de décalage aux ancres (voir plus bas). */
+    --hauteur-navbar: 4.5rem;
+
     /* Sidebar colors */
     --sidebar-background: 262 47% 19%;
     --sidebar-foreground: 210 20% 98%;
@@ -75,8 +102,75 @@
   * {
     @apply border-border;
   }
+
+  html {
+    scroll-behavior: smooth;
+    /* Empêche iOS d'agrandir tout seul le texte au passage en paysage. */
+    -webkit-text-size-adjust: 100%;
+  }
+
   body {
     @apply bg-background text-foreground font-sans;
+    /* Lissage : sans lui, Inter paraît épaissi sur les écrans à forte densité. */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Ligatures et chiffres proportionnels d'Inter. */
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'calt';
+  }
+
+  /*
+    La barre de navigation est `fixed` : sans ce décalage, un saut vers #about
+    ou #services amène le titre de section exactement sous la barre, qui le
+    masque. `scroll-margin-top` réserve la hauteur de la barre au moment du
+    saut, sans rien changer à la mise en page.
+  */
+  [id] {
+    scroll-margin-top: calc(var(--hauteur-navbar) + 1rem);
+  }
+
+  /*
+    Indicateur de focus clavier. Il n'en existait aucun sur les liens écrits à
+    la main (barre de navigation, boutons `.btn-*`) : la tabulation était
+    invisible. L'anneau se lit sur les deux fonds du site — le chartreuse
+    ressort sur le violet, et le halo violet qui l'entoure le détache du blanc,
+    où le chartreuse seul plafonne à 1,48:1.
+  */
+  :focus-visible {
+    outline: 2px solid #D6DD00;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 5px rgb(46 26 71 / 0.55);
+    border-radius: 3px;
+  }
+
+  /*
+    Les titres se resserrent à mesure qu'ils grandissent : à 60px, l'espacement
+    par défaut d'une police dessinée pour du texte courant fait paraître le mot
+    délavé. `text-wrap: balance` répartit les lignes d'un titre au lieu de
+    laisser un mot seul en dernière ligne — le défaut le plus visible d'un titre
+    long sur un écran de 375px.
+  */
+  h1, h2, h3, h4 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /*
+    Mouvement réduit. Le site anime 66 éléments et n'avait aucune garde : pour
+    un utilisateur ayant activé « réduire les animations » au niveau du système
+    (trouble vestibulaire, migraine), tout se déclenchait quand même.
+  */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
@@ -85,30 +179,59 @@
     @apply container mx-auto px-4 sm:px-6;
   }
   
-  .heading-xl {
-    @apply text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold leading-tight break-words;
-  }
-  
-  .heading-lg {
-    @apply text-2xl sm:text-3xl md:text-4xl font-heading font-bold leading-tight break-words;
-  }
-  
   /*
-    L'échelle doit rester strictement décroissante à chaque palier. Auparavant
-    heading-md démarrait comme heading-lg (text-2xl) et heading-sm comme
-    heading-md : deux niveaux de titre censés se distinguer s'affichaient à la
-    même taille sur mobile et sur petites tablettes. Chaque niveau descend
-    désormais d'un cran :
-      mobile  xl 30 · lg 24 · md 20 · sm 18
-      ≥640px  xl 36 · lg 30 · md 24 · sm 20
-      ≥768px  xl 48 · lg 36 · md 30 · sm 24
+    L'échelle reste strictement décroissante à chaque niveau — c'était déjà le
+    cas par paliers, ce l'est désormais en continu, puisque les quatre pas
+    interpolent sur la même plage de largeurs (voir `--pas-*` dans :root).
+
+    Deux réglages accompagnent la taille et ne peuvent pas en être séparés :
+    l'interligne se resserre quand le titre grandit (un titre de 60px n'a pas
+    besoin des 1,25 d'un paragraphe), et l'espacement des lettres devient
+    négatif. Ce second point est ce qui distingue le plus nettement un titre
+    composé d'un titre simplement agrandi.
   */
+  .heading-xl {
+    font-family: theme('fontFamily.heading');
+    font-size: var(--pas-xl);
+    font-weight: 700;
+    line-height: 1.06;
+    letter-spacing: -0.032em;
+    overflow-wrap: break-word;
+  }
+
+  .heading-lg {
+    font-family: theme('fontFamily.heading');
+    font-size: var(--pas-lg);
+    font-weight: 700;
+    line-height: 1.14;
+    letter-spacing: -0.024em;
+    overflow-wrap: break-word;
+  }
+
   .heading-md {
-    @apply text-xl sm:text-2xl md:text-3xl font-heading font-bold leading-tight;
+    font-family: theme('fontFamily.heading');
+    font-size: var(--pas-md);
+    font-weight: 700;
+    line-height: 1.22;
+    letter-spacing: -0.018em;
   }
 
   .heading-sm {
-    @apply text-lg sm:text-xl md:text-2xl font-heading font-semibold leading-tight;
+    font-family: theme('fontFamily.heading');
+    font-size: var(--pas-sm);
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.012em;
+  }
+
+  /*
+    Surtitre. Il situe la section avant que le titre ne l'annonce, et remplace
+    avantageusement une numérotation décorative : ces sections ne forment pas
+    une séquence, les numéroter mentirait sur le contenu.
+  */
+  .surtitre {
+    @apply font-heading text-xs font-semibold uppercase;
+    letter-spacing: 0.14em;
   }
   
   /*
@@ -122,14 +245,111 @@
     max-width: 53ch;
   }
 
-  .btn-primary {
-    @apply bg-prisma-purple hover:bg-prisma-purple/90 text-white px-5 py-3 rounded-md font-medium transition-colors;
-  }
-  
+  /*
+    Boutons.
+
+    Deux règles gouvernent leur comportement sur un site consulté à 97 % au
+    doigt :
+
+    1. Le survol est enfermé dans `@media (hover: hover)`. Sur un téléphone, un
+       `:hover` se déclenche à l'appui et **reste collé** après le relâchement :
+       le bouton garde son état survolé jusqu'au prochain appui ailleurs. La
+       requête média le réserve aux appareils dotés d'un vrai pointeur.
+    2. Le retour tactile passe donc par `:active`, seul état réellement perçu
+       sur mobile : un léger enfoncement confirme l'appui avant même que la
+       page n'ait réagi.
+
+    `min-height: 2.75rem` (44px) est le plancher tactile retenu par Apple comme
+    par Material Design ; `touch-action: manipulation` supprime le délai de
+    300 ms que certains navigateurs mobiles conservent pour guetter un double
+    appui.
+  */
+  .btn-primary,
   .btn-secondary {
-    @apply bg-prisma-chartreuse hover:bg-prisma-chartreuse/90 text-prisma-purple px-5 py-3 rounded-md font-medium transition-colors;
+    @apply inline-flex items-center justify-center px-5 py-3 rounded-lg font-medium;
+    min-height: 2.75rem;
+    touch-action: manipulation;
+    transition: background-color 200ms ease, box-shadow 200ms ease, transform 120ms ease;
+  }
+
+  .btn-primary {
+    @apply bg-prisma-purple text-white;
+    box-shadow: var(--ombre-sm);
+  }
+
+  .btn-secondary {
+    @apply bg-prisma-chartreuse text-prisma-purple;
+    box-shadow: var(--ombre-sm);
+  }
+
+  @media (hover: hover) {
+    .btn-primary:hover {
+      @apply bg-prisma-purple/90;
+      box-shadow: var(--ombre-md);
+    }
+    .btn-secondary:hover {
+      @apply bg-prisma-chartreuse/90;
+      box-shadow: var(--ombre-md);
+    }
+  }
+
+  .btn-primary:active,
+  .btn-secondary:active {
+    transform: translateY(1px);
+    box-shadow: var(--ombre-sm);
+  }
+
+  /*
+    Cible tactile. 23 liens du site — pied de page, « Lire la suite », adresses
+    de contact — mesuraient de 17 à 20px de haut, sous le minimum de 24px du
+    critère WCAG 2.5.8 et très loin des 44px confortables. Cette classe étend
+    la zone sensible sans modifier la mise en page : le texte garde sa taille,
+    seule la surface qui répond au doigt grandit.
+  */
+  .cible-tactile {
+    @apply inline-flex items-center;
+    min-height: 2.75rem;
+    touch-action: manipulation;
+  }
+
+  /*
+    Carte de contenu. Remplace les `bg-white rounded-lg shadow` disséminés :
+    une seule définition du rayon, de la bordure et de la profondeur, pour que
+    toutes les cartes du site se ressemblent enfin.
+  */
+  .carte {
+    @apply bg-white rounded-xl border border-gray-100;
+    box-shadow: var(--ombre-sm);
+    transition: box-shadow 220ms ease, transform 220ms ease;
+  }
+
+  @media (hover: hover) {
+    .carte:hover {
+      box-shadow: var(--ombre-lg);
+      transform: translateY(-2px);
+    }
   }
   
+  /*
+    Fond de la bannière d'accueil.
+
+    Il remplace un dégradé linéaire surmonté de deux `<div>` floutées en
+    `blur-3xl`. Le résultat visuel est proche, le coût de rendu ne l'est pas :
+    `filter: blur(64px)` impose au navigateur une passe de flou sur une couche
+    séparée, à chaque image, alors qu'un dégradé radial est peint directement.
+    Sur un téléphone d'entrée de gamme — le terminal type ici — cette passe est
+    l'une des rares choses qui font saccader un défilement par ailleurs simple.
+
+    Les trois couches se lisent de haut en bas : halo chartreuse en haut à
+    droite, halo plus discret en bas à gauche, puis le dégradé violet de marque.
+  */
+  .fond-banniere {
+    background-image:
+      radial-gradient(58% 48% at 88% 12%, rgb(214 221 0 / 0.20), transparent 70%),
+      radial-gradient(42% 38% at 4% 92%, rgb(214 221 0 / 0.10), transparent 70%),
+      linear-gradient(to bottom right, #2E1A47 0%, #2E1A47 45%, #4B2D6D 100%);
+  }
+
   /*
     Emphase dans un titre.
     L'ancienne version peignait le texte d'un dégradé violet → chartreuse :

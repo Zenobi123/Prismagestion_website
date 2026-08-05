@@ -98,7 +98,7 @@ Si les variables `VITE_SUPABASE_URL` / `VITE_SUPABASE_PUBLISHABLE_KEY` sont
 absentes au build, le site bascule automatiquement sur un backend local
 (`src/lib/localBackend/`) qui reproduit l'API de `supabase-js` dans le
 localStorage du navigateur — pratique pour développer hors ligne. Dans ce
-mode, un compte admin local `obiangtimenathan@gmail.com` / `admin123` est créé
+mode, un compte admin local `prismagestionsarl@gmail.com` / `admin123` est créé
 et les données restent propres à chaque navigateur.
 
 ## Développer en local

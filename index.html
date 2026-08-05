@@ -3,19 +3,37 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <!--
+      Le zoom reste autorisé. `maximum-scale=1.0, user-scalable=no` bloquait
+      l'agrandissement sur mobile : échec du critère WCAG 1.4.4 et, en usage
+      réel, impossibilité pour un lecteur presbyte d'agrandir un montant ou
+      une adresse. `viewport-fit=cover` permet aux fonds de couvrir les
+      encoches et la barre d'accueil des téléphones récents.
+    -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#2E1A47" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-    <!-- Polices : découvertes dès l'analyse du <head>, sans attendre le CSS.
-         Seules les graisses réellement employées sont demandées (la 300
-         n'apparaît nulle part dans le site). -->
+    <!--
+      Polices : découvertes dès l'analyse du <head>, sans attendre le CSS.
+
+      Inter est demandée en fonte variable (`wght@400..700`) : un seul fichier
+      remplace les quatre coupes statiques, soit trois requêtes de moins sur une
+      connexion mobile — et l'axe continu autorise n'importe quelle graisse
+      intermédiaire sans téléchargement supplémentaire.
+
+      Poppins ne sert qu'aux titres : la 700 pour les trois premiers niveaux,
+      la 600 pour `.heading-sm` et le surtitre. Les coupes 400 et 500 étaient
+      déclarées sans jamais être employées. Poppins n'existant pas en fonte
+      variable chez Google Fonts, les deux graisses restent des fichiers
+      distincts.
+    -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=Poppins:wght@600;700&display=swap"
     />
 
     <!-- Primary Meta Tags -->
@@ -59,7 +77,8 @@
       "contactPoint": {
         "@type": "ContactPoint",
         "contactType": "customer service",
-        "email": "obiangtimenathan@gmail.com"
+        "email": "prismagestionsarl@gmail.com",
+        "telephone": ["+237694310554", "+237676277662"]
       },
       "hasOfferCatalog": {
         "@type": "OfferCatalog",
@@ -103,8 +122,8 @@
       "description": "Cabinet d'expertise comptable, fiscale, financière, RH et digitale à Yaoundé, Cameroun.",
       "url": "https://prismagestionsite.vercel.app",
       "image": "https://prismagestionsite.vercel.app/logo-prisma.png",
-      "email": "obiangtimenathan@gmail.com",
-      "telephone": "+237694310554",
+      "email": "prismagestionsarl@gmail.com",
+      "telephone": ["+237694310554", "+237676277662"],
       "priceRange": "$$",
       "areaServed": { "@type": "Country", "name": "Cameroun" },
       "address": {

@@ -55,7 +55,7 @@ const Chatbot = () => {
   return (
     <Card className="fixed bottom-6 right-6 w-80 h-96 shadow-xl z-50 flex flex-col">
       <CardHeader className="flex flex-row items-center justify-between p-4 bg-prisma-purple text-white rounded-t-lg">
-        <CardTitle className="text-sm font-medium">Assistant PRISMA</CardTitle>
+        <CardTitle className="text-sm font-medium">PRISMA</CardTitle>
         <Button
           variant="ghost"
           size="icon"
@@ -73,7 +73,7 @@ const Chatbot = () => {
               <ChatMessage
                 message={{
                   id: 'welcome',
-                  text: 'Bonjour ! Je suis l\'assistant PRISMA. Comment puis-je vous aider aujourd\'hui ?',
+                  text: 'Bonjour ! Je suis PRISMA. Comment puis-je vous aider aujourd\'hui ?',
                   isBot: true,
                   timestamp: new Date()
                 }}
@@ -117,7 +117,7 @@ const Chatbot = () => {
           {isLoading && (
             <div className="flex items-center space-x-2 text-gray-500">
               <Loader2 className="h-4 w-4 animate-spin" />
-              <span className="text-sm">Assistant écrit...</span>
+              <span className="text-sm">PRISMA écrit...</span>
             </div>
           )}
           

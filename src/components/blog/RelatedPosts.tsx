@@ -15,7 +15,7 @@ const RelatedPosts: React.FC<RelatedPostsProps> = ({ relatedPosts }) => {
       <h2 className="text-2xl font-bold text-prisma-purple mb-6">Articles similaires</h2>
       <div className="grid md:grid-cols-3 gap-6">
         {relatedPosts.map(relatedPost => (
-          <article key={relatedPost.id} className="bg-white rounded-lg overflow-hidden shadow-md transition-transform hover:shadow-lg hover:-translate-y-1">
+          <article key={relatedPost.id} className="carte overflow-hidden">
             <div className="aspect-w-16 aspect-h-9">
               <img 
                 src={relatedPost.image} 

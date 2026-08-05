@@ -104,7 +104,7 @@ const BlogSection = () => {
         ) : blogPosts.length > 0 ? (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {blogPosts.map((post) => (
-              <article key={post.id} className="bg-white rounded-xl overflow-hidden shadow-md transition-transform hover:shadow-lg hover:-translate-y-1">
+              <article key={post.id} className="carte overflow-hidden">
                 <div className="aspect-w-16 aspect-h-9">
                   <img
                     src={webpTwin(post.image ?? '') ?? post.image}
@@ -145,7 +145,7 @@ const BlogSection = () => {
                       d'accent sur fond violet, où il atteint 10,5:1. */}
                   <Link
                     to={`/blog/${post.slug}`}
-                    className="inline-flex items-center text-prisma-purple font-medium text-sm hover:underline"
+                    className="cible-tactile text-prisma-purple font-medium text-sm hover:underline"
                   >
                     Lire la suite <ArrowRight size={16} className="ml-1" />
                   </Link>

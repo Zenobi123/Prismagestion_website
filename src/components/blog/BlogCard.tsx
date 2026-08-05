@@ -12,8 +12,8 @@ interface BlogCardProps {
 
 const BlogCard: React.FC<BlogCardProps> = ({ post, featured = false }) => {
   const cardClass = featured 
-    ? "bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 md:col-span-2"
-    : "bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1";
+    ? "carte overflow-hidden md:col-span-2"
+    : "carte overflow-hidden";
 
   return (
     <article className={cardClass}>

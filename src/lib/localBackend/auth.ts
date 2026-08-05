@@ -13,7 +13,7 @@ const SESSION_KEY = 'prisma-local-auth:session';
 const USERS_TABLE = '_local_users';
 
 export const DEFAULT_ADMIN = {
-  email: 'obiangtimenathan@gmail.com',
+  email: 'prismagestionsarl@gmail.com',
   password: 'admin123',
 };
 

@@ -3,14 +3,18 @@ import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { getContactConfig, upsertContactConfig } from "@/utils/contact/config";
 import { supabase } from "@/integrations/supabase/client";
+import { CONTACT } from "@/config/social";
 
+// Mêmes valeurs de repli que la section publique, importées de la source unique.
+// L'onglet d'administration affichait auparavant un WhatsApp (671 050 546) que
+// le site n'a jamais montré : les deux jeux de valeurs avaient divergé.
 const defaultContact = {
   title: "Contactez-nous",
   description: "Prenez contact avec notre équipe pour discuter de vos besoins et objectifs.",
-  address: "Yaoundé, Cameroun",
-  email: "obiangtimenathan@gmail.com",
-  phone: "+237 694 310 554",
-  whatsapp: "+237 671 050 546",
+  address: CONTACT.addressLine,
+  email: CONTACT.email,
+  phone: CONTACT.phone,
+  whatsapp: CONTACT.whatsapp,
   formTitle: "Envoyez-nous un message",
   formDescription: "Utilisez ce formulaire pour nous envoyer directement votre demande."
 };

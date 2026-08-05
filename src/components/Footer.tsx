@@ -26,10 +26,10 @@ const Footer = () => {
               Des solutions sur-mesure pour répondre aux défis de votre entreprise.
             </p>
             <div className="flex space-x-4 mb-4">
-              <a href={`mailto:${CONTACT.email}`} aria-label="Nous écrire par email" className="bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors">
+              <a href={`mailto:${CONTACT.email}`} aria-label="Nous écrire par email" className="inline-flex items-center justify-center h-11 w-11 bg-white/10 hover:bg-white/20 rounded-full transition-colors">
                 <Mail className="h-5 w-5" />
               </a>
-              <a href={`tel:${CONTACT.phone}`} aria-label="Nous appeler" className="bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors">
+              <a href={`tel:${CONTACT.phone}`} aria-label="Nous appeler" className="inline-flex items-center justify-center h-11 w-11 bg-white/10 hover:bg-white/20 rounded-full transition-colors">
                 <Phone className="h-5 w-5" />
               </a>
               {socialLinks.map(({ key, href, label, Icon }) => (
@@ -39,14 +39,14 @@ const Footer = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors"
+                  className="inline-flex items-center justify-center h-11 w-11 bg-white/10 hover:bg-white/20 rounded-full transition-colors"
                 >
                   <Icon className="h-5 w-5" />
                 </a>
               ))}
             </div>
             <div>
-              <Link to="/outils" className="text-prisma-chartreuse hover:text-white transition-colors">
+              <Link to="/outils" className="cible-tactile text-prisma-chartreuse hover:text-white transition-colors">
                 Outils pratiques
               </Link>
             </div>
@@ -54,26 +54,30 @@ const Footer = () => {
           
           <div>
             <h3 className="font-medium text-lg mb-4 text-prisma-chartreuse">Services</h3>
-            <ul className="space-y-2">
-              <li><a href="/#services" className="text-white/80 hover:text-white transition-colors">Comptabilité</a></li>
-              <li><a href="/#services" className="text-white/80 hover:text-white transition-colors">Finance</a></li>
-              <li><a href="/#services" className="text-white/80 hover:text-white transition-colors">Fiscalité</a></li>
-              <li><a href="/#services" className="text-white/80 hover:text-white transition-colors">Ressources Humaines</a></li>
-              <li><Link to="/expertise/ia-et-genie-logiciel" className="text-white/80 hover:text-white transition-colors">Génie Logiciel</Link></li>
-              <li><Link to="/expertise/ia-et-genie-logiciel" className="text-white/80 hover:text-white transition-colors">Intelligence Artificielle</Link></li>
+            {/* Plus d'interligne explicite : la hauteur tactile de 44px des
+                liens crée déjà l'espacement, l'ajouter les éloignerait trop. */}
+            <ul>
+              <li><a href="/#services" className="cible-tactile text-white/80 hover:text-white transition-colors">Comptabilité</a></li>
+              <li><a href="/#services" className="cible-tactile text-white/80 hover:text-white transition-colors">Finance</a></li>
+              <li><a href="/#services" className="cible-tactile text-white/80 hover:text-white transition-colors">Fiscalité</a></li>
+              <li><a href="/#services" className="cible-tactile text-white/80 hover:text-white transition-colors">Ressources Humaines</a></li>
+              <li><Link to="/expertise/ia-et-genie-logiciel" className="cible-tactile text-white/80 hover:text-white transition-colors">Génie Logiciel</Link></li>
+              <li><Link to="/expertise/ia-et-genie-logiciel" className="cible-tactile text-white/80 hover:text-white transition-colors">Intelligence Artificielle</Link></li>
             </ul>
           </div>
           
           <div>
             <h3 className="font-medium text-lg mb-4 text-prisma-chartreuse">Liens utiles</h3>
-            <ul className="space-y-2">
-              <li><Link to="/" className="text-white/80 hover:text-white transition-colors">Accueil</Link></li>
-              <li><a href="/#about" className="text-white/80 hover:text-white transition-colors">À propos</a></li>
-              <li><a href="/#services" className="text-white/80 hover:text-white transition-colors">Services</a></li>
-              <li><Link to="/expertise/ia-et-genie-logiciel" className="text-white/80 hover:text-white transition-colors">IA &amp; Génie Logiciel</Link></li>
-              <li><Link to="/blog" className="text-white/80 hover:text-white transition-colors">Notre Blog</Link></li>
-              <li><a href="/#contact" className="text-white/80 hover:text-white transition-colors">Nous contacter</a></li>
-              <li><Link to="/admin" className="text-white/80 hover:text-white transition-colors">Administration</Link></li>
+            {/* Plus d'interligne explicite : la hauteur tactile de 44px des
+                liens crée déjà l'espacement, l'ajouter les éloignerait trop. */}
+            <ul>
+              <li><Link to="/" className="cible-tactile text-white/80 hover:text-white transition-colors">Accueil</Link></li>
+              <li><a href="/#about" className="cible-tactile text-white/80 hover:text-white transition-colors">À propos</a></li>
+              <li><a href="/#services" className="cible-tactile text-white/80 hover:text-white transition-colors">Services</a></li>
+              <li><Link to="/expertise/ia-et-genie-logiciel" className="cible-tactile text-white/80 hover:text-white transition-colors">IA &amp; Génie Logiciel</Link></li>
+              <li><Link to="/blog" className="cible-tactile text-white/80 hover:text-white transition-colors">Notre Blog</Link></li>
+              <li><a href="/#contact" className="cible-tactile text-white/80 hover:text-white transition-colors">Nous contacter</a></li>
+              <li><Link to="/admin" className="cible-tactile text-white/80 hover:text-white transition-colors">Administration</Link></li>
             </ul>
           </div>
         </div>
@@ -84,8 +88,8 @@ const Footer = () => {
           </p>
           <div className="md:mt-0">
             <ul className="flex flex-wrap justify-center md:justify-end gap-x-6 gap-y-2 text-sm">
-              <li><a href="#" className="text-white/70 hover:text-white transition-colors">Politique de confidentialité</a></li>
-              <li><a href="#" className="text-white/70 hover:text-white transition-colors">Mentions légales</a></li>
+              <li><a href="#" className="cible-tactile text-white/70 hover:text-white transition-colors">Politique de confidentialité</a></li>
+              <li><a href="#" className="cible-tactile text-white/70 hover:text-white transition-colors">Mentions légales</a></li>
             </ul>
           </div>
         </div>

@@ -1,4 +1,4 @@
-// Fonction edge de notification email (contact / devis / rendez-vous).
+// Fonction edge de notification email (contact / devis / rendez-vous / newsletter).
 //
 // Durcissement sécurité :
 // - CORS restreint à une liste d'origines autorisées (ALLOWED_ORIGINS,
@@ -10,12 +10,20 @@
 // - Limitation de débit par IP (best effort, mémoire de l'instance).
 // - Taille de requête plafonnée.
 
-// Domaine réellement servi. Un domaine que le cabinet ne contrôle plus n'a
+// Domaines réellement servis. Un domaine que le cabinet ne contrôle plus n'a
 // rien à faire ici : s'il est racheté, son nouveau propriétaire hériterait du
 // droit d'appeler cette fonction. Ajouter le prochain nom de domaine à cette
 // liste — ou le poser dans le secret ALLOWED_ORIGINS, qui la remplace — au
 // moment de son branchement.
+//
+// Les trois entrées sont nécessaires et le dépôt n'en portait que la dernière :
+// la version déployée le 05/08/2026 ne connaissait que les deux domaines
+// `.site`, si bien qu'un déploiement du fichier local tel quel aurait rejeté
+// en 403 les formulaires servis depuis ces domaines. Les deux listes sont donc
+// fusionnées ici, et c'est ce fichier qui fait désormais foi.
 const DEFAULT_ALLOWED_ORIGINS = [
+  'https://prismagestion.site',
+  'https://www.prismagestion.site',
   'https://prismagestionsite.vercel.app',
 ]
 
@@ -139,7 +147,7 @@ function validatePayload(type: string, data: unknown): { ok: true; data: Record<
 
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
 const FROM_EMAIL = Deno.env.get('FROM_EMAIL') ?? 'PRISMA GESTION <onboarding@resend.dev>'
-const TO_EMAIL = Deno.env.get('NOTIFY_EMAIL') ?? 'obiangtimenathan@gmail.com'
+const TO_EMAIL = Deno.env.get('NOTIFY_EMAIL') ?? 'prismagestionsarl@gmail.com'
 
 // Échappe le contenu fourni par les visiteurs avant insertion dans le HTML
 // de l'email (protection contre l'injection HTML).

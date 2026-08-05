@@ -2,6 +2,16 @@
 import type { Config } from "tailwindcss";
 
 export default {
+	/*
+	  `hoverOnlyWhenSupported` enveloppe toutes les variantes `hover:` dans
+	  `@media (hover: hover)`. Sans lui, un appui du doigt déclenche le `:hover`
+	  et l'état reste collé après le relâchement : sur mobile, le dernier bouton
+	  touché garde sa couleur de survol jusqu'au prochain appui ailleurs. Le
+	  comportement au pointeur, lui, ne change pas.
+	*/
+	future: {
+		hoverOnlyWhenSupported: true,
+	},
 	darkMode: ["class"],
 	content: [
 		"./pages/**/*.{ts,tsx}",

@@ -256,7 +256,9 @@ const Navbar = () => {
         <button 
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           className={cn(
-            "lg:hidden p-2 -mr-2 focus:outline-none focus:ring-2 focus:ring-prisma-chartreuse rounded-md",
+            // 44×44 : c'est la cible la plus sollicitée du site sur mobile.
+            // `p-2` autour d'une icône de 20px n'en donnait que 36.
+            "lg:hidden inline-flex items-center justify-center h-11 w-11 -mr-2 focus:outline-none focus:ring-2 focus:ring-prisma-chartreuse rounded-md",
             isScrolled || shouldForceScrolled ? "text-prisma-purple" : "text-white"
           )}
           aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}

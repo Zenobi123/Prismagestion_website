@@ -1,4 +1,6 @@
 
+import { CONTACT } from '@/config/social';
+
 export interface PageMetadata {
   title: string;
   description: string;
@@ -80,7 +82,8 @@ export class MetadataService {
       "contactPoint": {
         "@type": "ContactPoint",
         "contactType": "customer service",
-        "email": "obiangtimenathan@gmail.com"
+        "email": CONTACT.email,
+        "telephone": [CONTACT.phone, CONTACT.phoneSecondary]
       },
       "sameAs": []
     };

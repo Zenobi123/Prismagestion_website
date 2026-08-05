@@ -4,14 +4,19 @@ import ContactInfo from "./contact/ContactInfo";
 import ContactForm from "./contact/ContactForm";
 import { getContactConfig } from "@/utils/contact/config";
 import { supabase } from "@/integrations/supabase/client";
+import { CONTACT } from "@/config/social";
 
+// Repli utilisé tant que la table `contact_config` est vide — ce qui est le cas
+// aujourd'hui : ces valeurs sont donc bien celles affichées en production.
+// Elles viennent de `@/config/social` pour ne plus diverger.
 const defaultData = {
   title: "Contactez-nous",
   description: "Prenez contact avec notre équipe pour discuter de vos besoins et objectifs.",
-  address: "Yaoundé, Cameroun",
-  email: "obiangtimenathan@gmail.com",
-  phone: "+237 656 752 475",
-  whatsapp: "+237 694 310 554",
+  address: CONTACT.addressLine,
+  email: CONTACT.email,
+  phone: CONTACT.phone,
+  phoneSecondary: CONTACT.phoneSecondary,
+  whatsapp: CONTACT.whatsapp,
   formTitle: "Envoyez-nous un message",
   formDescription: "Utilisez ce formulaire pour nous envoyer directement votre demande."
 };

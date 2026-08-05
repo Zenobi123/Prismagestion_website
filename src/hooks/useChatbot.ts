@@ -1,5 +1,6 @@
 
 import { useState, useCallback } from 'react';
+import { CONTACT, formatPhone } from '@/config/social';
 
 interface Message {
   id: string;
@@ -60,9 +61,10 @@ Souhaitez-vous plus d'informations sur un service en particulier ?`,
 
   contact: `Vous pouvez nous contacter de plusieurs façons :
 
-📧 **Email :** obiangtimenathan@gmail.com
-📱 **WhatsApp :** +237 694 310 554
-📍 **Adresse :** Yaoundé, Cameroun
+📧 **Email :** ${CONTACT.email}
+📞 **Téléphone :** ${formatPhone(CONTACT.phone)} · ${formatPhone(CONTACT.phoneSecondary)}
+📱 **WhatsApp :** ${formatPhone(CONTACT.whatsapp)}
+📍 **Adresse :** ${CONTACT.addressLine}
 
 🕒 **Horaires :**
 Lundi - Vendredi : 8h00 - 18h00
@@ -76,8 +78,9 @@ Vous pouvez également utiliser notre formulaire de contact sur le site pour nou
 3. **Nos experts vous répondront** dans les 24h
 
 Ou contactez-nous directement :
-📧 obiangtimenathan@gmail.com
-📱 WhatsApp : +237 694 310 554
+📧 ${CONTACT.email}
+📞 ${formatPhone(CONTACT.phone)} · ${formatPhone(CONTACT.phoneSecondary)}
+📱 WhatsApp : ${formatPhone(CONTACT.whatsapp)}
 
 Quel service vous intéresse le plus ?`,
 

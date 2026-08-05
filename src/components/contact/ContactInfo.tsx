@@ -1,5 +1,6 @@
 
 import { MapPin, Mail, Phone, MessageSquare } from 'lucide-react';
+import { CONTACT, formatPhone } from '@/config/social';
 
 interface ContactInfoProps {
   contactData?: {
@@ -9,18 +10,23 @@ interface ContactInfoProps {
     email: string;
     phone: string;
     whatsapp: string;
+    /** Second numéro du cabinet. Absent des données administrables. */
+    phoneSecondary?: string;
   };
 }
 
 const ContactInfo = ({ contactData }: ContactInfoProps) => {
-  // Default values if contactData is not provided
+  // Les coordonnées de repli viennent de `@/config/social`, source unique :
+  // elles étaient auparavant recopiées en dur ici, dans `ContactSection` et
+  // dans l'onglet d'administration, avec trois valeurs qui avaient divergé.
   const {
     title = "Contactez-nous",
     description = "Prenez contact avec notre équipe pour discuter de vos besoins et objectifs.",
-    address = "Yaoundé, Cameroun",
-    email = "obiangtimenathan@gmail.com",
-    phone = "+237 656 752 475",
-    whatsapp = "+237 694 310 554"
+    address = CONTACT.addressLine,
+    email = CONTACT.email,
+    phone = CONTACT.phone,
+    whatsapp = CONTACT.whatsapp,
+    phoneSecondary = CONTACT.phoneSecondary,
   } = contactData || {};
 
   return (
@@ -47,7 +53,7 @@ const ContactInfo = ({ contactData }: ContactInfoProps) => {
             <h3 className="font-semibold text-prisma-purple mb-1">Email</h3>
             <a 
               href={`mailto:${email}`} 
-              className="text-gray-600 hover:text-prisma-purple hover:underline transition-colors"
+              className="cible-tactile text-gray-600 hover:text-prisma-purple hover:underline transition-colors"
             >
               {email}
             </a>
@@ -60,12 +66,23 @@ const ContactInfo = ({ contactData }: ContactInfoProps) => {
           </div>
           <div>
             <h3 className="font-semibold text-prisma-purple mb-1">Téléphone</h3>
-            <a 
-              href={`tel:${phone.replace(/\s+/g, '')}`} 
-              className="text-gray-600 hover:text-prisma-purple hover:underline transition-colors"
-            >
-              {phone}
-            </a>
+            {/* Les deux lignes du cabinet, chacune appelable d'un appui. */}
+            <div className="flex flex-col">
+              <a
+                href={`tel:${phone.replace(/[^+0-9]/g, '')}`}
+                className="cible-tactile text-gray-600 hover:text-prisma-purple hover:underline transition-colors"
+              >
+                {formatPhone(phone)}
+              </a>
+              {phoneSecondary && (
+                <a
+                  href={`tel:${phoneSecondary.replace(/[^+0-9]/g, '')}`}
+                  className="cible-tactile text-gray-600 hover:text-prisma-purple hover:underline transition-colors"
+                >
+                  {formatPhone(phoneSecondary)}
+                </a>
+              )}
+            </div>
           </div>
         </div>
         
@@ -76,12 +93,12 @@ const ContactInfo = ({ contactData }: ContactInfoProps) => {
           <div>
             <h3 className="font-semibold text-prisma-purple mb-1">WhatsApp</h3>
             <a 
-              href={`https://wa.me/${whatsapp.replace(/\+|\s+/g, '')}`} 
+              href={`https://wa.me/${whatsapp.replace(/[^0-9]/g, '')}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-600 hover:text-prisma-purple hover:underline transition-colors"
+              className="cible-tactile text-gray-600 hover:text-prisma-purple hover:underline transition-colors"
             >
-              {whatsapp}
+              {formatPhone(whatsapp)}
             </a>
           </div>
         </div>

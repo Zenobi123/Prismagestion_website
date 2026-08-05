@@ -55,11 +55,12 @@ const OffersSection = () => {
                 role="tab"
                 aria-selected={activePole === pole.id}
                 onClick={() => setActivePole(pole.id)}
-                className={`rounded-full px-4 py-2 text-sm md:text-base font-medium transition-colors ${
+                className={`inline-flex items-center justify-center min-h-[2.75rem] rounded-full px-5 text-sm md:text-base font-medium transition-colors ${
                   activePole === pole.id
                     ? 'bg-prisma-purple text-white shadow-sm'
                     : 'text-prisma-purple hover:bg-white/70'
                 }`}
+                style={{ touchAction: 'manipulation' }}
               >
                 {pole.shortTitle}
               </button>
