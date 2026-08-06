@@ -21,7 +21,7 @@ const CalculateurImpots = () => {
     <>
       <Helmet>
         <title>Calculateur d'impôts - PRISMA GESTION</title>
-        <meta name="description" content="Estimez facilement vos impôts selon les barèmes camerounais en vigueur" />
+        <meta name="description" content="Estimez l'Impôt Général Synthétique et la Contribution des Patentes selon les barèmes camerounais en vigueur" />
       </Helmet>
 
       <Navbar />
@@ -34,7 +34,7 @@ const CalculateurImpots = () => {
               <SiteBreadcrumb
                 items={[
                   { label: "Outils Pratiques", href: "/outils" },
-                  { label: "Calculateur IGS" }
+                  { label: "Calculateur d'impôts" }
                 ]}
                 className="text-white/80 [&_a]:text-white/80 hover:[&_a]:text-white [&_span[aria-current]]:text-white"
               />
@@ -47,9 +47,9 @@ const CalculateurImpots = () => {
               <ChevronLeft className="mr-1 h-4 w-4" />
               Retour aux outils
             </Button>
-            <h1 className="heading-lg mb-4">Calculateur d'Impôt Général Synthétique (IGS)</h1>
+            <h1 className="heading-lg mb-4">Calculateur d'IGS et de Patente</h1>
             <p className="max-w-2xl text-lg opacity-90">
-              Estimez facilement l'IGS à payer selon les barèmes camerounais en vigueur pour les petites et moyennes entreprises.
+              Estimez l'Impôt Général Synthétique dû par les entreprises réalisant moins de 50 millions de F CFA de chiffre d'affaires, ou la Contribution des Patentes due au-delà, selon les barèmes camerounais en vigueur.
             </p>
           </div>
         </section>

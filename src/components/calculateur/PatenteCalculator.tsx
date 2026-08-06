@@ -118,7 +118,7 @@ const PatenteCalculator = () => {
 
               <div className="bg-purple-50 p-3.5 rounded-lg border border-purple-200 text-xs text-purple-900 space-y-1">
                 <p>
-                  📌 <strong>Échéance légale :</strong> La contribution des patentes doit être acquittée au plus tard le <strong>15 Mars</strong> de chaque année auprès de votre centre des impôts de rattachement (CIME / CSI / DGE).
+                  📌 <strong>Échéance légale :</strong> La contribution des patentes doit être acquittée au plus tard le <strong>28 Février</strong> de chaque année auprès de votre centre des impôts de rattachement (CIME / CSI / DGE).
                 </p>
               </div>
             </CardContent>

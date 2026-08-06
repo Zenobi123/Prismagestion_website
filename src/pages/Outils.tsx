@@ -45,8 +45,8 @@ const Outils = () => {
                   <h3 className="heading-sm">Calculateur d'Impôts</h3>
                 </div>
                 <p className="text-gray-600 mb-6">
-                  Estimez facilement vos impôts selon les barèmes camerounais en vigueur. Calcul de l'IRPP, 
-                  de la patente, et autres taxes applicables.
+                  Estimez l'Impôt Général Synthétique et la Contribution des Patentes selon les
+                  barèmes camerounais en vigueur.
                 </p>
                 <Link to="/outils/calculateur-impots">
                   <Button variant="outline" className="w-full">
