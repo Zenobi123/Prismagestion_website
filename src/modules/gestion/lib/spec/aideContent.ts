@@ -40,16 +40,28 @@ export interface ChangelogEntry {
 }
 
 /** Version courante de l'application telle qu'affichée dans l'aide. */
-export const APP_VERSION = "1.5.1";
+export const APP_VERSION = "1.6.0";
 
 /** Date de la dernière mise à jour de l'aide (AAAA-MM-JJ). */
-export const LAST_UPDATED = "2026-08-05";
+export const LAST_UPDATED = "2026-08-06";
 
 /**
  * Journal des nouveautés : la première entrée est la plus récente.
  * Ajoutez une entrée à chaque changement majeur.
  */
 export const changelog: ChangelogEntry[] = [
+  {
+    version: "1.6.0",
+    date: "2026-08-06",
+    title: "La configuration du cabinet suit désormais tous vos appareils",
+    changes: [
+      "Paramètres → Cabinet : l'identité du cabinet (téléphone, NIU, siège, signataire, signature, cachet, coordonnées de paiement) est enregistrée dans la base et non plus dans le navigateur. Vous la saisissez une fois, elle s'applique partout — ordinateur, téléphone, autre navigateur.",
+      "Jusqu'ici, chaque navigateur gardait sa propre copie : une facture émise depuis le téléphone pouvait porter un pied de page différent de la même facture émise depuis l'ordinateur, et toute correction devait être ressaisie sur chaque appareil.",
+      "Votre configuration existante est reprise automatiquement au premier chargement, signature et cachet compris. Rien n'est à ressaisir.",
+      "Coordonnées du cabinet actualisées : téléphone (237) 694 310 554 / 676 277 662 / 656 752 475, e-mail prismagestionsarl@gmail.com, numéros de paiement 694 31 05 54 / 676 27 76 62 / 656 75 24 75.",
+      "Si l'enregistrement échoue — connexion coupée, session expirée — un message le signale désormais au lieu d'afficher une confirmation trompeuse.",
+    ],
+  },
   {
     version: "1.5.1",
     date: "2026-08-05",

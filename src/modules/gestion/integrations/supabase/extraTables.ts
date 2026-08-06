@@ -51,4 +51,60 @@ export type ExtraTables = {
       },
     ];
   };
+  // Identite du cabinet, ligne unique (contrainte id = 1). Toutes les colonnes
+  // ont une valeur par defaut en base : un Insert n'a besoin de rien.
+  cabinet_config: {
+    Row: {
+      id: number;
+      nom_cabinet: string;
+      slogan: string;
+      siege: string;
+      telephone: string;
+      niu: string;
+      signataire_nom: string;
+      signataire_titre: string;
+      signature: string | null;
+      cachet: string | null;
+      signature_promo: string;
+      mode_paiement: string;
+      numeros_paiement: string;
+      echeance_facture: string;
+      updated_at: string;
+    };
+    Insert: {
+      id?: number;
+      nom_cabinet?: string;
+      slogan?: string;
+      siege?: string;
+      telephone?: string;
+      niu?: string;
+      signataire_nom?: string;
+      signataire_titre?: string;
+      signature?: string | null;
+      cachet?: string | null;
+      signature_promo?: string;
+      mode_paiement?: string;
+      numeros_paiement?: string;
+      echeance_facture?: string;
+      updated_at?: string;
+    };
+    Update: {
+      id?: number;
+      nom_cabinet?: string;
+      slogan?: string;
+      siege?: string;
+      telephone?: string;
+      niu?: string;
+      signataire_nom?: string;
+      signataire_titre?: string;
+      signature?: string | null;
+      cachet?: string | null;
+      signature_promo?: string;
+      mode_paiement?: string;
+      numeros_paiement?: string;
+      echeance_facture?: string;
+      updated_at?: string;
+    };
+    Relationships: [];
+  };
 };

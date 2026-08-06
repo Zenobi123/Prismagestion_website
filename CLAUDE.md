@@ -151,7 +151,13 @@ Console (`src/modules/gestion/`) :
   `courrierStatut.ts`, `facturePrestations.ts` (ACF/ATTIM sont classés en
   taxes, pas en honoraires), `aideContent.ts` (contenu de l'aide + journal —
   incrémenter `APP_VERSION`/`LAST_UPDATED` et ajouter une entrée à chaque
-  fonctionnalité notable), `pdfExport.ts`, `usePrint.ts`, `cabinetConfig.ts`.
+  fonctionnalité notable), `pdfExport.ts`, `usePrint.ts`, `cabinetConfig.ts`
+  (identité du cabinet — **la source de vérité est la table Supabase
+  `cabinet_config`**, ligne unique ; le `localStorage` n'en est que le cache,
+  ce qui garde `loadCabinetConfig()` synchrone pour les composants
+  imprimables. `saveCabinetConfig()` et le second élément de
+  `useCabinetConfig()` sont **asynchrones** : les attendre, sinon un échec
+  d'écriture passe pour une réussite).
 - `config/fiscalConstants.ts` — constantes dupliquées utilisées par quelques
   composants anciens ; **préférer `lib/spec/fiscal-constants.ts`**.
 - `services/` — accès aux données Supabase, un fichier par domaine.

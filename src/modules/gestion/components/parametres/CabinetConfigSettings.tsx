@@ -44,13 +44,23 @@ export default function CabinetConfigSettings() {
     update(field, dataUrl);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setSaving(true);
     try {
-      setConfig(draft);
-      toast({ title: 'Configuration enregistrée', description: 'Les modèles imprimables utilisent désormais ces informations.' });
+      // `await` indispensable : l'enregistrement passe par la base. Sans lui,
+      // le toast de succès s'afficherait avant même de savoir si l'écriture a
+      // abouti, et un échec réseau passerait pour une réussite.
+      await setConfig(draft);
+      toast({
+        title: 'Configuration enregistrée',
+        description: 'Elle vaut désormais pour tous vos appareils et pour les modèles imprimables.',
+      });
     } catch {
-      toast({ title: 'Erreur', description: "Impossible d'enregistrer la configuration.", variant: 'destructive' });
+      toast({
+        title: 'Erreur',
+        description: "La configuration n'a pas pu être enregistrée. Vérifiez votre connexion et réessayez.",
+        variant: 'destructive',
+      });
     } finally {
       setSaving(false);
     }
