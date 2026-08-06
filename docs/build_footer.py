@@ -31,12 +31,14 @@ html = """
 <div class="bar"></div>
 <div class="wrap">
   <div>
-    <div><span class="lbl">Si&egrave;ge Social :</span> Yaound&eacute; &ndash; Bata Longkak</div>
+    <div><span class="lbl">Si&egrave;ge Social :</span> Yaound&eacute; &ndash; Etoa - M&eacute;ki</div>
     <div><span class="lbl">BP :</span> 35 462 Yaound&eacute; &ndash; Cameroun</div>
     <div><span class="lbl">RCCM N&deg; :</span> RC/YAO/2021/2124</div>
   </div>
   <div>
-    <div><span class="lbl">T&eacute;l :</span> (237) 694 310 554 / 676 277 662 / 656 752 475</div>
+    <!-- Deux numeros seulement : la colonne droite du pied de page ne peut pas
+         en accueillir un troisieme sans deborder de la largeur de l'image. -->
+    <div><span class="lbl">T&eacute;l :</span> (237) 694 310 554 / 676 277 662</div>
     <div><span class="lbl">Email :</span> prismagestionsarl@gmail.com</div>
     <div><span class="lbl">N.I.U :</span> M052116042979Z</div>
   </div>

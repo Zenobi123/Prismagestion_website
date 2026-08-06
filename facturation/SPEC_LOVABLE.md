@@ -220,7 +220,7 @@ interface CabinetConfig {
   // Identité
   nomCabinet: string;          // Défaut: "PRISMA GESTION"
   slogan: string;              // Défaut: "Comptabilité - Finance - Fiscalité"
-  siege: string;               // Défaut: "Yaoundé - Bata Longkak"
+  siege: string;               // Défaut: "Yaoundé - Etoa - Méki"
   telephone: string;           // Défaut: "(237) 694 310 554 / 676 277 662 / 656 752 475"
   niu: string;                 // Défaut: "M052116042979Z"
   // Signataire par défaut
@@ -703,7 +703,7 @@ KPI cards en bas : Total Impôts, Total Honoraires, Total Général, Factures Pa
 ┌──────────────────────────────────────────────────────────────┐
 │ PRISMA GESTION                              FACTURE          │
 │ Comptabilité - Finance - Fiscalité          Date : 28/01/2026│
-│ Siège Social : Yaoundé - Bata Longkak                         │
+│ Siège Social : Yaoundé - Etoa - Méki                         │
 │ Tél : (237) 694 310 554 / 676 277 662 / 656 752 475                         │
 │ N.I.U : M052116042979Z                                        │
 ├──────────────────────────────────────────────────────────────┤
@@ -1029,7 +1029,7 @@ const number = `RECU-${num}/${new Date().getFullYear()}`;
 │ │ Reçu de :                                                │ │ (bg-blue-50, border-left bleu)
 │ │ NOM CLIENT                                               │ │
 │ │ NIU : M0xxx                                              │ │
-│ │ Yaoundé - Bata Longkak                                   │ │
+│ │ Yaoundé - Etoa - Méki                                   │ │
 │ └──────────────────────────────────────────────────────────┘ │
 │                                                                │
 │ ┌──────────────────────────────────────────────────────────┐ │
@@ -1051,7 +1051,7 @@ const number = `RECU-${num}/${new Date().getFullYear()}`;
 │ ────────────────────────────────────────                       │
 │ PRISMA GESTION                  [Cachet][Signature]          │
 │ Comptabilité…                   ────────                     │
-│ Yaoundé - Bata Longkak          OBIANG TIME Nathan            │
+│ Yaoundé - Etoa - Méki          OBIANG TIME Nathan            │
 │ Tél : (237)…                    Directeur Associé             │
 │ N.I.U : M0xxx                                                  │
 │                                                                │
@@ -1805,7 +1805,7 @@ create table cabinet_config (
   id              int primary key default 1,
   nom_cabinet     text default 'PRISMA GESTION',
   slogan          text default 'Comptabilité - Finance - Fiscalité',
-  siege           text default 'Yaoundé - Bata Longkak',
+  siege           text default 'Yaoundé - Etoa - Méki',
   telephone       text default '(237) 694 310 554 / 676 277 662 / 656 752 475',
   niu             text default 'M052116042979Z',
   signataire_nom  text default 'OBIANG TIME Nathan',

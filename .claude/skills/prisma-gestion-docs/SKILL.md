@@ -26,7 +26,7 @@ ressaisir en texte sauf demande explicite :
 
 - **Raison sociale :** PRISMA GESTION — Cabinet de Conseil
 - **Services :** Comptabilité · Finance · Fiscalité · Gestion des Ressources Humaines · Prestations intellectuelles · Génie logiciel
-- **Siège Social :** Yaoundé – Bata Longkak
+- **Siège Social :** Yaoundé – Etoa - Méki
 - **BP :** 35 462 Yaoundé – Cameroun
 - **RCCM N° :** RC/YAO/2021/2124
 - **Tél :** (237) 694 310 554 / 676 277 662 / 656 752 475

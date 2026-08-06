@@ -33,7 +33,7 @@ export interface CabinetConfig {
 export const DEFAULT_CABINET_CONFIG: CabinetConfig = {
   nomCabinet: 'PRISMA GESTION',
   slogan: 'Comptabilité - Finance - Fiscalité',
-  siege: 'Yaoundé - Bata Longkak',
+  siege: 'Yaoundé - Etoa - Méki',
   telephone: '(237) 694 310 554 / 676 277 662 / 656 752 475',
   niu: 'M052116042979Z',
   signataireNom: 'OBIANG TIME Nathan',
