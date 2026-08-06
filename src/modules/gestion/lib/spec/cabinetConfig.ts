@@ -30,7 +30,7 @@ export const DEFAULT_CABINET_CONFIG: CabinetConfig = {
   cachet: undefined,
   signaturePromo: "PRISMA Manager — PRISMA GESTION : L'expertise qui sécurise votre gestion.",
   modePaiement: 'Mobile Money / Espèces',
-  numerosPaiement: '694 31 05 54 / 656 75 24 75 — OBIANG TIME Nathan',
+  numerosPaiement: '694 31 05 54 / 676 27 76 62 / 656 75 24 75 — OBIANG TIME Nathan',
   echeanceFacture: "30 jours à compter de la date d'émission",
 };
 

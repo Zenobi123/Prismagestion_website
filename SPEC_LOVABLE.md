@@ -237,7 +237,7 @@ interface CabinetConfig {
 
 ```
 Mode de paiement : Mobile Money / Espèces
-Numéros : 694 31 05 54 / 656 75 24 75 — OBIANG TIME Nathan
+Numéros : 694 31 05 54 / 676 27 76 62 / 656 75 24 75 — OBIANG TIME Nathan
 Échéance facture : 30 jours à compter de la date d'émission
 ```
 
@@ -658,7 +658,7 @@ KPI cards en bas : Total Impôts, Total Honoraires, Total Général, Factures Pa
 │ ┌────────────────────────────────────────────────────────────┐│
 │ │ Informations de paiement                                   ││
 │ │ Mode : Mobile Money / Espèces                              ││
-│ │ Numéros : 694 31 05 54 / 656 75 24 75 — OBIANG TIME Nathan ││
+│ │ Numéros : 694 31 05 54 / 676 27 76 62 / 656 75 24 75 — OBIANG TIME Nathan ││
 │ │ Échéance : 30 jours à compter de la date d'émission        ││
 │ └────────────────────────────────────────────────────────────┘│
 │                                                                │
@@ -746,7 +746,7 @@ Identique à la facture mais avec :
   ```
   Conditions du devis
   Validité : Ce devis est valable 30 jours à compter de sa date d'émission
-  Moyen de paiement : 694 31 05 54 / 656 75 24 75 — OBIANG TIME Nathan
+  Moyen de paiement : 694 31 05 54 / 676 27 76 62 / 656 75 24 75 — OBIANG TIME Nathan
   Ce devis ne constitue pas une facture et n'engage le client qu'après acceptation formelle.
   ```
 - Zone "Bon pour accord" en bas à gauche (avec carré pointillé pour signature client)
