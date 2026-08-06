@@ -10,11 +10,14 @@ import TaxResultDisplay from '../TaxResultDisplay';
  * et les blocs muets. Chaque condition est donc testée dans les deux sens.
  */
 
+// Valeurs reprises telles quelles de calculateTaxClass(2 000 000) : IGS 60 000,
+// TDL 9 000 (palier ≤ 60 000 du barème), total 69 000. Un jeu de données
+// inventé masquerait une divergence entre le moteur et son affichage.
 const resultatClasse5 = {
   classe: 5,
   montant: 60_000,
-  tdl: 6_000,
-  total: 66_000,
+  tdl: 9_000,
+  total: 69_000,
   chiffreAffaires: 2_000_000,
   minRange: 2_000_000,
   maxRange: 2_499_999,
@@ -25,8 +28,12 @@ describe('mode « résultat IGS »', () => {
     render(<TaxResultDisplay result={resultatClasse5} />);
     expect(screen.getByText('5')).toBeInTheDocument();
     expect(screen.getByText('60 000 F CFA')).toBeInTheDocument();
-    expect(screen.getByText('6 000 F CFA')).toBeInTheDocument();
-    expect(screen.getByText('66 000 F CFA')).toBeInTheDocument();
+    expect(screen.getByText('9 000 F CFA')).toBeInTheDocument();
+    expect(screen.getByText('69 000 F CFA')).toBeInTheDocument();
+    // Le libellé est vérifié ici parce qu'un test plus bas s'appuie sur son
+    // absence : sans ce contrôle positif, le renommer viderait l'autre en
+    // silence — c'est ce qui était arrivé à « TDL (10% IGS) ».
+    expect(screen.getByText('TDL (Barème 2026)')).toBeInTheDocument();
     expect(screen.getByText(/total à payer/i)).toBeInTheDocument();
   });
 
@@ -63,8 +70,8 @@ describe('blocs conditionnels', () => {
     render(<TaxResultDisplay result={sansTdl} />);
     // « TDL » figure aussi dans « Total à payer (IGS + TDL) » : on vise la
     // vignette dédiée, pas toute occurrence du sigle.
-    expect(screen.queryByText('TDL (10% IGS)')).not.toBeInTheDocument();
-    expect(screen.queryByText('6 000 F CFA')).not.toBeInTheDocument();
+    expect(screen.queryByText('TDL (Barème 2026)')).not.toBeInTheDocument();
+    expect(screen.queryByText('9 000 F CFA')).not.toBeInTheDocument();
   });
 
   it('n’affiche pas le total quand il n’est pas fourni', () => {

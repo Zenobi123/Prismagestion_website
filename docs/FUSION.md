@@ -380,7 +380,7 @@ couverts, **82 tests** — la suite passe de 169 à **251**.
 
 | Fichier | Ce qui est vérifié |
 |---|---|
-| `src/utils/__tests__/taxCalculations.test.ts` | Calculateur d'IGS public : les 10 tranches, chaque borne des deux côtés, TDL à 10 %, sortie du barème au-delà de 49 999 999 F CFA |
+| `src/utils/__tests__/taxCalculations.test.ts` | Calculateur d'IGS public : les 10 tranches, chaque borne des deux côtés, TDL (forfaitaire à 10 % à l'origine, au barème par tranches depuis le 06/08/2026), sortie du barème au-delà de 49 999 999 F CFA |
 | `src/utils/__tests__/fraisMarche.test.ts` | Liquidation des frais d'enregistrement : droit à 7 %, CAC assis sur le droit, timbre par page, assiette de la pénalité de retard, bascule du barème CNE au 21/07/2026, refus de chiffrer hors barème |
 | `src/utils/__tests__/security.test.ts` | `hasPermission` et sa journalisation des refus, masquage de texte, force des mots de passe, caviardage récursif avant stockage, jetons CSRF |
 
