@@ -13,12 +13,40 @@ const taxClasses = [
   { classe: 10, min: 30_000_000, max: 49_999_999, montant: 2_000_000 },
 ];
 
+// Barème de la TDL adossée à l'IGS (Article C 86 CGI / LF 2026)
+const baremeTDL = [
+  { max: 30_000, montant: 7_500 },
+  { max: 60_000, montant: 9_000 },
+  { max: 100_000, montant: 15_000 },
+  { max: 150_000, montant: 22_500 },
+  { max: 200_000, montant: 30_000 },
+  { max: 300_000, montant: 45_000 },
+  { max: 400_000, montant: 60_000 },
+  { max: 500_000, montant: 75_000 },
+  { max: Number.POSITIVE_INFINITY, montant: 90_000 },
+];
+
+export const calculateTDL = (montantIGSPrincipal: number): number => {
+  const m = Math.round(montantIGSPrincipal || 0);
+  if (m <= 0) return 0;
+  const t = baremeTDL.find((item) => m <= item.max);
+  return t ? t.montant : 0;
+};
+
 /**
- * Calcule la classe d'imposition et le montant de l'IGS à payer
+ * Calcule la classe d'imposition, le montant de l'IGS et les pénalités éventuelles
  * @param chiffreAffaires - Le chiffre d'affaires annuel
- * @returns Objet contenant la classe, le montant, et les informations sur la tranche
+ * @param moisRetardOrOptions - Nombre de mois de retard ou objet d'options
+ * @returns Objet contenant la classe, le montant, les pénalités et les informations de paiement
  */
-export const calculateTaxClass = (chiffreAffaires: number) => {
+export const calculateTaxClass = (
+  chiffreAffaires: number,
+  moisRetardOrOptions: number | { moisRetard?: number } = 0
+) => {
+  const moisRetard = typeof moisRetardOrOptions === 'number'
+    ? Math.max(0, moisRetardOrOptions)
+    : Math.max(0, moisRetardOrOptions?.moisRetard || 0);
+
   // Trouver la classe correspondante au chiffre d'affaires
   const taxClass = taxClasses.find((taxClass) => 
     chiffreAffaires >= taxClass.min && chiffreAffaires <= taxClass.max
@@ -31,6 +59,8 @@ export const calculateTaxClass = (chiffreAffaires: number) => {
       return {
         classe: 0,
         montant: 0,
+        penalites: 0,
+        moisRetard: 0,
         chiffreAffaires,
         minRange: 0, 
         maxRange: 0,
@@ -41,6 +71,8 @@ export const calculateTaxClass = (chiffreAffaires: number) => {
     return {
       classe: 0,
       montant: 0,
+      penalites: 0,
+      moisRetard: 0,
       chiffreAffaires,
       minRange: 0, 
       maxRange: 0,
@@ -48,16 +80,37 @@ export const calculateTaxClass = (chiffreAffaires: number) => {
     };
   }
   
-  // Calculer la Taxe de Développement Local (TDL) - 10% de l'IGS
-  const tdl = Math.round(taxClass.montant * 0.10);
-  const total = taxClass.montant + tdl;
+  // Calculer la Taxe de Développement Local (TDL) selon le barème officiel par tranches (Loi de Finances 2026)
+  const tdl = calculateTDL(taxClass.montant);
+  
+  // Pénalités de retard : 10 % du principal IGS par mois de retard
+  const penalites = Math.round(taxClass.montant * 0.10 * moisRetard);
+  
+  const total = taxClass.montant + tdl + penalites;
+  const montantTrimestriel = Math.round(total / 4);
+
+  // Échéances de paiement trimestrielles (ramenées de 2 mois vers l'arrière)
+  const echeancesTrimestrielles = [
+    "15 Février",
+    "15 Mai",
+    "15 Août",
+    "15 Novembre",
+  ];
+
+  // Échéance de la déclaration annuelle (fixée au 15 juin)
+  const echeanceAnnuelle = "15 Juin";
 
   // Retourner les informations de la classe trouvée
   return {
     classe: taxClass.classe,
     montant: taxClass.montant,
     tdl,
+    penalites,
+    moisRetard,
     total,
+    montantTrimestriel,
+    echeancesTrimestrielles,
+    echeanceAnnuelle,
     chiffreAffaires,
     minRange: taxClass.min,
     maxRange: taxClass.max

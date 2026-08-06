@@ -368,7 +368,7 @@ export const aideSections: AideSection[] = [
       {
         question: "Comment sont calculés les principaux impôts ?",
         answer:
-          "Les règles sont centralisées : la Patente vaut 0,283 % du CA (plancher 141 500, plafond 4 500 000 F CFA) ; le Solde IR/IS vaut 0,1 % du CA au-delà de 15 M F CFA ; le Bail est à 5 % pour les clients OBNL/Non Professionnels (10 % sinon), qui sont par ailleurs exonérés de PSL. Les échéances trimestrielles de l'IGS sont fixées au 15 janvier, 15 mars, 15 juillet et 15 octobre.",
+          "Les règles sont centralisées : la Patente vaut 0,283 % du CA (plancher 141 500, plafond 4 500 000 F CFA) ; le Solde IR/IS vaut 0,1 % du CA au-delà de 15 M F CFA ; le Bail est à 5 % pour les clients OBNL/Non Professionnels (10 % sinon), qui sont par ailleurs exonérés de PSL. Les échéances trimestrielles de l'IGS sont fixées au 15 février, 15 mai, 15 août et 15 novembre.",
       },
     ],
   },

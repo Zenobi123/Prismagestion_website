@@ -59,17 +59,31 @@ describe('calculateTaxClass — barème', () => {
 });
 
 describe('calculateTaxClass — TDL', () => {
-  it('la TDL vaut 10 % de l’IGS et le total les additionne', () => {
-    const r = calculateTaxClass(2_000_000);
+  it('la TDL suit le barème officiel par tranches (Article C 86 CGI / LF 2026)', () => {
+    // Classe 1: IGS 20 000 -> TDL 7 500
+    expect(calculateTaxClass(200_000).tdl).toBe(7_500);
+    // Classe 5: IGS 60 000 -> TDL 9 000
+    expect(calculateTaxClass(2_000_000).tdl).toBe(9_000);
+    // Classe 6: IGS 150 000 -> TDL 22 500
+    expect(calculateTaxClass(3_000_000).tdl).toBe(22_500);
+    // Classe 10: IGS 2 000 000 -> TDL 90 000
+    expect(calculateTaxClass(35_000_000).tdl).toBe(90_000);
+  });
+});
+
+describe('calculateTaxClass — Pénalités de retard', () => {
+  it('calcule des pénalités de 10 % par mois de retard sur l’IGS principal', () => {
+    // CA 2 000 000 -> IGS 60 000 F CFA. 2 mois de retard -> 20 % = 12 000 F CFA
+    const r = calculateTaxClass(2_000_000, 2);
     expect(r.montant).toBe(60_000);
-    expect(r.tdl).toBe(6_000);
-    expect(r.total).toBe(66_000);
+    expect(r.tdl).toBe(9_000);
+    expect(r.penalites).toBe(12_000);
+    expect(r.total).toBe(81_000);
   });
 
-  it.each(BAREME)('classe %i : total = IGS + 10 %%', (_classe, min, _max, montant) => {
-    const r = calculateTaxClass(min);
-    expect(r.tdl).toBe(Math.round(montant * 0.1));
-    expect(r.total).toBe(montant + r.tdl!);
+  it('sans retard (0 mois), les pénalités sont nuls', () => {
+    const r = calculateTaxClass(2_000_000, 0);
+    expect(r.penalites).toBe(0);
   });
 });
 
@@ -99,3 +113,26 @@ describe('calculateTaxClass — hors barème', () => {
     );
   });
 });
+
+describe('calculateTaxClass — Échéances IGS', () => {
+  it('renvoie les échéances trimestrielles décalées (15 Fév, 15 Mai, 15 Août, 15 Nov)', () => {
+    const r = calculateTaxClass(2_000_000);
+    expect(r.echeancesTrimestrielles).toEqual([
+      '15 Février',
+      '15 Mai',
+      '15 Août',
+      '15 Novembre',
+    ]);
+  });
+
+  it('renvoie l’échéance annuelle au 15 Juin', () => {
+    const r = calculateTaxClass(2_000_000);
+    expect(r.echeanceAnnuelle).toBe('15 Juin');
+  });
+
+  it('calcule correctement l’acompte trimestriel (total / 4)', () => {
+    const r = calculateTaxClass(2_000_000); // montant: 60 000, tdl: 9 000, total: 69 000
+    expect(r.montantTrimestriel).toBe(17_250);
+  });
+});
+

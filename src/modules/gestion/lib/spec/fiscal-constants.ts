@@ -48,14 +48,14 @@ export const TF_TAUX = 0.001;          // 0,1 % de la valeur du bien
 
 // === ÉCHÉANCES TRIMESTRIELLES IGS / PSL ===
 export const ECHEANCES_TRIMESTRIELLES = [
-  { trimestre: 1, mois: 0, jour: 15, label: '15 Janvier' },
-  { trimestre: 2, mois: 2, jour: 15, label: '15 Mars' },
-  { trimestre: 3, mois: 6, jour: 15, label: '15 Juillet' },
-  { trimestre: 4, mois: 9, jour: 15, label: '15 Octobre' },
+  { trimestre: 1, mois: 1, jour: 15, label: '15 Février' },
+  { trimestre: 2, mois: 4, jour: 15, label: '15 Mai' },
+  { trimestre: 3, mois: 7, jour: 15, label: '15 Août' },
+  { trimestre: 4, mois: 10, jour: 15, label: '15 Novembre' },
 ] as const;
 
 // === ÉCHÉANCES ANNUELLES (mémo) ===
-// IGS annuel : 1er Mars (péribilité au 1er Avril)
+// IGS annuel : 15 Juin
 // Patente : 28 Février
 // Bail Commercial / TF : annuel
 // DSF : 15 Mars — DARP : 30 Juin — DBEF : 30 Juin

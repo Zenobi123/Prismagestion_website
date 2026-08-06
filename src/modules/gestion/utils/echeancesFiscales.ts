@@ -9,10 +9,10 @@ export interface EcheanceInfo {
 type QuarterKey = "T1" | "T2" | "T3" | "T4";
 
 const QUARTERS: Record<QuarterKey, string> = {
-  T1: "-01-15",
-  T2: "-03-15",
-  T3: "-07-15",
-  T4: "-10-15",
+  T1: "-02-15",
+  T2: "-05-15",
+  T3: "-08-15",
+  T4: "-11-15",
 };
 
 /**

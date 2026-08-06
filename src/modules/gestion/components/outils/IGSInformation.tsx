@@ -199,7 +199,7 @@ const IGSInformation = () => {
       <p>
         Tout contribuable soumis à l'IGS est légalement tenu de souscrire une déclaration détaillée
         de ses revenus perçus au cours de l'année fiscale précédente. Cette déclaration doit être
-        déposée au plus tard le 15 mars de chaque année au centre des impôts compétent pour son
+        déposée au plus tard le 15 juin de chaque année au centre des impôts compétent pour son
         lieu d'imposition.
       </p>
       <p className="mt-2">La déclaration et le paiement doivent être effectués :</p>
@@ -212,21 +212,19 @@ const IGSInformation = () => {
       </ul>
       <p>
         L'Impôt Général Synthétique lui-même est acquitté sur une base trimestrielle. Ces paiements
-        trimestriels doivent être effectués dans les quinze (15) jours suivant la fin de chaque
-        trimestre civil :
+        trimestriels doivent être effectués selon le calendrier d'échéances suivant :
       </p>
       <ul className="list-disc pl-5 my-4 space-y-1">
-        <li>1er Trimestre (1er janvier au 31 mars) : Paiement exigible avant le 15 avril.</li>
-        <li>2ème Trimestre (1er avril au 30 juin) : Paiement exigible avant le 15 juillet.</li>
-        <li>3ème Trimestre (1er juillet au 30 septembre) : Paiement exigible avant le 15 octobre.</li>
+        <li>1er Trimestre (1er janvier au 31 mars) : Paiement exigible avant le 15 février.</li>
+        <li>2ème Trimestre (1er avril au 30 juin) : Paiement exigible avant le 15 mai.</li>
+        <li>3ème Trimestre (1er juillet au 30 septembre) : Paiement exigible avant le 15 août.</li>
         <li>
-          4ème Trimestre (1er octobre au 31 décembre) : Paiement exigible avant le 15 janvier de
-          l'année suivante.
+          4ème Trimestre (1er octobre au 31 décembre) : Paiement exigible avant le 15 novembre.
         </li>
       </ul>
       <p>
         Par ailleurs, pour les personnes physiques soumises à l'IGS, une déclaration annuelle de
-        revenus de particulier doit être déposée au plus tard le 31 octobre.
+        revenus de particulier doit être déposée au plus tard le 31 Mars.
       </p>
 
       <H3>Obligations comptables</H3>

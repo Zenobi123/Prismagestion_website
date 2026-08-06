@@ -23,7 +23,8 @@ const IGSCalculatorTab = () => {
 
   const handleSubmit = (values: IGSFormValues) => {
     const chiffreAffaires = values.chiffreAffaires;
-    const taxResult = calculateTaxClass(chiffreAffaires);
+    const moisRetard = values.moisRetard || 0;
+    const taxResult = calculateTaxClass(chiffreAffaires, moisRetard);
     setResult(taxResult);
   };
   
