@@ -29,7 +29,7 @@ ressaisir en texte sauf demande explicite :
 - **Siège Social :** Yaoundé – Bata Longkak
 - **BP :** 35 462 Yaoundé – Cameroun
 - **RCCM N° :** RC/YAO/2021/2124
-- **Tél :** (237) 656 752 475 / 671 050 546
+- **Tél :** (237) 694 310 554 / 676 277 662 / 656 752 475
 - **Email :** prismagestionsarl@gmail.com
 - **N.I.U :** M052116042979Z
 - **Signataire par défaut :** Nathan OBIANG TIME, Directeur Associé

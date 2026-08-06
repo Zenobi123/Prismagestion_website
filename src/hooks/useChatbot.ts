@@ -62,7 +62,7 @@ Souhaitez-vous plus d'informations sur un service en particulier ?`,
   contact: `Vous pouvez nous contacter de plusieurs façons :
 
 📧 **Email :** ${CONTACT.email}
-📞 **Téléphone :** ${formatPhone(CONTACT.phone)} · ${formatPhone(CONTACT.phoneSecondary)}
+📞 **Téléphone :** ${CONTACT.phones.map(formatPhone).join(' · ')}
 📱 **WhatsApp :** ${formatPhone(CONTACT.whatsapp)}
 📍 **Adresse :** ${CONTACT.addressLine}
 
@@ -79,7 +79,7 @@ Vous pouvez également utiliser notre formulaire de contact sur le site pour nou
 
 Ou contactez-nous directement :
 📧 ${CONTACT.email}
-📞 ${formatPhone(CONTACT.phone)} · ${formatPhone(CONTACT.phoneSecondary)}
+📞 ${CONTACT.phones.map(formatPhone).join(' · ')}
 📱 WhatsApp : ${formatPhone(CONTACT.whatsapp)}
 
 Quel service vous intéresse le plus ?`,

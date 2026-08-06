@@ -221,7 +221,7 @@ interface CabinetConfig {
   nomCabinet: string;          // Défaut: "PRISMA GESTION"
   slogan: string;              // Défaut: "Comptabilité - Finance - Fiscalité"
   siege: string;               // Défaut: "Yaoundé - Bata Longkak"
-  telephone: string;           // Défaut: "(237) 656 752 475 / 671 050 546"
+  telephone: string;           // Défaut: "(237) 694 310 554 / 676 277 662 / 656 752 475"
   niu: string;                 // Défaut: "M052116042979Z"
   // Signataire par défaut
   signataireNom: string;       // Défaut: "OBIANG TIME Nathan"
@@ -238,7 +238,7 @@ interface CabinetConfig {
 
 ```
 Mode de paiement : Mobile Money / Espèces
-Numéros : 656 75 24 75 / 694 31 05 54 — OBIANG TIME Nathan
+Numéros : 694 31 05 54 / 656 75 24 75 — OBIANG TIME Nathan
 Échéance facture : 30 jours à compter de la date d'émission
 ```
 
@@ -704,7 +704,7 @@ KPI cards en bas : Total Impôts, Total Honoraires, Total Général, Factures Pa
 │ PRISMA GESTION                              FACTURE          │
 │ Comptabilité - Finance - Fiscalité          Date : 28/01/2026│
 │ Siège Social : Yaoundé - Bata Longkak                         │
-│ Tél : (237) 656 752 475 / 671 050 546                         │
+│ Tél : (237) 694 310 554 / 676 277 662 / 656 752 475                         │
 │ N.I.U : M052116042979Z                                        │
 ├──────────────────────────────────────────────────────────────┤
 │ ┌────────────────────────┐  ┌──────────────────────────────┐│
@@ -731,7 +731,7 @@ KPI cards en bas : Total Impôts, Total Honoraires, Total Général, Factures Pa
 │ ┌────────────────────────────────────────────────────────────┐│
 │ │ Informations de paiement                                   ││
 │ │ Mode : Mobile Money / Espèces                              ││
-│ │ Numéros : 656 75 24 75 / 694 31 05 54 — OBIANG TIME Nathan ││
+│ │ Numéros : 694 31 05 54 / 656 75 24 75 — OBIANG TIME Nathan ││
 │ │ Échéance : 30 jours à compter de la date d'émission        ││
 │ └────────────────────────────────────────────────────────────┘│
 │                                                                │
@@ -837,7 +837,7 @@ Identique à la facture mais avec :
   ```
   Conditions du devis
   Validité : Ce devis est valable 30 jours à compter de sa date d'émission
-  Moyen de paiement : 656 75 24 75 / 694 31 05 54 — OBIANG TIME Nathan
+  Moyen de paiement : 694 31 05 54 / 656 75 24 75 — OBIANG TIME Nathan
   Ce devis ne constitue pas une facture et n'engage le client qu'après acceptation formelle.
   ```
 - Zone "Bon pour accord" en bas à gauche (avec carré pointillé pour signature client)
@@ -1257,7 +1257,7 @@ Section dédiée avec :
 │ PRISMA GESTION                          Réf : CRR-0001/2026/01│
 │ Comptabilité - Finance - Fiscalité      Yaoundé, le 28/01/2026│
 │ Siège Social : Yaoundé - Bata                  [BROUILLON]    │
-│ Tél : (237) 656 752 475 / 671 050 546                         │
+│ Tél : (237) 694 310 554 / 676 277 662 / 656 752 475                         │
 │ N.I.U : M052116042979Z                                        │
 ├──────────────────────────────────────────────────────────────┤
 │                                       (aligné droite)         │
@@ -1806,7 +1806,7 @@ create table cabinet_config (
   nom_cabinet     text default 'PRISMA GESTION',
   slogan          text default 'Comptabilité - Finance - Fiscalité',
   siege           text default 'Yaoundé - Bata Longkak',
-  telephone       text default '(237) 656 752 475 / 671 050 546',
+  telephone       text default '(237) 694 310 554 / 676 277 662 / 656 752 475',
   niu             text default 'M052116042979Z',
   signataire_nom  text default 'OBIANG TIME Nathan',
   signataire_titre text default 'Directeur Associé',

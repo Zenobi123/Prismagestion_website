@@ -10,8 +10,9 @@ interface ContactInfoProps {
     email: string;
     phone: string;
     whatsapp: string;
-    /** Second numéro du cabinet. Absent des données administrables. */
+    /** Lignes complémentaires du cabinet. Absentes des données administrables. */
     phoneSecondary?: string;
+    phoneTertiary?: string;
   };
 }
 
@@ -27,7 +28,12 @@ const ContactInfo = ({ contactData }: ContactInfoProps) => {
     phone = CONTACT.phone,
     whatsapp = CONTACT.whatsapp,
     phoneSecondary = CONTACT.phoneSecondary,
+    phoneTertiary = CONTACT.phoneTertiary,
   } = contactData || {};
+
+  // Les trois lignes, dans l'ordre d'appel. Le filtre couvre le cas où les
+  // données administrables n'en fourniraient qu'une.
+  const numeros = [phone, phoneSecondary, phoneTertiary].filter(Boolean);
 
   return (
     <div>
@@ -66,22 +72,17 @@ const ContactInfo = ({ contactData }: ContactInfoProps) => {
           </div>
           <div>
             <h3 className="font-semibold text-prisma-purple mb-1">Téléphone</h3>
-            {/* Les deux lignes du cabinet, chacune appelable d'un appui. */}
+            {/* Les lignes du cabinet, chacune appelable d'un appui. */}
             <div className="flex flex-col">
-              <a
-                href={`tel:${phone.replace(/[^+0-9]/g, '')}`}
-                className="cible-tactile text-gray-600 hover:text-prisma-purple hover:underline transition-colors"
-              >
-                {formatPhone(phone)}
-              </a>
-              {phoneSecondary && (
+              {numeros.map((numero) => (
                 <a
-                  href={`tel:${phoneSecondary.replace(/[^+0-9]/g, '')}`}
+                  key={numero}
+                  href={`tel:${numero.replace(/[^+0-9]/g, '')}`}
                   className="cible-tactile text-gray-600 hover:text-prisma-purple hover:underline transition-colors"
                 >
-                  {formatPhone(phoneSecondary)}
+                  {formatPhone(numero)}
                 </a>
-              )}
+              ))}
             </div>
           </div>
         </div>

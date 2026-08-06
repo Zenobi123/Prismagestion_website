@@ -16,6 +16,7 @@ const defaultData = {
   email: CONTACT.email,
   phone: CONTACT.phone,
   phoneSecondary: CONTACT.phoneSecondary,
+  phoneTertiary: CONTACT.phoneTertiary,
   whatsapp: CONTACT.whatsapp,
   formTitle: "Envoyez-nous un message",
   formDescription: "Utilisez ce formulaire pour nous envoyer directement votre demande."

@@ -83,7 +83,7 @@ export class MetadataService {
         "@type": "ContactPoint",
         "contactType": "customer service",
         "email": CONTACT.email,
-        "telephone": [CONTACT.phone, CONTACT.phoneSecondary]
+        "telephone": [...CONTACT.phones]
       },
       "sameAs": []
     };

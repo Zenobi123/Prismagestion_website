@@ -22,7 +22,7 @@ export const DEFAULT_CABINET_CONFIG: CabinetConfig = {
   nomCabinet: 'PRISMA GESTION',
   slogan: 'Comptabilité - Finance - Fiscalité',
   siege: 'Yaoundé - Bata Longkak',
-  telephone: '(237) 656 752 475 / 671 050 546',
+  telephone: '(237) 694 310 554 / 676 277 662 / 656 752 475',
   niu: 'M052116042979Z',
   signataireNom: 'OBIANG TIME Nathan',
   signataireTitre: 'Directeur Associé',
@@ -30,7 +30,7 @@ export const DEFAULT_CABINET_CONFIG: CabinetConfig = {
   cachet: undefined,
   signaturePromo: "PRISMA Manager — PRISMA GESTION : L'expertise qui sécurise votre gestion.",
   modePaiement: 'Mobile Money / Espèces',
-  numerosPaiement: '656 75 24 75 / 694 31 05 54 — OBIANG TIME Nathan',
+  numerosPaiement: '694 31 05 54 / 656 75 24 75 — OBIANG TIME Nathan',
   echeanceFacture: "30 jours à compter de la date d'émission",
 };
 

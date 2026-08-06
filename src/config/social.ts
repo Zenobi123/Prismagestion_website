@@ -4,14 +4,29 @@
 // site (footer, contact, etc.). Pour activer un réseau, renseigner son URL
 // ci-dessous : les composants n'affichent que les liens réellement définis.
 
-// Les numéros sont stockés au format compact, sans espace : ils alimentent
-// directement les liens `tel:` et `wa.me`, où un espace n'a rien à faire.
-// Pour l'affichage, passer par `formatPhone()` ci-dessous.
+/**
+ * Les trois lignes du cabinet, **dans l'ordre d'appel voulu**. Cet ordre est
+ * repris tel quel partout où les numéros s'affichent — site, chatbot, données
+ * structurées, pied de page des documents. C'est la seule liste à modifier.
+ *
+ * Format compact, sans espace : ces valeurs alimentent directement les liens
+ * `tel:` et `wa.me`, où un espace n'a rien à faire. Pour l'affichage, passer
+ * par `formatPhone()` ci-dessous.
+ */
+export const PHONES = [
+  '+237694310554',
+  '+237676277662',
+  '+237656752475',
+] as const;
+
 export const CONTACT = {
   email: 'prismagestionsarl@gmail.com',
-  phone: '+237694310554',
-  phoneSecondary: '+237676277662',
-  whatsapp: '+237694310554',
+  phones: PHONES,
+  // Dérivés de PHONES pour les appelants qui n'attendent qu'un numéro.
+  phone: PHONES[0],
+  phoneSecondary: PHONES[1],
+  phoneTertiary: PHONES[2],
+  whatsapp: PHONES[0],
   addressLine: 'Yaoundé, Cameroun',
 } as const;
 

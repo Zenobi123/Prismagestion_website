@@ -36,7 +36,7 @@ html = """
     <div><span class="lbl">RCCM N&deg; :</span> RC/YAO/2021/2124</div>
   </div>
   <div>
-    <div><span class="lbl">T&eacute;l :</span> (237) 656 752 475 / 671 050 546</div>
+    <div><span class="lbl">T&eacute;l :</span> (237) 694 310 554 / 676 277 662 / 656 752 475</div>
     <div><span class="lbl">Email :</span> prismagestionsarl@gmail.com</div>
     <div><span class="lbl">N.I.U :</span> M052116042979Z</div>
   </div>
