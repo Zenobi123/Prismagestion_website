@@ -107,6 +107,35 @@ export type ExtraTables = {
     };
     Relationships: [];
   };
+  // Exercices comptables clotures (migration 20260807160000). Une annee
+  // absente de la table est ouverte : seules les clotures y figurent.
+  exercices: {
+    Row: {
+      annee: number;
+      statut: string;
+      cloture_le: string;
+      cloture_par: string | null;
+      created_at: string;
+      updated_at: string;
+    };
+    Insert: {
+      annee: number;
+      statut?: string;
+      cloture_le?: string;
+      cloture_par?: string | null;
+      created_at?: string;
+      updated_at?: string;
+    };
+    Update: {
+      annee?: number;
+      statut?: string;
+      cloture_le?: string;
+      cloture_par?: string | null;
+      created_at?: string;
+      updated_at?: string;
+    };
+    Relationships: [];
+  };
   // Journal des ecritures sur les tables metier (migration 20260807120000).
   // Alimente uniquement par le trigger `journaliser_modification()` : aucune
   // policy d'ecriture n'existe, d'ou un Insert/Update volontairement vide.

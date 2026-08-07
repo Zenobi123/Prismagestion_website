@@ -1,6 +1,19 @@
 // Clôture de l'année comptable (cabinet-wide).
-// Stockage local (comme cabinetConfig) : aucune table Supabase dédiée n'existe.
-import { useCallback, useEffect, useState } from 'react';
+//
+// La source de vérité est la table Supabase `exercices` : une année qui y
+// figure au statut « clos » est clôturée, une année absente est ouverte.
+//
+// Elle vivait auparavant dans le `localStorage`, ce qui posait trois problèmes
+// résolus le 07/08/2026 : vider le cache rouvrait tous les exercices, un autre
+// appareil n'en voyait aucun, et rien n'était réellement verrouillé — le
+// trigger `verrouiller_exercice_clos` s'en charge désormais côté base.
+import { useCallback } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  getExercicesClos,
+  cloturerExercice,
+  rouvrirExercice,
+} from '@gestion/services/exerciceService';
 
 export interface ClotureExercice {
   /** Année comptable clôturée (ex: 2024). */
@@ -9,30 +22,7 @@ export interface ClotureExercice {
   closedAt: string;
 }
 
-const STORAGE_KEY = 'cloturesComptables';
-export const CLOTURE_STORAGE_EVENT = 'clotures-comptables-updated';
-
-export function loadClotures(): ClotureExercice[] {
-  if (typeof window === 'undefined') return [];
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return [];
-    return parsed
-      .filter((c): c is ClotureExercice => !!c && typeof c.year === 'number')
-      .sort((a, b) => b.year - a.year);
-  } catch {
-    return [];
-  }
-}
-
-export function saveClotures(list: ClotureExercice[]): void {
-  if (typeof window === 'undefined') return;
-  const sorted = [...list].sort((a, b) => b.year - a.year);
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(sorted));
-  window.dispatchEvent(new CustomEvent(CLOTURE_STORAGE_EVENT));
-}
+export const CLE_REQUETE_CLOTURES = ['exercices-clos'] as const;
 
 export function getMaxClosedYear(list: ClotureExercice[]): number | null {
   if (!list.length) return null;
@@ -63,39 +53,47 @@ export function isExerciceVisible(
 }
 
 /**
- * Hook réactif sur le registre des exercices clôturés. Toute mutation est
- * diffusée via un CustomEvent pour synchroniser tous les composants montés.
+ * Hook réactif sur le registre des exercices clôturés.
+ *
+ * `closeYear` et `reopenYear` sont **asynchrones** : les attendre, sinon un
+ * échec d'écriture passe pour une réussite — même précaution que pour
+ * `saveCabinetConfig()`.
  */
 export function useClotures() {
-  const [clotures, setCloturesState] = useState<ClotureExercice[]>(() => loadClotures());
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    const refresh = () => setCloturesState(loadClotures());
-    const onStorage = (e: StorageEvent) => {
-      if (e.key === STORAGE_KEY) refresh();
-    };
-    window.addEventListener(CLOTURE_STORAGE_EVENT, refresh);
-    window.addEventListener('storage', onStorage);
-    return () => {
-      window.removeEventListener(CLOTURE_STORAGE_EVENT, refresh);
-      window.removeEventListener('storage', onStorage);
-    };
-  }, []);
+  const { data: clotures = [], isLoading } = useQuery({
+    queryKey: CLE_REQUETE_CLOTURES,
+    queryFn: getExercicesClos,
+    staleTime: 5 * 60 * 1000,
+  });
 
-  const closeYear = useCallback((year: number) => {
-    const current = loadClotures();
-    if (current.some((c) => c.year === year)) return;
-    saveClotures([...current, { year, closedAt: new Date().toISOString() }]);
-  }, []);
+  const rafraichir = useCallback(
+    () => queryClient.invalidateQueries({ queryKey: CLE_REQUETE_CLOTURES }),
+    [queryClient],
+  );
 
-  const reopenYear = useCallback((year: number) => {
-    saveClotures(loadClotures().filter((c) => c.year !== year));
-  }, []);
+  const closeYear = useCallback(
+    async (year: number) => {
+      await cloturerExercice(year);
+      await rafraichir();
+    },
+    [rafraichir],
+  );
+
+  const reopenYear = useCallback(
+    async (year: number) => {
+      await rouvrirExercice(year);
+      await rafraichir();
+    },
+    [rafraichir],
+  );
 
   const maxClosedYear = getMaxClosedYear(clotures);
 
   return {
     clotures,
+    isLoading,
     maxClosedYear,
     isYearClosed: (year: number) => isYearClosed(clotures, year),
     closeYear,

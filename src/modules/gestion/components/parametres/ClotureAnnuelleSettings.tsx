@@ -73,17 +73,47 @@ export default function ClotureAnnuelleSettings() {
   useEffect(() => {
     if (!printState || !reportRef.current) return;
     printReport();
-    if (printState.commitYear !== undefined) {
-      closeYear(printState.commitYear);
-      toast({
-        title: `Exercice ${printState.commitYear} clôturé`,
-        description:
-          "Le point de clôture a été généré. Les éléments de cet exercice sont désormais archivés.",
-      });
-    }
+    const annee = printState.commitYear;
     setPrintState(null);
+    if (annee === undefined) return;
+
+    // La clôture est désormais une écriture en base : l'attendre, sinon un
+    // échec passerait pour une réussite.
+    closeYear(annee)
+      .then(() =>
+        toast({
+          title: `Exercice ${annee} clôturé`,
+          description:
+            "Le point de clôture a été généré. Les écritures de cet exercice sont désormais verrouillées.",
+        }),
+      )
+      .catch(() =>
+        toast({
+          title: "Clôture non enregistrée",
+          description:
+            "Le point de clôture a été imprimé, mais la clôture n'a pas pu être enregistrée. Réessayez.",
+          variant: "destructive",
+        }),
+      );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [printState]);
+
+  const handleRouvrir = (annee: number) => {
+    reopenYear(annee)
+      .then(() =>
+        toast({
+          title: `Exercice ${annee} rouvert`,
+          description: "Ses écritures redeviennent modifiables.",
+        }),
+      )
+      .catch(() =>
+        toast({
+          title: "Réouverture impossible",
+          description: "L'exercice n'a pas pu être rouvert. Réessayez.",
+          variant: "destructive",
+        }),
+      );
+  };
 
   const gatherAndPrint = async (year: number, commit: boolean) => {
     setBusy(true);
@@ -115,11 +145,17 @@ export default function ClotureAnnuelleSettings() {
             <Lock className="w-4 h-4" /> Clôture de l'année comptable
           </CardTitle>
           <CardDescription>
-            La clôture archive un exercice : ses factures, paiements, missions et états fiscaux
-            cessent de s'afficher partout dans l'application (seul l'exercice en cours reste
-            visible). Un point de clôture détaillé est imprimé au moment de la clôture. Les
-            exercices clôturés restent consultables en lecture seule via le sélecteur
-            « Exercice » présent sur chaque page.
+            La clôture arrête un exercice : ses factures, paiements, devis, propositions,
+            courriers et obligations fiscales deviennent <strong>non modifiables et non
+            supprimables</strong>, y compris depuis un autre appareil. Ils cessent aussi de
+            s'afficher par défaut, seul l'exercice en cours restant visible, et restent
+            consultables via le sélecteur « Exercice » présent sur chaque page. Un point de
+            clôture détaillé est imprimé au moment de la clôture.
+            <br />
+            <br />
+            Pour intervenir sur un exercice clos — encaisser un règlement tardif, corriger une
+            écriture — il faut le rouvrir. La clôture comme la réouverture sont enregistrées
+            dans le journal des modifications.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -234,7 +270,7 @@ export default function ClotureAnnuelleSettings() {
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                           <AlertDialogCancel>Annuler</AlertDialogCancel>
-                          <AlertDialogAction onClick={() => reopenYear(c.year)}>
+                          <AlertDialogAction onClick={() => handleRouvrir(c.year)}>
                             Rouvrir l'exercice
                           </AlertDialogAction>
                         </AlertDialogFooter>

@@ -40,7 +40,7 @@ export interface ChangelogEntry {
 }
 
 /** Version courante de l'application telle qu'affichée dans l'aide. */
-export const APP_VERSION = "1.9.0";
+export const APP_VERSION = "1.10.0";
 
 /** Date de la dernière mise à jour de l'aide (AAAA-MM-JJ). */
 export const LAST_UPDATED = "2026-08-07";
@@ -50,6 +50,19 @@ export const LAST_UPDATED = "2026-08-07";
  * Ajoutez une entrée à chaque changement majeur.
  */
 export const changelog: ChangelogEntry[] = [
+  {
+    version: "1.10.0",
+    date: "2026-08-07",
+    title: "La clôture d'exercice verrouille vraiment, et suit tous vos appareils",
+    changes: [
+      "La clôture annuelle était enregistrée dans votre navigateur. Vider le cache rouvrait tous les exercices, et un autre appareil n'en voyait aucun. Elle est désormais enregistrée dans la base : elle vous suit partout et ne se perd plus.",
+      "Surtout, elle verrouille réellement. Les factures, paiements, devis, propositions, courriers et obligations fiscales d'un exercice clos ne peuvent plus être ni modifiés, ni supprimés, ni créés. Jusqu'ici, « clôturer » ne faisait que masquer l'exercice dans les listes : tout restait modifiable.",
+      "Le verrou est posé dans la base, pas dans l'écran : il s'applique quelle que soit la manière dont la donnée est touchée.",
+      "Pour intervenir sur un exercice clos — encaisser un règlement tardif, corriger une écriture — rouvrez-le depuis Paramètres → Clôture annuelle, faites la correction, puis reclôturez. La clôture comme la réouverture apparaissent dans le journal des modifications.",
+      "Les tâches et le planning ne sont pas verrouillés : ce ne sont pas des pièces comptables.",
+      "Aucun exercice n'était clôturé jusqu'à présent : rien n'a été repris, la liste démarre vide.",
+    ],
+  },
   {
     version: "1.9.0",
     date: "2026-08-07",
@@ -645,7 +658,7 @@ export const aideSections: AideSection[] = [
       {
         question: "Onglet Clôture annuelle — à quoi sert-il ?",
         answer:
-          "Il permet de clôturer un exercice comptable : ses factures, paiements, missions et états fiscaux cessent alors de s'afficher par défaut et passent en lecture seule. Un « point de clôture » détaillé est généré/imprimé. L'historique des clôtures permet de réimprimer ce point ou de rouvrir un exercice si nécessaire.",
+          "Il permet d'arrêter un exercice comptable. La clôture a deux effets.\n\nD'abord un verrouillage réel : les factures, paiements, devis, propositions, courriers et obligations fiscales de l'exercice clos ne peuvent plus être modifiés, supprimés, ni créés. Le verrou est posé dans la base et s'applique quelle que soit la manière dont la donnée est touchée. Les tâches et le planning restent libres — ce ne sont pas des pièces comptables.\n\nEnsuite un effet d'affichage : les éléments de l'exercice cessent de s'afficher par défaut, seul l'exercice en cours restant visible. Ils demeurent consultables via le sélecteur « Exercice » présent sur chaque page.\n\nUn « point de clôture » détaillé est imprimé au moment de la clôture, et peut être réimprimé depuis l'historique.\n\nPour intervenir sur un exercice clos — un client qui règle tardivement une facture, une écriture à corriger — rouvrez-le, faites la correction, puis reclôturez. La clôture et la réouverture sont toutes deux enregistrées dans le journal des modifications.\n\nDepuis le 7 août 2026, la clôture est enregistrée dans la base et non plus dans le navigateur : elle vaut pour tous vos appareils et survit au vidage du cache.",
       },
       {
         question: "Onglets Profil, Application, Sécurité et Notifications",
