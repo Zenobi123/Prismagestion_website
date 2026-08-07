@@ -18,6 +18,8 @@ export async function generateFinancialReport() {
     
     // Indicateurs financiers principaux
     const financialData = [
+      ["Chiffre d'affaires (honoraires)", `${formatMontantPdf(stats.chiffreAffaires)}`],
+      ['Débours refacturés (impôts)', `${formatMontantPdf(stats.debours)}`],
       ['Total Facturé', `${formatMontantPdf(stats.totalFactures)}`],
       ['Total Encaissé', `${formatMontantPdf(stats.totalPaiements)}`],
       ['Taux de Recouvrement', `${stats.tauxRecouvrement.toFixed(1)}%`],

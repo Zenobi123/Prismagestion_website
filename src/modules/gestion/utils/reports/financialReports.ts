@@ -10,57 +10,67 @@ export const generateChiffresAffairesReport = async () => {
     const stats = ReportDataService.calculateFinancialStats(data.factures, data.paiements);
     
     const doc = new jsPDF();
-    
+
     // En-tête
     doc.setFontSize(18);
     doc.text('Rapport Chiffre d\'Affaires', 14, 22);
     doc.setFontSize(10);
     doc.text(`Généré le ${new Date().toLocaleDateString()}`, 14, 30);
-    
+
     // Résumé financier
     doc.setFontSize(14);
     doc.text('Résumé Financier', 14, 45);
-    
+
+    // Le chiffre d'affaires du cabinet, ce sont les honoraires. Les impôts
+    // refacturés transitent par la facture mais ne lui appartiennent pas.
     const summaryData = [
-      ['Total Factures', `${formatMontantPdf(stats.totalFactures)}`],
+      ["Chiffre d'affaires (honoraires)", `${formatMontantPdf(stats.chiffreAffaires)}`],
+      ['Débours refacturés (impôts)', `${formatMontantPdf(stats.debours)}`],
+      ['Total facturé aux clients', `${formatMontantPdf(stats.totalFactures)}`],
       ['Total Paiements', `${formatMontantPdf(stats.totalPaiements)}`],
       ['Taux de Recouvrement', `${stats.tauxRecouvrement.toFixed(1)}%`],
       ['Factures Payées', stats.facuresPayees.toString()],
       ['Factures en Retard', stats.facturesEnRetard.toString()]
     ];
-    
+
     autoTable(doc, {
       startY: 55,
       head: [['Indicateur', 'Valeur']],
       body: summaryData,
       theme: 'grid'
     });
-    
+
     // Détail des factures par mois
     const currentY = doc.lastAutoTable.finalY + 20;
     doc.setFontSize(14);
     doc.text('Évolution Mensuelle', 14, currentY);
-    
+
     // Grouper les factures par mois
     const facturesByMonth = data.factures.reduce((acc, facture) => {
       const month = new Date(facture.date).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long' });
-      if (!acc[month]) acc[month] = { count: 0, amount: 0 };
+      if (!acc[month]) acc[month] = { count: 0, honoraires: 0, impots: 0, total: 0 };
       acc[month].count++;
-      acc[month].amount += facture.montant || 0;
+      acc[month].honoraires += facture.montant_honoraires || 0;
+      acc[month].impots += facture.montant_impots || 0;
+      acc[month].total += facture.montant || 0;
       return acc;
     }, {});
-    
-    const monthlyData = Object.entries(facturesByMonth).map(([month, data]: [string, { count: number; amount: number }]) => [
-      month,
-      data.count.toString(),
-      `${formatMontantPdf(data.amount)}`
-    ]);
-    
+
+    const monthlyData = Object.entries(facturesByMonth).map(
+      ([month, data]: [string, { count: number; honoraires: number; impots: number; total: number }]) => [
+        month,
+        data.count.toString(),
+        `${formatMontantPdf(data.honoraires)}`,
+        `${formatMontantPdf(data.impots)}`,
+        `${formatMontantPdf(data.total)}`
+      ]);
+
     autoTable(doc, {
       startY: currentY + 10,
-      head: [['Mois', 'Nombre de Factures', 'Montant Total']],
+      head: [['Mois', 'Factures', 'Honoraires', 'Débours', 'Total facturé']],
       body: monthlyData,
-      theme: 'grid'
+      theme: 'grid',
+      styles: { fontSize: 8 }
     });
     
     doc.save(`chiffre-affaires-${new Date().toISOString().slice(0, 10)}.pdf`);

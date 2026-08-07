@@ -40,7 +40,7 @@ export interface ChangelogEntry {
 }
 
 /** Version courante de l'application telle qu'affichée dans l'aide. */
-export const APP_VERSION = "1.7.0";
+export const APP_VERSION = "1.8.0";
 
 /** Date de la dernière mise à jour de l'aide (AAAA-MM-JJ). */
 export const LAST_UPDATED = "2026-08-07";
@@ -50,6 +50,18 @@ export const LAST_UPDATED = "2026-08-07";
  * Ajoutez une entrée à chaque changement majeur.
  */
 export const changelog: ChangelogEntry[] = [
+  {
+    version: "1.8.0",
+    date: "2026-08-07",
+    title: "Votre chiffre d'affaires ne compte plus les impôts de vos clients",
+    changes: [
+      "Les rapports financiers distinguent désormais deux montants : le chiffre d'affaires du cabinet, c'est-à-dire vos seuls honoraires, et les débours — les impôts (IGS, Patente, TDL, PSL…) que vous refacturez après les avoir réglés pour le compte du client.",
+      "Jusqu'ici, tout était additionné. Sur les factures déjà émises, l'écart est d'un facteur cinq : 2 194 739 F CFA facturés, dont 1 752 739 d'impôts et seulement 442 000 d'honoraires. Les rapports « Chiffre d'affaires » et « Bilan financier » édités avant aujourd'hui portaient donc un montant très surestimé.",
+      "Le rapport d'évolution mensuelle sépare lui aussi les trois colonnes : honoraires, débours, total facturé.",
+      "Ce que le client doit ne change pas : il reste redevable du total, impôts compris. Le suivi des créances et le taux de recouvrement sont donc inchangés.",
+      "La ventilation est calculée automatiquement à partir des lignes de chaque facture et de chaque devis, et se met à jour dès qu'une ligne est ajoutée, modifiée ou retirée.",
+    ],
+  },
   {
     version: "1.7.0",
     date: "2026-08-07",

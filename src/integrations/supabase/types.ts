@@ -639,6 +639,8 @@ export type Database = {
           date_validite: string | null
           facture_id: string | null
           id: string
+          montant_honoraires: number
+          montant_impots: number
           montant_total: number
           notes: string | null
           numero: string
@@ -653,6 +655,8 @@ export type Database = {
           date_validite?: string | null
           facture_id?: string | null
           id: string
+          montant_honoraires?: number
+          montant_impots?: number
           montant_total?: number
           notes?: string | null
           numero: string
@@ -667,6 +671,8 @@ export type Database = {
           date_validite?: string | null
           facture_id?: string | null
           id?: string
+          montant_honoraires?: number
+          montant_impots?: number
           montant_total?: number
           notes?: string | null
           numero?: string
@@ -909,6 +915,8 @@ export type Database = {
           id: string
           mode_paiement: string
           montant: number
+          montant_honoraires: number
+          montant_impots: number
           montant_paye: number | null
           notes: string | null
           status: string
@@ -923,6 +931,8 @@ export type Database = {
           id: string
           mode_paiement?: string
           montant?: number
+          montant_honoraires?: number
+          montant_impots?: number
           montant_paye?: number | null
           notes?: string | null
           status?: string
@@ -937,6 +947,8 @@ export type Database = {
           id?: string
           mode_paiement?: string
           montant?: number
+          montant_honoraires?: number
+          montant_impots?: number
           montant_paye?: number | null
           notes?: string | null
           status?: string
@@ -1590,20 +1602,6 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "fk_tasks_client"
-            columns: ["client_id"]
-            isOneToOne: false
-            referencedRelation: "clients"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "fk_tasks_collaborateur"
-            columns: ["collaborateur_id"]
-            isOneToOne: false
-            referencedRelation: "collaborateurs"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "tasks_client_id_fkey"
             columns: ["client_id"]
             isOneToOne: false
@@ -1665,13 +1663,6 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "fk_users_collaborateur"
-            columns: ["collaborateur_id"]
-            isOneToOne: false
-            referencedRelation: "collaborateurs"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "users_collaborateur_id_fkey"
             columns: ["collaborateur_id"]
             isOneToOne: false
             referencedRelation: "collaborateurs"

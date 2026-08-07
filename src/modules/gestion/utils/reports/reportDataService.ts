@@ -98,7 +98,7 @@ export class ReportDataService {
         .from('tasks')
         .select(`
           *,
-          clients!fk_tasks_client(nom, raisonsociale)
+          clients!tasks_client_id_fkey(nom, raisonsociale)
         `);
 
       if (tasksError) {
@@ -206,20 +206,41 @@ export class ReportDataService {
     }
   }
 
+  /**
+   * Deux notions à ne pas confondre :
+   *
+   * - `totalFactures` — ce que les clients DOIVENT, impôts refacturés compris.
+   *   C'est la base du recouvrement.
+   * - `chiffreAffaires` — ce que le cabinet a PRODUIT, c'est-à-dire les seuls
+   *   honoraires. Les impôts encaissés pour le compte du client (IGS, Patente,
+   *   TDL, PSL…) sont des opérations pour compte de tiers : les compter en
+   *   chiffre d'affaires le surestime — d'un facteur cinq sur l'historique
+   *   existant.
+   */
   static calculateFinancialStats(
-    factures: { montant?: number | string | null; status_paiement?: string | null; echeance?: string | null }[],
+    factures: {
+      montant?: number | string | null;
+      montant_honoraires?: number | string | null;
+      montant_impots?: number | string | null;
+      status_paiement?: string | null;
+      echeance?: string | null;
+    }[],
     paiements: { montant?: number | string | null }[],
   ) {
     const totalFactures = factures.reduce((sum, f) => sum + (Number(f.montant) || 0), 0);
+    const chiffreAffaires = factures.reduce((sum, f) => sum + (Number(f.montant_honoraires) || 0), 0);
+    const debours = factures.reduce((sum, f) => sum + (Number(f.montant_impots) || 0), 0);
     const totalPaiements = paiements.reduce((sum, p) => sum + (Number(p.montant) || 0), 0);
     const facuresPayees = factures.filter(f => f.status_paiement === 'payée').length;
-    const facturesEnRetard = factures.filter(f => 
-      f.status_paiement === 'non_payée' && 
+    const facturesEnRetard = factures.filter(f =>
+      f.status_paiement === 'non_payée' &&
       new Date(f.echeance) < new Date()
     ).length;
 
     return {
       totalFactures,
+      chiffreAffaires,
+      debours,
       totalPaiements,
       facuresPayees,
       facturesEnRetard,
