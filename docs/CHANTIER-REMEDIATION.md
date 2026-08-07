@@ -301,7 +301,7 @@ Par ordre de valeur décroissante à l'intérieur de chaque plan.
 | ~~Retirer le code mort~~ — **fait**, 24 fichiers, voir § 2.6 | — |
 | ~~Retirer les 5 orphelins restants de `hooks/fiscal/`~~ — **fait**, voir § 2.7 | — |
 | **19 écrans vivants portent encore un tableau sans variante mobile** — inventaire ci-dessous. Avec 97 % de trafic mobile, c'est le plus gros reste d'interface de la console | 3–4 j |
-| **Trancher le sort de 7 composants morts du tableau de bord** : `RecentTasks`, `DashboardCollapsible`, `ExpiringClientDocuments`, `UnfiledDsfList`, `UnpaidPatenteList`, `UnpaidPatenteSummary`, `AlertBanner`. Aucun n'est monté. Les rebrancher est une décision produit (le tableau de bord n'affiche ni les tâches, ni les documents clients qui expirent) ; à défaut, les supprimer | décision |
+| ~~Trancher le sort des 7 composants morts du tableau de bord~~ — **supprimés** le 07/08/2026 sur décision de Nathan, avec la chaîne `useExpiringClients` + `hooks/expiring/` qu'ils maintenaient seuls en vie. Acté : le tableau de bord n'affichera ni liste de tâches, ni documents clients expirants | — |
 | Balayer les cibles tactiles du reste de la console — `.cible-tactile` est désormais posée dans les missions, les attestations, le journal et la génération de tâches, mais pas ailleurs | ½ j |
 | Registre de courrier : référence séquentielle (aujourd'hui un timestamp base 36), PDF archivé, insertion non « best-effort » | 1–2 j |
 | Enrichir les tâches (description, priorité, type de mission, charge) | 1 j |
@@ -349,8 +349,11 @@ puisque rien ne dépend alors de JavaScript.
 | `DataImportButton` | Partagé (aperçu d'import) |
 
 Déjà traités : `CollaborateurList`, `ClientList`, `ClientsList`,
-`FactureTable`, `ExpiringFiscalAttestations`, `MissionCard`, et `RecentTasks`
-(§ 2.7, mais mort).
+`FactureTable`, `ExpiringFiscalAttestations`, `MissionCard`.
+
+`RecentTasks` avait été traité au § 2.7 avant qu'on ne découvre qu'il était
+mort ; il a été supprimé depuis. **Vérifier qu'un composant est monté avant
+de le retravailler** — un `grep` de son nom d'export suffit.
 
 ---
 
