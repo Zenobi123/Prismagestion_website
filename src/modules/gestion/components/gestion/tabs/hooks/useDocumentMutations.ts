@@ -2,15 +2,39 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@gestion/integrations/supabase/client";
 import { useToast } from "@gestion/components/ui/use-toast";
 
+const BUCKET = "documents";
+
 export interface DocumentAdministratif {
   id: string;
   client_id: string;
   nom: string;
   type: string;
   statut: string;
-  fichier_url?: string;
+  /**
+   * Chemin de l'objet dans le bucket privé `documents`, jamais une URL.
+   * Une URL signée expire au bout d'une heure : la persister rendait le
+   * document définitivement inaccessible. Voir `getDocumentUrl()`.
+   */
+  fichier_path?: string;
   date_creation: string;
   date_expiration?: string;
+}
+
+/**
+ * Produit une URL signée à la demande pour un document stocké.
+ * Même modèle que `getFiscalAttachmentUrl()` de `fiscalAttachmentService` :
+ * la base garde le chemin, l'URL ne vit que le temps de l'usage.
+ */
+export async function getDocumentUrl(
+  path: string,
+  options?: { download?: boolean; expiresIn?: number },
+): Promise<string | null> {
+  const { data, error } = await supabase.storage
+    .from(BUCKET)
+    .createSignedUrl(path, options?.expiresIn ?? 60, { download: options?.download });
+
+  if (error || !data?.signedUrl) return null;
+  return data.signedUrl;
 }
 
 export function useDocumentMutations(clientId: string) {
@@ -42,7 +66,8 @@ export function useDocumentMutations(clientId: string) {
   ];
   const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 
-  const uploadFile = async (file: File) => {
+  /** Téléverse le fichier et renvoie son **chemin** dans le bucket. */
+  const uploadFile = async (file: File): Promise<string> => {
     if (!ALLOWED_TYPES.includes(file.type)) {
       throw new Error("Type de fichier non autorisé. Utilisez PDF, Word ou images.");
     }
@@ -55,29 +80,21 @@ export function useDocumentMutations(clientId: string) {
     const filePath = `${clientId}/${fileName}`;
 
     const { error } = await supabase.storage
-      .from("documents")
+      .from(BUCKET)
       .upload(filePath, file);
 
     if (error) {
       throw error;
     }
 
-    const { data: signedData, error: signError } = await supabase.storage
-      .from("documents")
-      .createSignedUrl(filePath, 3600);
-
-    if (signError || !signedData?.signedUrl) {
-      throw new Error("Impossible de générer l'URL du document.");
-    }
-
-    return signedData.signedUrl;
+    return filePath;
   };
 
   const saveDocument = useMutation({
     mutationFn: async ({ nom, type, statut, file }: { nom: string, type: string, statut: string, file?: File }) => {
-      let fichier_url = "";
+      let fichier_path: string | null = null;
       if (file) {
-        fichier_url = await uploadFile(file);
+        fichier_path = await uploadFile(file);
       }
 
       const { data, error } = await supabase
@@ -87,7 +104,7 @@ export function useDocumentMutations(clientId: string) {
           nom,
           type,
           statut,
-          fichier_url: fichier_url || null,
+          fichier_path,
         }])
         .select()
         .single();
@@ -105,7 +122,7 @@ export function useDocumentMutations(clientId: string) {
     onError: (error) => {
       toast({
         title: "Erreur",
-        description: "Impossible d'enregistrer le document.",
+        description: error instanceof Error ? error.message : "Impossible d'enregistrer le document.",
         variant: "destructive",
       });
     },
@@ -141,16 +158,33 @@ export function useDocumentMutations(clientId: string) {
 
   const updateDocumentFile = useMutation({
     mutationFn: async ({ id, file }: { id: string, file: File }) => {
-      const fichier_url = await uploadFile(file);
+      // Le chemin remplacé est lu avant l'écriture : sans versionnage en base,
+      // l'ancien objet ne serait plus atteignable depuis l'application — un
+      // fichier client orphelin dans un bucket privé, pas un historique.
+      const { data: existant } = await supabase
+        .from("documents_administratifs")
+        .select("fichier_path")
+        .eq("id", id)
+        .single();
+
+      const fichier_path = await uploadFile(file);
 
       const { data, error } = await supabase
         .from("documents_administratifs")
-        .update({ fichier_url })
+        .update({ fichier_path })
         .eq("id", id)
         .select()
         .single();
 
       if (error) throw error;
+
+      const ancienChemin = existant?.fichier_path;
+      if (ancienChemin && ancienChemin !== fichier_path) {
+        // Best-effort : le remplacement est déjà acquis, un objet resté en
+        // place ne doit pas faire échouer l'opération aux yeux de l'utilisateur.
+        await supabase.storage.from(BUCKET).remove([ancienChemin]);
+      }
+
       return data;
     },
     onSuccess: () => {
@@ -163,7 +197,7 @@ export function useDocumentMutations(clientId: string) {
     onError: (error) => {
       toast({
         title: "Erreur",
-        description: "Impossible de mettre à jour le document.",
+        description: error instanceof Error ? error.message : "Impossible de mettre à jour le document.",
         variant: "destructive",
       });
     },

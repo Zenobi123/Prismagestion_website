@@ -8,10 +8,9 @@ import { Button } from "@gestion/components/ui/button";
 import { Input } from "@gestion/components/ui/input";
 import { Textarea } from "@gestion/components/ui/textarea";
 import { Client } from "@gestion/types/client";
-import { useDocumentMutations } from "./hooks/useDocumentMutations";
+import { useDocumentMutations, getDocumentUrl } from "./hooks/useDocumentMutations";
 import { useInteractionMutations } from "./hooks/useInteractionMutations";
 import { v4 as uuidv4 } from "uuid";
-import { supabase } from "@gestion/integrations/supabase/client";
 import { toast } from "sonner";
 import {
   CheckCircle2,
@@ -46,7 +45,7 @@ interface DocumentItem {
   name: string;
   required: boolean;
   status: DocumentStatus;
-  fileUrl?: string;
+  filePath?: string;
 }
 
 interface DocumentSection {
@@ -252,7 +251,7 @@ export function GestionDossier({ selectedClient }: GestionDossierProps) {
             ...baseDoc,
             id: fetchedDoc.id,
             status: fetchedDoc.statut as DocumentStatus,
-            fileUrl: fetchedDoc.fichier_url,
+            filePath: fetchedDoc.fichier_path,
           };
         }
         return baseDoc;
@@ -324,29 +323,26 @@ export function GestionDossier({ selectedClient }: GestionDossierProps) {
     });
   };
 
-  const extractStoragePath = (url: string): string | null => {
-    // signed URL: .../storage/v1/object/sign/documents/<path>?token=...
-    const m = url.match(/\/object\/(?:sign|public)\/documents\/([^?]+)/);
-    return m ? decodeURIComponent(m[1]) : null;
+  const handleView = async (filePath: string) => {
+    const url = await getDocumentUrl(filePath);
+    if (!url) {
+      toast.error("Impossible d'ouvrir le document");
+      return;
+    }
+    window.open(url, "_blank");
   };
 
-  const handleDownload = async (docName: string, fileUrl: string) => {
+  const handleDownload = async (docName: string, filePath: string) => {
     try {
-      let downloadUrl = fileUrl;
-      const path = extractStoragePath(fileUrl);
-      if (path) {
-        const { data, error } = await supabase.storage
-          .from("documents")
-          .createSignedUrl(path, 60, { download: true });
-        if (!error && data?.signedUrl) downloadUrl = data.signedUrl;
-      }
+      const downloadUrl = await getDocumentUrl(filePath, { download: true });
+      if (!downloadUrl) throw new Error("Téléchargement impossible");
       const res = await fetch(downloadUrl);
       if (!res.ok) throw new Error("Téléchargement impossible");
       const blob = await res.blob();
       const objUrl = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = objUrl;
-      const ext = path?.split(".").pop() || "pdf";
+      const ext = filePath.split(".").pop() || "pdf";
       a.download = `${docName}.${ext}`;
       document.body.appendChild(a);
       a.click();
@@ -459,13 +455,13 @@ export function GestionDossier({ selectedClient }: GestionDossierProps) {
                         </Button>
                       )}
 
-                      {doc.fileUrl && !selectedFiles[doc.name] && (
+                      {doc.filePath && !selectedFiles[doc.name] && (
                         <>
                           <Button
                             variant="ghost"
                             size="icon"
                             className="h-8 w-8 text-blue-500 hover:text-blue-700 hover:bg-blue-50"
-                            onClick={() => window.open(doc.fileUrl, '_blank')}
+                            onClick={() => handleView(doc.filePath!)}
                             title="Voir le document"
                           >
                             <Eye className="h-4 w-4" />
@@ -474,7 +470,7 @@ export function GestionDossier({ selectedClient }: GestionDossierProps) {
                             variant="ghost"
                             size="icon"
                             className="h-8 w-8 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
-                            onClick={() => handleDownload(doc.name, doc.fileUrl!)}
+                            onClick={() => handleDownload(doc.name, doc.filePath!)}
                             title="Télécharger le document"
                           >
                             <Download className="h-4 w-4" />

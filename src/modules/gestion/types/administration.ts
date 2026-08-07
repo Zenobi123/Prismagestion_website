@@ -11,7 +11,8 @@ export interface Document {
   description?: string;
   date_creation: string;
   date_expiration?: string;
-  fichier_url?: string;
+  /** Chemin dans le bucket `documents` — jamais une URL signée (elle expire). */
+  fichier_path?: string;
   statut: string;
   created_at: string;
   updated_at: string;

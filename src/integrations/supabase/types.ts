@@ -739,7 +739,7 @@ export type Database = {
           date_creation: string
           date_expiration: string | null
           description: string | null
-          fichier_url: string | null
+          fichier_path: string | null
           id: string
           nom: string
           statut: string
@@ -752,7 +752,7 @@ export type Database = {
           date_creation?: string
           date_expiration?: string | null
           description?: string | null
-          fichier_url?: string | null
+          fichier_path?: string | null
           id?: string
           nom: string
           statut?: string
@@ -765,7 +765,7 @@ export type Database = {
           date_creation?: string
           date_expiration?: string | null
           description?: string | null
-          fichier_url?: string | null
+          fichier_path?: string | null
           id?: string
           nom?: string
           statut?: string
