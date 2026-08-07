@@ -1568,6 +1568,7 @@ export type Database = {
           end_date: string | null
           end_time: string | null
           id: string
+          reference_obligation: string | null
           start_date: string | null
           start_time: string | null
           status: string
@@ -1581,6 +1582,7 @@ export type Database = {
           end_date?: string | null
           end_time?: string | null
           id?: string
+          reference_obligation?: string | null
           start_date?: string | null
           start_time?: string | null
           status?: string
@@ -1594,6 +1596,7 @@ export type Database = {
           end_date?: string | null
           end_time?: string | null
           id?: string
+          reference_obligation?: string | null
           start_date?: string | null
           start_time?: string | null
           status?: string

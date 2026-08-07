@@ -2,6 +2,7 @@
 import { Button } from "@gestion/components/ui/button";
 import { RefreshCw } from "lucide-react";
 import NewTaskDialog from "./NewTaskDialog";
+import GenerationTachesDialog from "../tasks/GenerationTachesDialog";
 
 interface DashboardHeaderProps {
   lastRefresh: Date;
@@ -35,6 +36,7 @@ const DashboardHeader = ({ lastRefresh, onRefresh }: DashboardHeaderProps) => {
           </div>
         </div>
         <div className="flex gap-2 shrink-0 ml-2">
+          <GenerationTachesDialog />
           <NewTaskDialog />
         </div>
       </div>

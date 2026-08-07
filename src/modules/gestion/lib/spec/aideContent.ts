@@ -40,7 +40,7 @@ export interface ChangelogEntry {
 }
 
 /** Version courante de l'application telle qu'affichée dans l'aide. */
-export const APP_VERSION = "1.8.0";
+export const APP_VERSION = "1.9.0";
 
 /** Date de la dernière mise à jour de l'aide (AAAA-MM-JJ). */
 export const LAST_UPDATED = "2026-08-07";
@@ -50,6 +50,20 @@ export const LAST_UPDATED = "2026-08-07";
  * Ajoutez une entrée à chaque changement majeur.
  */
 export const changelog: ChangelogEntry[] = [
+  {
+    version: "1.9.0",
+    date: "2026-08-07",
+    title: "Le calendrier fiscal génère vos tâches",
+    changes: [
+      "Tableau de bord → bouton « Échéances fiscales » : l'application confronte chaque client actif au calendrier — IGS et précompte sur loyer trimestriels, Patente, DSF, DARP, DBEF — selon son régime et son mode de paiement, puis crée les tâches correspondantes.",
+      "Vous choisissez l'exercice et le collaborateur, vous voyez la liste exacte de ce qui va être créé, et vous validez. Rien n'est créé sans votre accord.",
+      "Les échéances sont classées en trois groupes : « À traiter » (dans les 30 jours), « Plus tard dans l'année », et « Déjà passées » pour un éventuel rattrapage. Seul le premier groupe est retenu par défaut.",
+      "Chaque tâche s'ouvre 30 jours avant sa date légale et porte l'échéance comme date de fin. Exemple : l'acompte IGS du 15 août apparaît le 16 juillet.",
+      "Une échéance déjà transformée en tâche n'est jamais reproposée, même si vous relancez la génération plusieurs fois.",
+      "Les dates d'échéance annuelles (Patente au 28 février, DSF au 15 mars, DARP et DBEF au 30 juin) sont désormais déclarées au même endroit que les échéances trimestrielles, et non plus dispersées.",
+      "Le précompte sur loyer n'est généré qu'en paiement trimestriel : aucune date légale n'étant documentée pour le versement annuel, l'application préfère ne rien proposer plutôt qu'avancer une échéance incertaine.",
+    ],
+  },
   {
     version: "1.8.0",
     date: "2026-08-07",
@@ -241,7 +255,12 @@ export const aideSections: AideSection[] = [
       {
         question: "Que montre le tableau de bord ?",
         answer:
-          "Il s'organise en trois blocs : un en-tête (avec création rapide de tâche), des statistiques rapides (cartes chiffrées) et un accordéon d'alertes fiscales repliable. C'est le point de départ recommandé chaque matin.",
+          "Il s'organise en trois blocs : un en-tête (avec création rapide de tâche et génération des échéances fiscales), des statistiques rapides (cartes chiffrées) et un accordéon d'alertes fiscales repliable. C'est le point de départ recommandé chaque matin.",
+      },
+      {
+        question: "Comment générer les tâches d'échéances fiscales ?",
+        answer:
+          "Le bouton « Échéances fiscales », en haut du tableau de bord, confronte chaque client actif au calendrier fiscal et propose de créer les tâches correspondantes.\n\nCe qui est pris en compte : l'IGS et le précompte sur loyer (quatre acomptes trimestriels aux 15 février, mai, août et novembre — ou un versement unique au 15 juin si le client est en paiement annuel pour l'IGS), la Patente au 28 février, la DSF au 15 mars, la DARP et la DBEF au 30 juin. L'assujettissement découle du régime fiscal, du type de client et de sa situation immobilière, exactement comme dans l'onglet fiscal.\n\nVous choisissez l'exercice et le collaborateur à qui affecter les tâches, puis vous voyez la liste précise de ce qui va être créé, répartie en trois groupes : « À traiter » (échéance dans les 30 jours), « Plus tard dans l'année », et « Déjà passées » pour un rattrapage. Seul le premier groupe est coché par défaut. Rien n'est créé tant que vous n'avez pas validé.\n\nChaque tâche s'ouvre 30 jours avant la date légale et se termine à l'échéance. Relancer la génération ne crée jamais de doublon : une échéance déjà transformée en tâche n'est plus proposée.\n\nÀ noter : le précompte sur loyer en paiement annuel n'est pas généré, aucune date légale de référence n'étant documentée pour ce cas.",
       },
       {
         question: "Que contiennent les statistiques rapides ?",

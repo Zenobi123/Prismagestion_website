@@ -54,11 +54,27 @@ export const ECHEANCES_TRIMESTRIELLES = [
   { trimestre: 4, mois: 10, jour: 15, label: '15 Novembre' },
 ] as const;
 
-// === ÉCHÉANCES ANNUELLES (mémo) ===
-// IGS annuel : 15 Juin
-// Patente : 28 Février
-// Bail Commercial / TF : annuel
-// DSF : 15 Mars — DARP : 30 Juin — DBEF : 30 Juin
+// === ÉCHÉANCE ANNUELLE IGS ===
+// Utilisée comme point de départ des pénalités en mode de paiement annuel,
+// au même titre qu'ECHEANCES_TRIMESTRIELLES pour le mode trimestriel.
+export const ECHEANCE_ANNUELLE_IGS = { mois: 5, jour: 15, label: '15 Juin' } as const;
+
+// === AUTRES ÉCHÉANCES ANNUELLES ===
+// Ces dates ne vivaient qu'en commentaire ; elles sont désormais déclarées,
+// au même titre qu'ECHEANCES_TRIMESTRIELLES, pour que le générateur de tâches
+// et toute autre fonction les lisent au même endroit — jamais en dur.
+// `mois` suit la convention de Date : 0 = janvier.
+export const ECHEANCES_ANNUELLES = {
+  patente: { mois: 1, jour: 28, label: '28 Février' },
+  dsf: { mois: 2, jour: 15, label: '15 Mars' },
+  darp: { mois: 5, jour: 30, label: '30 Juin' },
+  dbef: { mois: 5, jour: 30, label: '30 Juin' },
+} as const;
+
+export type ObligationAnnuelle = keyof typeof ECHEANCES_ANNUELLES;
+
+// Bail Commercial / TF : annuels, sans date légale fixe connue à ce jour —
+// donc volontairement absents du générateur de tâches.
 
 // === CGA ===
 export const CGA_REDUCTION = 0.5; // 50 % de l'IGS pour adhérents
