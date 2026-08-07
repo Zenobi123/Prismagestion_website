@@ -35,7 +35,7 @@ Cinq manques structurants avaient été identifiés :
 | `f3e8560` | Séparation débours / honoraires | en production |
 | `dd6ca8e` | Générateur de tâches depuis le calendrier fiscal | en production |
 | `950f489` | Clôture d'exercice côté serveur, verrouillante | en production |
-| `479b758` | Statut de tâche dérivé, vue de charge, retrait du code mort | **non poussé** |
+| `8ac1719` | Statut de tâche dérivé, vue de charge, retrait du code mort | **non poussé** |
 
 ### 2.1 Protection des pièces et GED (`bef1c9b`)
 
@@ -116,7 +116,7 @@ Cinq manques structurants avaient été identifiés :
   asynchrones** — les attendre, sinon un échec d'écriture passe pour une
   réussite.
 
-### 2.6 Statut dérivé, vue de charge, code mort (`479b758`)
+### 2.6 Statut dérivé, vue de charge, code mort (`8ac1719`)
 
 **`getTasks()` ne lit plus que.** Elle réécrivait les statuts et
 resynchronisait `collaborateurs.tachesencours` à chaque appel ; avec un
