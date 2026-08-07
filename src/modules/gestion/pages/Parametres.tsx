@@ -9,6 +9,7 @@ import SecuritySettings from "@gestion/components/parametres/SecuritySettings";
 import NotificationSettings from "@gestion/components/parametres/NotificationSettings";
 import CabinetConfigSettings from "@gestion/components/parametres/CabinetConfigSettings";
 import ClotureAnnuelleSettings from "@gestion/components/parametres/ClotureAnnuelleSettings";
+import JournalModifications from "@gestion/components/parametres/JournalModifications";
 import UserManagement from "@gestion/components/parametres/user-management/UserManagement";
 import { CollaborateurUnauthorized } from "@gestion/components/collaborateurs/CollaborateurUnauthorized";
 import { useAuthorization } from "@gestion/hooks/useAuthorization";
@@ -42,6 +43,7 @@ const Parametres = () => {
                   <TabsTrigger value="profile" className="text-xs sm:text-sm">Profil</TabsTrigger>
                   <TabsTrigger value="cabinet" className="text-xs sm:text-sm">Cabinet (impressions)</TabsTrigger>
                   <TabsTrigger value="cloture" className="text-xs sm:text-sm">Clôture annuelle</TabsTrigger>
+                  <TabsTrigger value="journal" className="text-xs sm:text-sm">Journal</TabsTrigger>
                   <TabsTrigger value="application" className="text-xs sm:text-sm">Application</TabsTrigger>
                   <TabsTrigger value="security" className="text-xs sm:text-sm">Sécurité</TabsTrigger>
                   <TabsTrigger value="notifications" className="text-xs sm:text-sm">Notifications</TabsTrigger>
@@ -59,6 +61,10 @@ const Parametres = () => {
 
               <TabsContent value="cloture">
                 <ClotureAnnuelleSettings />
+              </TabsContent>
+
+              <TabsContent value="journal">
+                <JournalModifications />
               </TabsContent>
 
               <TabsContent value="application">

@@ -40,16 +40,29 @@ export interface ChangelogEntry {
 }
 
 /** Version courante de l'application telle qu'affichée dans l'aide. */
-export const APP_VERSION = "1.6.0";
+export const APP_VERSION = "1.7.0";
 
 /** Date de la dernière mise à jour de l'aide (AAAA-MM-JJ). */
-export const LAST_UPDATED = "2026-08-06";
+export const LAST_UPDATED = "2026-08-07";
 
 /**
  * Journal des nouveautés : la première entrée est la plus récente.
  * Ajoutez une entrée à chaque changement majeur.
  */
 export const changelog: ChangelogEntry[] = [
+  {
+    version: "1.7.0",
+    date: "2026-08-07",
+    title: "Vos pièces sont protégées, et tout ce qui change est désormais tracé",
+    changes: [
+      "Paramètres → Journal : nouvel onglet qui consigne chaque création, modification et suppression sur vos données — avec le détail des champs touchés, leur valeur avant et après. Filtrable par donnée, par type d'opération et par date. Le journal est en lecture seule : il ne peut être ni corrigé ni effacé depuis l'application. Il démarre au 7 août 2026 et ne contient rien d'antérieur.",
+      "Une facture qui a été émise ne peut plus être supprimée : elle s'annule, ce qui en conserve la trace. Jusqu'ici, seule une facture à la fois envoyée ET intégralement payée était protégée — une facture partiellement réglée pouvait disparaître, et ses paiements avec elle.",
+      "Un règlement encaissé ne s'efface plus avec la facture qui l'a motivé.",
+      "Supprimer définitivement un client n'emporte plus ses devis, propositions, pièces administratives, obligations fiscales et employés. La suppression est refusée tant qu'un de ces éléments subsiste ; la corbeille reste la voie normale.",
+      "Gestion documentaire réparée : les pièces déposées dans le dossier d'un client restaient consultables une heure, puis le bouton « Voir » ouvrait un lien mort. Le document est maintenant accessible sans limite de temps.",
+      "Remplacer le fichier d'un document supprime l'ancien au lieu de le laisser traîner, inaccessible, dans l'espace de stockage.",
+    ],
+  },
   {
     version: "1.6.0",
     date: "2026-08-06",
@@ -586,7 +599,12 @@ export const aideSections: AideSection[] = [
       {
         question: "Quels réglages trouve-t-on dans les Paramètres ?",
         answer:
-          "Les Paramètres sont organisés en onglets : Profil, Cabinet (impressions), Clôture annuelle, Application, Sécurité, Notifications, et Utilisateurs (réservé aux administrateurs). La page n'est accessible qu'aux administrateurs.",
+          "Les Paramètres sont organisés en onglets : Profil, Cabinet (impressions), Clôture annuelle, Journal, Application, Sécurité, Notifications, et Utilisateurs (réservé aux administrateurs). La page n'est accessible qu'aux administrateurs.",
+      },
+      {
+        question: "Onglet Journal — que puis-je y retrouver ?",
+        answer:
+          "Le journal consigne chaque création, modification et suppression portant sur les données du cabinet : clients, factures, paiements, devis, propositions, courriers, tâches, obligations fiscales, documents, personnel. Pour une modification, il indique précisément quels champs ont changé, avec leur valeur avant et après ; pour une création ou une suppression, il conserve la ligne concernée.\n\nTrois filtres permettent de s'y retrouver : la donnée (Clients, Factures…), le type d'opération (Création, Modification, Suppression) et une date de départ. Chaque ligne se déplie pour afficher le détail.\n\nDeux points à connaître. Le journal est en lecture seule : il ne peut être ni corrigé ni effacé depuis l'application, ce qui est précisément ce qui lui donne sa valeur de preuve en cas de litige ou de contrôle. Et il démarre au 7 août 2026 : il ne contient rien d'antérieur à sa mise en service.\n\nLorsque la colonne « auteur » indique « hors session applicative », l'écriture n'a pas été faite depuis la console mais directement en base — par une intervention technique, par exemple.",
       },
       {
         question: "Onglet Cabinet — que configure-t-on pour les documents ?",

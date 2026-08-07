@@ -107,4 +107,25 @@ export type ExtraTables = {
     };
     Relationships: [];
   };
+  // Journal des ecritures sur les tables metier (migration 20260807120000).
+  // Alimente uniquement par le trigger `journaliser_modification()` : aucune
+  // policy d'ecriture n'existe, d'ou un Insert/Update volontairement vide.
+  audit_log: {
+    Row: {
+      id: number;
+      table_name: string;
+      row_id: string | null;
+      action: "INSERT" | "UPDATE" | "DELETE";
+      acteur: string | null;
+      acteur_email: string | null;
+      fait_le: string;
+      /** UPDATE : colonnes modifiees avant changement. DELETE : ligne entiere. */
+      avant: Record<string, unknown> | null;
+      /** UPDATE : colonnes modifiees apres changement. INSERT : ligne entiere. */
+      apres: Record<string, unknown> | null;
+    };
+    Insert: Record<string, never>;
+    Update: Record<string, never>;
+    Relationships: [];
+  };
 };
