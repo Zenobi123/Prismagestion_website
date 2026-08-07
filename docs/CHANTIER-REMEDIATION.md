@@ -26,7 +26,7 @@ Cinq manques structurants avaient été identifiés :
 
 ---
 
-## 2. Ce qui a été livré (6 commits)
+## 2. Ce qui a été livré (6 commits, tous en production)
 
 | Commit | Objet | État |
 |---|---|---|
@@ -35,7 +35,7 @@ Cinq manques structurants avaient été identifiés :
 | `f3e8560` | Séparation débours / honoraires | en production |
 | `dd6ca8e` | Générateur de tâches depuis le calendrier fiscal | en production |
 | `950f489` | Clôture d'exercice côté serveur, verrouillante | en production |
-| `8ac1719` | Statut de tâche dérivé, vue de charge, retrait du code mort | **non poussé** |
+| `8ac1719` | Statut de tâche dérivé, vue de charge, retrait du code mort | en production |
 
 ### 2.1 Protection des pièces et GED (`bef1c9b`)
 
