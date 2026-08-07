@@ -24,6 +24,11 @@ import {
 import { OrdreMissionDialog } from "./OrdreMissionDialog";
 import { RapportMissionUpload } from "./RapportMissionUpload";
 import type { MissionInfo } from "@gestion/services/missionDocumentService";
+import {
+  LIBELLES_STATUT_TACHE,
+  type StatutAffiche,
+  type StatutTache,
+} from "@gestion/lib/spec/statutTache";
 
 interface MissionCardProps {
   mission: {
@@ -31,7 +36,10 @@ interface MissionCardProps {
     title: string;
     client: string;
     assignedTo: string;
-    status: string;
+    /** Statut affiché : retard et planification compris. */
+    status: StatutAffiche;
+    /** Statut réellement enregistré — le seul que l'on puisse réécrire. */
+    statutEnregistre: StatutTache;
     startDate: string;
     endDate: string;
     rawStartDate: string | null;
@@ -54,12 +62,13 @@ const MissionCard = ({ mission }: MissionCardProps) => {
   };
 
   const updateStatusMutation = useMutation({
-    mutationFn: ({ id, status }: { id: string; status: "en_attente" | "en_cours" | "termine" | "en_retard" }) =>
+    mutationFn: ({ id, status }: { id: string; status: StatutTache }) =>
       updateTaskStatus(id, status),
     onSuccess: () => {
       toast.success("Statut mis à jour avec succès");
       queryClient.invalidateQueries({ queryKey: ["missions"] });
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      queryClient.invalidateQueries({ queryKey: ["collaborateurs"] });
     },
     onError: (error) => {
       toast.error("Erreur lors de la mise à jour du statut : " + error.message);
@@ -72,30 +81,35 @@ const MissionCard = ({ mission }: MissionCardProps) => {
       toast.success("Tâche supprimée avec succès");
       queryClient.invalidateQueries({ queryKey: ["missions"] });
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      queryClient.invalidateQueries({ queryKey: ["collaborateurs"] });
     },
     onError: (error) => {
       toast.error("Erreur lors de la suppression : " + error.message);
     },
   });
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
+  const getStatusBadge = (statut: StatutAffiche) => {
+    switch (statut) {
       case "en_cours":
-        return <Badge variant="secondary">En cours</Badge>;
+        return <Badge variant="secondary">{LIBELLES_STATUT_TACHE.en_cours}</Badge>;
       case "en_attente":
-        return <Badge variant="outline">En attente</Badge>;
-      case "planifiee":
-        return <Badge variant="default" className="bg-blue-500">Planifiée</Badge>;
+        return <Badge variant="outline">{LIBELLES_STATUT_TACHE.en_attente}</Badge>;
+      case "planifie":
+        return (
+          <Badge variant="default" className="bg-blue-500">
+            {LIBELLES_STATUT_TACHE.planifie}
+          </Badge>
+        );
       case "termine":
-        return <Badge variant="success">Terminée</Badge>;
+        return <Badge variant="success">{LIBELLES_STATUT_TACHE.termine}</Badge>;
       case "en_retard":
-        return <Badge variant="destructive">En retard</Badge>;
+        return <Badge variant="destructive">{LIBELLES_STATUT_TACHE.en_retard}</Badge>;
       default:
         return null;
     }
   };
 
-  const handleStatusChange = (newStatus: "en_attente" | "en_cours" | "termine" | "en_retard") => {
+  const handleStatusChange = (newStatus: StatutTache) => {
     updateStatusMutation.mutate({ id: mission.id, status: newStatus });
   };
 
@@ -140,21 +154,21 @@ const MissionCard = ({ mission }: MissionCardProps) => {
                 <DropdownMenuItem
                   onClick={() => handleStatusChange("en_attente")}
                   className="flex items-center gap-2"
-                  disabled={mission.status === "en_attente"}
+                  disabled={mission.statutEnregistre === "en_attente"}
                 >
                   <Calendar className="h-4 w-4" /> En attente
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => handleStatusChange("en_cours")}
                   className="flex items-center gap-2"
-                  disabled={mission.status === "en_cours"}
+                  disabled={mission.statutEnregistre === "en_cours"}
                 >
                   <PlayCircle className="h-4 w-4" /> En cours
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => handleStatusChange("termine")}
                   className="flex items-center gap-2"
-                  disabled={mission.status === "termine"}
+                  disabled={mission.statutEnregistre === "termine"}
                 >
                   <Check className="h-4 w-4" /> Terminée
                 </DropdownMenuItem>

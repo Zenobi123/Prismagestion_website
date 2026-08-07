@@ -20,11 +20,13 @@ export interface MissionView {
   rawEndDate: string | null;
 }
 
+// Les seuls statuts que `tasks_status_check` accepte. « en_retard » y figurait,
+// alors que la contrainte l'a toujours refusé : une ligne importée avec cette
+// valeur aurait fait échouer son insertion.
 const VALID_STATUSES: Task["status"][] = [
   "en_attente",
   "en_cours",
   "termine",
-  "en_retard",
 ];
 
 const EXPORT_COLUMNS: DataColumn<MissionView>[] = [

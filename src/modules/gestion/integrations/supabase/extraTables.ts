@@ -3,6 +3,8 @@
 // À fusionner dans le type Database (voir client.ts). Régénérer types.ts rendra
 // les entrées correspondantes inutiles.
 
+import type { Json } from "./types";
+
 export type ExtraTables = {
   rapports_mission: {
     Row: {
@@ -134,6 +136,35 @@ export type ExtraTables = {
       created_at?: string;
       updated_at?: string;
     };
+    Relationships: [];
+  };
+  // Vue de lecture des collaborateurs (migration 20260807102437). Elle reprend
+  // les colonnes de la table et y ajoute `tachesencours`, agrege depuis
+  // `tasks` : la colonne denormalisee du meme nom a ete supprimee. Vue en
+  // lecture seule, d'ou un Insert/Update volontairement vide — les ecritures
+  // visent la table `collaborateurs`.
+  collaborateurs_charge: {
+    Row: {
+      id: string;
+      nom: string;
+      prenom: string;
+      email: string;
+      poste: string;
+      dateentree: string;
+      statut: string;
+      permissions: Json | null;
+      telephone: string;
+      niveauetude: string;
+      datenaissance: string;
+      ville: string;
+      quartier: string;
+      created_at: string;
+      user_id: string | null;
+      /** Taches commencees et non terminees. Calcule, jamais stocke. */
+      tachesencours: number;
+    };
+    Insert: Record<string, never>;
+    Update: Record<string, never>;
     Relationships: [];
   };
   // Journal des ecritures sur les tables metier (migration 20260807120000).

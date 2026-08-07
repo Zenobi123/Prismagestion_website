@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@gestion/components/ui/use-toast";
-import { Collaborateur } from "@gestion/types/collaborateur";
+import { NouveauCollaborateur } from "@gestion/types/collaborateur";
 import { getCollaborateurs, createCollaborateur, deleteCollaborateur, updateCollaborateur } from "@gestion/services/collaborateurService";
 import { supabase } from "@gestion/integrations/supabase/client";
 
@@ -32,7 +32,7 @@ export const useCollaborateurs = () => {
     fetchRole();
   }, []);
 
-  const [newCollaborateur, setNewCollaborateur] = useState<Omit<Collaborateur, 'id' | 'created_at'>>({
+  const [newCollaborateur, setNewCollaborateur] = useState<NouveauCollaborateur>({
     nom: "",
     prenom: "",
     email: "",
@@ -45,7 +45,6 @@ export const useCollaborateurs = () => {
     ville: "",
     quartier: "",
     permissions: [],
-    tachesencours: 0
   });
 
   const { data: collaborateurs = [], isLoading } = useQuery({
@@ -75,7 +74,6 @@ export const useCollaborateurs = () => {
         ville: "",
         quartier: "",
         permissions: [],
-        tachesencours: 0
       });
     },
     onError: (error) => {

@@ -20,10 +20,13 @@ const QuickStats = () => {
   const [showUnfiledDarpDialog, setShowUnfiledDarpDialog] = useState(false);
   const [showNonCompliantDialog, setShowNonCompliantDialog] = useState(false);
 
+  // Ni les tâches ni les collaborateurs ne sont sondés toutes les 60 s : ces
+  // données ne changent que sur action de l'utilisateur, et chaque mutation
+  // invalide déjà sa clé. Le sondage servait à rattraper les statuts que
+  // `getTasks()` réécrivait au passage — cette écriture a disparu.
   const { data: tasks = [], isLoading: isTasksLoading } = useQuery({
     queryKey: ["tasks"],
     queryFn: getTasks,
-    refetchInterval: 60000,
     refetchOnWindowFocus: true,
     staleTime: 30000,
     gcTime: 5 * 60 * 1000
@@ -32,7 +35,6 @@ const QuickStats = () => {
   const { data: collaborateurs = [], isLoading: isCollaborateursLoading } = useQuery({
     queryKey: ["collaborateurs"],
     queryFn: getCollaborateurs,
-    refetchInterval: 60000,
     refetchOnWindowFocus: true,
     staleTime: 30000,
     gcTime: 5 * 60 * 1000

@@ -100,7 +100,6 @@ export function CollaborateurImportExport({
           quartier: (row.quartier || "").trim(),
           statut,
           permissions: [],
-          tachesencours: 0,
         });
         success++;
       } catch {

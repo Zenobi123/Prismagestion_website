@@ -3,14 +3,13 @@ import { getTasks } from "@gestion/services/taskService";
 import { AlertTriangle, Clock, Flame } from "lucide-react";
 import { Badge } from "@gestion/components/ui/badge";
 import { useExercice } from "@gestion/contexts/ExerciceContext";
+import { LIBELLES_STATUT_TACHE, type StatutAffiche } from "@gestion/lib/spec/statutTache";
 
 const RecentTasks = () => {
   const { isVisibleByDate } = useExercice();
   const { data: tasks = [], isLoading } = useQuery({
     queryKey: ["tasks"],
     queryFn: getTasks,
-    // Configurer le rafraîchissement automatique
-    refetchInterval: 60000,
     refetchOnWindowFocus: true,
     staleTime: 30000,
     gcTime: 5 * 60 * 1000
@@ -20,57 +19,36 @@ const RecentTasks = () => {
   // puis retirer les tâches terminées et limiter à 10 tâches actives.
   const activeTasks = tasks
     .filter((task) => isVisibleByDate(task.start_date || task.end_date || task.created_at))
-    .filter((task) => task.status !== "termine")
+    .filter((task) => task.statut_affiche !== "termine")
     .slice(0, 10);
 
-  const getStatusBadge = (status: string, startDate: string | null, endDate: string | null) => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Reset hours to start of day for accurate comparison
-
-    // Check if task is overdue
-    if (endDate) {
-      const taskEndDate = new Date(endDate);
-      taskEndDate.setHours(0, 0, 0, 0);
-
-      if (taskEndDate < today && status !== "termine") {
-        return (
-          <div className="flex items-center gap-1">
-            <Badge 
-              className="flex items-center gap-1 animate-pulse-slow bg-[#ea384c] hover:bg-[#d32f40] text-white"
-            >
-              <Flame size={14} className="mr-1" />
-              En retard
-            </Badge>
-          </div>
-        );
-      }
-    }
-
-    // Check if task is planned (status is en_attente but start date is in the future)
-    if (status === "en_attente" && startDate) {
-      const taskStartDate = new Date(startDate);
-      taskStartDate.setHours(0, 0, 0, 0);
-      
-      if (taskStartDate > today) {
-        return <Badge className="bg-purple-500 hover:bg-purple-600">Planifiée</Badge>;
-      }
-    }
-
-    // If not overdue or planned, show regular status badge
-    switch (status) {
-      case "en_cours":
-        return <Badge variant="success">En cours</Badge>;
-      case "termine":
-        return <Badge className="bg-blue-500 hover:bg-blue-600">Terminé</Badge>;
+  // Le retard et la planification ne sont plus recalculés ici : `getTasks()`
+  // livre `statut_affiche`, seule source de la règle (`lib/spec/statutTache`).
+  const getStatusBadge = (statut: StatutAffiche) => {
+    switch (statut) {
       case "en_retard":
         return (
-          <Badge className="bg-[#ea384c] hover:bg-[#d32f40] text-white">
+          <Badge className="flex items-center gap-1 animate-pulse-slow bg-[#ea384c] hover:bg-[#d32f40] text-white">
             <Flame size={14} className="mr-1" />
-            En retard
+            {LIBELLES_STATUT_TACHE.en_retard}
+          </Badge>
+        );
+      case "planifie":
+        return (
+          <Badge className="bg-purple-500 hover:bg-purple-600">
+            {LIBELLES_STATUT_TACHE.planifie}
+          </Badge>
+        );
+      case "en_cours":
+        return <Badge variant="success">{LIBELLES_STATUT_TACHE.en_cours}</Badge>;
+      case "termine":
+        return (
+          <Badge className="bg-blue-500 hover:bg-blue-600">
+            {LIBELLES_STATUT_TACHE.termine}
           </Badge>
         );
       default:
-        return <Badge variant="outline">En attente</Badge>;
+        return <Badge variant="outline">{LIBELLES_STATUT_TACHE.en_attente}</Badge>;
     }
   };
 
@@ -100,24 +78,8 @@ const RecentTasks = () => {
         <tbody>
           {activeTasks.length > 0 ? (
             activeTasks.map((task) => {
-              const today = new Date();
-              today.setHours(0, 0, 0, 0);
-              
-              const taskEndDate = task.end_date ? new Date(task.end_date) : null;
-              if (taskEndDate) taskEndDate.setHours(0, 0, 0, 0);
-              
-              const isOverdue =
-                taskEndDate &&
-                taskEndDate < today &&
-                task.status !== "termine";
-
-              // Déterminer si la tâche est planifiée
-              const taskStartDate = task.start_date ? new Date(task.start_date) : null;
-              let isPlanned = false;
-              if (taskStartDate) {
-                taskStartDate.setHours(0, 0, 0, 0);
-                isPlanned = taskStartDate > today && task.status === "en_attente";
-              }
+              const isOverdue = task.statut_affiche === "en_retard";
+              const isPlanned = task.statut_affiche === "planifie";
 
               return (
                 <tr 
@@ -138,7 +100,7 @@ const RecentTasks = () => {
                   <td>
                     {task.collaborateurs ? `${task.collaborateurs.prenom} ${task.collaborateurs.nom}` : "Non assigné"}
                   </td>
-                  <td>{getStatusBadge(task.status, task.start_date, task.end_date)}</td>
+                  <td>{getStatusBadge(task.statut_affiche)}</td>
                   <td className="flex items-center gap-1">
                     {task.end_date ? (
                       <>

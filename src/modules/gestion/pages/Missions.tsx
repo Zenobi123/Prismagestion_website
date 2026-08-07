@@ -13,6 +13,7 @@ import { CollaborateurUnauthorized } from "@gestion/components/collaborateurs/Co
 import { useExercice } from "@gestion/contexts/ExerciceContext";
 import { ExerciceSelector, ExerciceReadOnlyBanner } from "@gestion/components/exercice/ExerciceControls";
 import { MissionImportExport } from "@gestion/components/missions/MissionImportExport";
+import { statutAffiche, type StatutTache } from "@gestion/lib/spec/statutTache";
 
 const Missions = () => {
   const { isAuthorized } = useAuthorization(
@@ -53,21 +54,32 @@ const Missions = () => {
       }
 
 
-      return tasksData.map(task => ({
-        id: task.id,
-        title: task.title,
-        client: task.clients?.raisonsociale || task.clients?.nom || 'Client inconnu',
-        assignedTo: task.collaborateurs ? `${task.collaborateurs.prenom} ${task.collaborateurs.nom}` : 'Non assigné',
-        status: task.status,
-        startDate: task.start_date ? new Date(task.start_date).toLocaleDateString() : 'Non définie',
-        endDate: task.end_date ? new Date(task.end_date).toLocaleDateString() : 'Non définie',
-        rawStartDate: task.start_date ?? null,
-        rawEndDate: task.end_date ?? null,
-        clientId: task.client_id,
-        collaborateurId: task.collaborateur_id,
-        createdAt: task.created_at,
-        refYear: getYearFromDate(task.start_date || task.end_date || task.created_at)
-      }));
+      const aujourdhui = new Date();
+      return tasksData.map(task => {
+        // `tasks.status` remonte en `string` des types générés ; la contrainte
+        // `tasks_status_check` garantit qu'il vaut l'une des trois valeurs.
+        const statutEnregistre = task.status as StatutTache;
+        return {
+          id: task.id,
+          title: task.title,
+          client: task.clients?.raisonsociale || task.clients?.nom || 'Client inconnu',
+          assignedTo: task.collaborateurs ? `${task.collaborateurs.prenom} ${task.collaborateurs.nom}` : 'Non assigné',
+          // `status` porte le statut affiché — retard et planification compris —
+          // pour que le filtre « En retard » de MissionFilters trouve enfin
+          // quelque chose. `statutEnregistre` reste le statut de la colonne,
+          // seul à pouvoir être réécrit.
+          status: statutAffiche({ ...task, status: statutEnregistre }, aujourdhui),
+          statutEnregistre,
+          startDate: task.start_date ? new Date(task.start_date).toLocaleDateString() : 'Non définie',
+          endDate: task.end_date ? new Date(task.end_date).toLocaleDateString() : 'Non définie',
+          rawStartDate: task.start_date ?? null,
+          rawEndDate: task.end_date ?? null,
+          clientId: task.client_id,
+          collaborateurId: task.collaborateur_id,
+          createdAt: task.created_at,
+          refYear: getYearFromDate(task.start_date || task.end_date || task.created_at)
+        };
+      });
     }
   });
 

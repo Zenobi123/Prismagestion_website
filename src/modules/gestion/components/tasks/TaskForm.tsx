@@ -2,7 +2,8 @@
 import { Button } from "@gestion/components/ui/button";
 import { TaskFormFields } from "./TaskFormFields";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createTask, determineInitialStatus } from "@gestion/services/taskService";
+import { createTask } from "@gestion/services/taskService";
+import { statutInitial } from "@gestion/lib/spec/statutTache";
 import { useToast } from "@gestion/components/ui/use-toast";
 
 interface TaskFormProps {
@@ -19,6 +20,9 @@ export const TaskForm = ({ clients, collaborateurs, onSuccess }: TaskFormProps) 
     mutationFn: createTask,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      // La charge des collaborateurs se lit désormais dans une vue calculée :
+      // créer une tâche la change, il faut donc invalider la clé.
+      queryClient.invalidateQueries({ queryKey: ["collaborateurs"] });
       toast({
         title: "Tâche créée",
         description: "La nouvelle tâche a été créée avec succès",
@@ -44,7 +48,7 @@ export const TaskForm = ({ clients, collaborateurs, onSuccess }: TaskFormProps) 
       title: formData.get("title") as string,
       client_id: clientId || undefined, // Only pass client_id if it exists
       collaborateur_id: formData.get("collaborateur_id") as string,
-      status: determineInitialStatus(startDate),
+      status: statutInitial(startDate),
       start_date: startDate,
       end_date: formData.get("end_date") as string,
       start_time: formData.get("start_time") as string,

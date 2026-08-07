@@ -40,7 +40,7 @@ export interface ChangelogEntry {
 }
 
 /** Version courante de l'application telle qu'affichée dans l'aide. */
-export const APP_VERSION = "1.10.0";
+export const APP_VERSION = "1.11.0";
 
 /** Date de la dernière mise à jour de l'aide (AAAA-MM-JJ). */
 export const LAST_UPDATED = "2026-08-07";
@@ -50,6 +50,17 @@ export const LAST_UPDATED = "2026-08-07";
  * Ajoutez une entrée à chaque changement majeur.
  */
 export const changelog: ChangelogEntry[] = [
+  {
+    version: "1.11.0",
+    date: "2026-08-07",
+    title: "Le statut « en retard » fonctionne enfin, et la console cesse de s'écrire toute seule",
+    changes: [
+      "Une tâche dont l'échéance est dépassée s'affiche « en retard ». C'était déjà le cas sur le tableau de bord, mais pas dans les Missions : le filtre « En retard » n'y trouvait jamais rien. Il fonctionne désormais partout, avec la même règle.",
+      "Le retard n'est plus enregistré, il est déduit de la date de fin. C'est ce qui le rendait faux : une tâche encore à l'heure hier peut être en retard aujourd'hui, sans que rien n'ait changé dans la fiche.",
+      "Le nombre de tâches en cours affiché sur chaque collaborateur est maintenant calculé au moment où vous le lisez. Il était auparavant recopié dans la fiche du collaborateur et pouvait rester figé sur une valeur périmée.",
+      "Le tableau de bord ne se recharge plus toutes les minutes en arrière-plan. Il se met à jour quand vous agissez et quand vous revenez sur l'onglet — moins de données consommées, notamment en connexion mobile.",
+    ],
+  },
   {
     version: "1.10.0",
     date: "2026-08-07",
@@ -532,7 +543,12 @@ export const aideSections: AideSection[] = [
       {
         question: "Comment suivre l'avancement d'une mission ?",
         answer:
-          "Chaque mission affiche un statut coloré : en attente, en cours, terminée ou en retard. Depuis la carte, un menu « Statut » permet de la faire évoluer. Les missions terminées depuis plus de 30 jours sont masquées des listes courantes pour rester lisible.",
+          "Chaque mission affiche un statut coloré : planifiée, en attente, en cours, en retard ou terminée. Depuis la carte, un menu « Statut » permet de la faire évoluer. Les missions terminées depuis plus de 30 jours sont masquées des listes courantes pour rester lisible.",
+      },
+      {
+        question: "Pourquoi le menu « Statut » ne propose-t-il pas « en retard » ?",
+        answer:
+          "Parce que « en retard » et « planifiée » ne se décident pas : ils se déduisent des dates. Une mission est en retard dès le lendemain de sa date de fin tant qu'elle n'est pas terminée, et planifiée tant que sa date de début n'est pas atteinte. Vous ne choisissez donc que trois statuts — en attente, en cours, terminée — et l'affichage se charge du reste, en tenant compte du jour où vous le consultez.",
       },
       {
         question: "Comment filtrer les missions ?",
@@ -601,6 +617,11 @@ export const aideSections: AideSection[] = [
         question: "Quels rôles existent et comment agissent-ils ?",
         answer:
           "Les rôles incluent notamment expert-comptable, comptable, gestionnaire, fiscaliste et assistant, ainsi qu'administrateur. Le rôle détermine les modules visibles et les actions autorisées : par exemple, seuls les administrateurs accèdent à la Facturation, aux Collaborateurs et aux Paramètres.",
+      },
+      {
+        question: "Que compte exactement le « nombre de tâches en cours » ?",
+        answer:
+          "Les tâches commencées et non terminées de ce collaborateur, en retard comprises — une tâche en retard reste à faire. Les tâches encore planifiées, dont la date de début n'est pas atteinte, ne sont pas comptées. Ce nombre est recalculé à chaque affichage : il ne peut plus rester figé sur une valeur périmée, et il ne se modifie pas à la main.",
       },
       {
         question: "Comment gérer le statut d'un collaborateur ?",

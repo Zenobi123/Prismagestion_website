@@ -1,4 +1,4 @@
-# Remédiation structurelle de la console — état au 07/08/2026
+# Remédiation structurelle de la console — état au 07/08/2026 (soir)
 
 Ce document sert de point de reprise. Il résume ce qui a été fait, ce qui a été
 délibérément écarté, les pièges rencontrés, et ce qui reste.
@@ -26,15 +26,16 @@ Cinq manques structurants avaient été identifiés :
 
 ---
 
-## 2. Ce qui a été livré (5 commits, tous en production)
+## 2. Ce qui a été livré (6 commits)
 
-| Commit | Objet |
-|---|---|
-| `bef1c9b` | Protection des pièces de facturation + réparation de la GED |
-| `5881060` | Piste d'audit (journal des modifications) |
-| `f3e8560` | Séparation débours / honoraires |
-| `dd6ca8e` | Générateur de tâches depuis le calendrier fiscal |
-| `950f489` | Clôture d'exercice côté serveur, verrouillante |
+| Commit | Objet | État |
+|---|---|---|
+| `bef1c9b` | Protection des pièces de facturation + réparation de la GED | en production |
+| `5881060` | Piste d'audit (journal des modifications) | en production |
+| `f3e8560` | Séparation débours / honoraires | en production |
+| `dd6ca8e` | Générateur de tâches depuis le calendrier fiscal | en production |
+| `950f489` | Clôture d'exercice côté serveur, verrouillante | en production |
+| `479b758` | Statut de tâche dérivé, vue de charge, retrait du code mort | **non poussé** |
 
 ### 2.1 Protection des pièces et GED (`bef1c9b`)
 
@@ -115,6 +116,61 @@ Cinq manques structurants avaient été identifiés :
   asynchrones** — les attendre, sinon un échec d'écriture passe pour une
   réussite.
 
+### 2.6 Statut dérivé, vue de charge, code mort (`479b758`)
+
+**`getTasks()` ne lit plus que.** Elle réécrivait les statuts et
+resynchronisait `collaborateurs.tachesencours` à chaque appel ; avec un
+`refetchInterval` de 60 s sur trois écrans partageant la clé `["tasks"]`, la
+console réécrivait la base en boucle. Les `refetchInterval` sur `tasks` et
+`collaborateurs` sont retirés — les mutations invalident déjà les clés, et
+`TaskForm`/`MissionCard` invalident désormais aussi `["collaborateurs"]`, que
+la charge dérivée rend sensible aux écritures sur les tâches.
+
+**Le bug `en_retard` est réglé en cessant de l'écrire.** « En retard » et
+« planifiée » ne sont pas des états de la tâche : ce sont des relations entre
+ses dates et le jour courant. Les persister obligeait à un balayage
+quotidien — précisément le balayage greffé dans la lecture. La contrainte
+`tasks_status_check` est **inchangée** : c'est le type TypeScript qui mentait
+sur la colonne, et ce mensonge rendait le bug invisible au compilateur.
+
+- `lib/spec/statutTache.ts` — module **pur**, la date du jour en paramètre.
+  `StatutTache` (3 valeurs, ce que la base accepte) contre `StatutAffiche`
+  (5 valeurs, ce que l'écran montre). 19 tests, éprouvés par mutation.
+- `getTasks()` retourne `TacheAffichee` = la ligne + `statut_affiche`.
+- La règle vivait en **quatre** exemplaires divergents : l'écriture,
+  `RecentTasks.getStatusBadge`, le calcul `isOverdue` de la même boucle de
+  rendu, et `useTaskStats` — qui comptait comme « actives » des tâches que
+  `RecentTasks` affichait en rouge. Une seule définition désormais.
+- Effet de bord réparé : le filtre « En retard » de `MissionFilters` ne
+  trouvait jamais rien, `Missions.tsx` lisant le statut brut. `MissionCard`
+  distingue maintenant `status` (affiché) et `statutEnregistre` (réécrivable).
+
+**`collaborateurs.tachesencours` devient la vue `collaborateurs_charge`**
+(migration `20260807102437`). Un compteur qu'il faut recalculer à chaque
+lecture n'est pas un compteur, c'est un agrégat.
+
+- `security_invoker = true` (PG 15.14) : sans lui la vue court-circuiterait
+  les 14 policies de `collaborateurs`.
+- Le prédicat SQL est la transcription exacte de `peseSurLaCharge()` — les
+  deux doivent évoluer ensemble. Concordance éprouvée sur 10 cas fictifs.
+- `c.*` est figé à la création : **ajouter une colonne à `collaborateurs`
+  impose de recréer la vue.**
+- Lectures sur la vue, écritures sur la table. `NouveauCollaborateur` (type)
+  exclut `tachesencours` des écritures.
+
+**24 fichiers de code mort retirés.** Au-delà des trois cibles annoncées, la
+fermeture transitive était obligatoire : `saveService.ts` avait deux
+importateurs (`useSavingState`, `useFiscalSave`) tirés par
+`useObligationsFiscales.tsx`, orchestrateur que plus personne n'importe,
+remplacé par `useObligationsFiscalesState` + `useUnifiedFiscalSave`. Le barrel
+`hooks/fiscal/services/index.ts` n'était lui non plus importé de nulle part et
+maintenait seul en vie `cacheService`, `fetchService`, `verifyService`,
+`validationService` et le dossier `verification/`.
+
+`fiscalDataPreparer` était pire que tronquant : il écrivait
+`obligations: { [fiscalYear]: … }`, écrasant **toutes les autres années** du
+client. Mort, donc jamais déclenché — mais à ne surtout pas ressusciter.
+
 ---
 
 ## 3. Décisions de cadrage à ne pas rouvrir
@@ -147,12 +203,18 @@ fourni. Les dix fichiers de `supabase/migrations/` ont été renommés pour
 coïncider avec `schema_migrations` — même opération qu'au § 2.1 de
 `docs/FUSION.md`. Le vérifier après toute nouvelle migration.
 
-**Bug latent non corrigé.** La contrainte `tasks_status_check` n'autorise que
-`en_attente`, `en_cours`, `termine` — **pas `en_retard`**. Or
-`taskService.updateTaskStatusesBasedOnDates()` tente de l'écrire, et l'erreur
-part dans un `catch` vide. Le statut « en retard » n'a donc jamais été
-persisté : il n'existe qu'en mémoire, le temps de l'affichage. À traiter avec
-le correctif de `getTasks()` (§ 5, administratif).
+**`npx tsc --noEmit` n'analyse aucun fichier.** Le `tsconfig.json` racine
+porte `"files": []` et délègue à des `references` : sans `-p`, `tsc` compile
+un projet vide et sort en succès. La commande qui vérifie réellement est
+`npx tsc --noEmit -p tsconfig.app.json` — celle que lance le `pre-push`, qui
+est donc correct. Trois erreurs de typage réelles sont passées inaperçues
+pendant ce chantier avant de relancer avec `-p`. **Toujours utiliser `-p` en
+vérification manuelle.**
+
+**Une contrainte `CHECK` est une spécification, le type TypeScript doit la
+dire.** `Task["status"]` déclarait `"en_retard"` que `tasks_status_check` a
+toujours refusé : le compilateur ne pouvait pas voir le bug. Avant d'ajouter
+une valeur à un type de statut, vérifier la contrainte correspondante.
 
 **`CLAUDE.md` n'est pas commité.** Il porte à la fois la documentation des
 règles posées ici (références de fichiers, immuabilité des pièces, suppression
@@ -196,8 +258,9 @@ Par ordre de valeur décroissante à l'intérieur de chaque plan.
 
 | Chantier | Effort |
 |---|---|
-| Correctif `getTasks()` : sortir l'écriture de la lecture, supprimer le `refetchInterval` de 60 s, régler le bug `en_retard`, remplacer le compteur `tachesencours` par une vue | ½ j |
-| Retirer le code mort : `storageService.ts` (mock), `administrationService.ts` (jamais importé), les 2 chemins de sauvegarde fiscale morts **et tronquants** | ½ j |
+| ~~Correctif `getTasks()`~~ — **fait**, voir § 2.6 | — |
+| ~~Retirer le code mort~~ — **fait**, 24 fichiers, voir § 2.6 | — |
+| Retirer les 5 orphelins restants de `hooks/fiscal/` repérés au passage, hors périmètre du jour : `useFiscalDataLoader`, `useBulkFiscalUpdate`, `useObligationStatus`, `useStableStatusChange`, `utils/dateUtils` — aucun importateur | ¼ j |
 | Registre de courrier : référence séquentielle (aujourd'hui un timestamp base 36), PDF archivé, insertion non « best-effort » | 1–2 j |
 | Enrichir les tâches (description, priorité, type de mission, charge) | 1 j |
 | Décider du module RH/paie : le compléter (IRPP, CNPS, DIPE) ou le retirer de l'interface | décision |
@@ -214,10 +277,9 @@ Par ordre de valeur décroissante à l'intérieur de chaque plan.
 
 ### Recommandation de reprise
 
-Les deux demi-journées du plan administratif (`getTasks()` et le code mort)
-sont le meilleur rapport effort/bénéfice restant. Ensuite, **contrats et
-facturation récurrente** est le chantier qui économisera le plus de temps au
-quotidien.
+Les deux demi-journées du plan administratif sont faites (§ 2.6). Le chantier
+suivant, et de loin le plus rentable, est **contrats et facturation
+récurrente** : c'est le modèle économique du cabinet qui n'est pas modélisé.
 
 ---
 
@@ -230,7 +292,9 @@ quotidien.
 2. **Les règles d'intégrité vivent dans la base, pas dans l'écran.** Trois
    écrans créent des lignes de facture : une règle posée dans un composant ne
    vaut que pour ce composant.
-3. **Une lecture n'écrit jamais.** `getTasks()` viole encore cette règle.
+3. **Une lecture n'écrit jamais.** Respectée depuis le § 2.6. Corollaire :
+   une valeur qui se périme sans que personne n'y touche (un retard, une
+   charge) se **dérive** à la lecture, elle ne se stocke pas.
 4. **Les fonctions de trigger ne sont pas appelables en RPC** : révoquer
    `EXECUTE` (PostgreSQL ne le vérifie pas au déclenchement d'un trigger).
 5. **Les tests sont éprouvés par mutation** — introduire volontairement la

@@ -1,12 +1,16 @@
 
 import MissionCard from "@gestion/components/missions/MissionCard";
+import type { StatutAffiche, StatutTache } from "@gestion/lib/spec/statutTache";
 
 interface Mission {
   id: string;
   title: string;
   client: string;
   assignedTo: string;
-  status: string;
+  /** Statut affiché : retard et planification compris. */
+  status: StatutAffiche;
+  /** Statut réellement enregistré — le seul que l'on puisse réécrire. */
+  statutEnregistre: StatutTache;
   startDate: string;
   endDate: string;
   rawStartDate: string | null;

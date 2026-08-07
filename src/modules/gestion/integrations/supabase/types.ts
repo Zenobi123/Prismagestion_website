@@ -335,7 +335,6 @@ export type Database = {
           prenom: string
           quartier: string
           statut: string
-          tachesencours: number | null
           telephone: string
           user_id: string | null
           ville: string
@@ -353,7 +352,6 @@ export type Database = {
           prenom: string
           quartier: string
           statut?: string
-          tachesencours?: number | null
           telephone: string
           user_id?: string | null
           ville: string
@@ -371,7 +369,6 @@ export type Database = {
           prenom?: string
           quartier?: string
           statut?: string
-          tachesencours?: number | null
           telephone?: string
           user_id?: string | null
           ville?: string

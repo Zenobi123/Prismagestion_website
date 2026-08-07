@@ -6,7 +6,7 @@ import { CollaborateurSearch } from "./CollaborateurSearch";
 import { CollaborateurList } from "./CollaborateurList";
 import { CollaborateurDialog } from "./CollaborateurDialog";
 import { CollaborateurImportExport } from "./CollaborateurImportExport";
-import { Collaborateur } from "@gestion/types/collaborateur";
+import { Collaborateur, NouveauCollaborateur } from "@gestion/types/collaborateur";
 
 interface CollaborateurContentProps {
   searchTerm: string;
@@ -16,7 +16,7 @@ interface CollaborateurContentProps {
   postes: string[];
   filteredCollaborateurs: Collaborateur[];
   isDialogOpen: boolean;
-  newCollaborateur: Omit<Collaborateur, 'id' | 'created_at' | 'tachesencours'>;
+  newCollaborateur: NouveauCollaborateur;
   onSearchChange: (value: string) => void;
   onStatutChange: (value: string) => void;
   onPosteChange: (value: string) => void;
