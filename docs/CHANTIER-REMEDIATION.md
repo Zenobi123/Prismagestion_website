@@ -173,9 +173,18 @@ client. Mort, donc jamais déclenché — mais à ne surtout pas ressusciter.
 
 ### 2.7 Lisibilité mobile des tâches et des missions
 
-97 % du trafic arrive sur mobile ; les deux écrans les plus consultés de la
-console y étaient mal servis. Mesures réelles en 375 px, CSS de production
+97 % du trafic arrive sur mobile. Mesures réelles en 375 px, CSS de production
 chargé.
+
+> **Correctif de portée, constaté après coup.** `RecentTasks` **n'est monté par
+> aucun écran** : son seul importateur est `DashboardCollapsible`, lui-même
+> jamais importé. Rollup l'élimine au tree-shaking — il n'apparaît dans aucun
+> chunk du build. Le message du commit `f07eeeb` le décrit comme étant sur
+> « l'écran d'accueil » : c'est faux. Le tableau de bord réel monte
+> `QuickStats` + `DashboardAccordion` (IGS, attestations, patente, immobilier,
+> DSF, DBEF) et **n'affiche aucune liste de tâches**. Le travail sur
+> `MissionCard`, lui, sert bien : `Missions.tsx` → `MissionList` →
+> `MissionCard` est un chemin vivant, vérifié dans le bundle de production.
 
 | Écran | Avant | Après |
 |---|---|---|
@@ -291,8 +300,9 @@ Par ordre de valeur décroissante à l'intérieur de chaque plan.
 | ~~Correctif `getTasks()`~~ — **fait**, voir § 2.6 | — |
 | ~~Retirer le code mort~~ — **fait**, 24 fichiers, voir § 2.6 | — |
 | ~~Retirer les 5 orphelins restants de `hooks/fiscal/`~~ — **fait**, voir § 2.7 | — |
-| Convertir en cartes les listes mobiles restantes du tableau de bord : `ExpiringClientDocuments`, `ExpiringFiscalAttestations`, `UnpaidPatenteList`, `UnfiledDsfList` — tableaux sans variante mobile, sur l'écran d'accueil | 1 j |
-| Balayer les cibles tactiles du reste de la console (`.cible-tactile` n'est posée que dans les missions, le journal et la génération de tâches) | ½ j |
+| **19 écrans vivants portent encore un tableau sans variante mobile** — inventaire ci-dessous. Avec 97 % de trafic mobile, c'est le plus gros reste d'interface de la console | 3–4 j |
+| **Trancher le sort de 7 composants morts du tableau de bord** : `RecentTasks`, `DashboardCollapsible`, `ExpiringClientDocuments`, `UnfiledDsfList`, `UnpaidPatenteList`, `UnpaidPatenteSummary`, `AlertBanner`. Aucun n'est monté. Les rebrancher est une décision produit (le tableau de bord n'affiche ni les tâches, ni les documents clients qui expirent) ; à défaut, les supprimer | décision |
+| Balayer les cibles tactiles du reste de la console — `.cible-tactile` est désormais posée dans les missions, les attestations, le journal et la génération de tâches, mais pas ailleurs | ½ j |
 | Registre de courrier : référence séquentielle (aujourd'hui un timestamp base 36), PDF archivé, insertion non « best-effort » | 1–2 j |
 | Enrichir les tâches (description, priorité, type de mission, charge) | 1 j |
 | Décider du module RH/paie : le compléter (IRPP, CNPS, DIPE) ou le retirer de l'interface | décision |
@@ -312,6 +322,35 @@ Par ordre de valeur décroissante à l'intérieur de chaque plan.
 Les deux demi-journées du plan administratif sont faites (§ 2.6). Le chantier
 suivant, et de loin le plus rentable, est **contrats et facturation
 récurrente** : c'est le modèle économique du cabinet qui n'est pas modélisé.
+
+---
+
+## 5 bis. Tableaux sans variante mobile — inventaire au 07/08/2026
+
+Relevé automatique : composants vivants portant un `<table>`/`<Table>`, sans
+`useIsMobile` ni bascule `sm:hidden`/`hidden sm:`. Les sous-composants
+(`*TableHeader`, `*TableRow`, `*TableBody`…) sont exclus : c'est leur parent
+qui porte la bascule. Les documents imprimables aussi — ils visent le papier.
+
+**Attention à la méthode** : chercher `useIsMobile` seul donne un faux
+diagnostic. `ExpiringFiscalAttestations` gère parfaitement le mobile avec
+`hidden sm:block` / `sm:hidden`, sans le hook — et c'est même préférable,
+puisque rien ne dépend alors de JavaScript.
+
+| Écran | Module |
+|---|---|
+| `CourrierHistorique` | Courrier |
+| `PaiementsList`, `InvoicesTable`, `PaymentsTable`, `RapportEcheances` | Facturation |
+| `AnalyseParFacture`, `DetailsTabContent`, `DerivedPrestationsTab` | Facturation — analyse |
+| `ResteAFaire`, `SituationPaiements`, `SuiviPrestations`, `SyntheseGlobale` | Facturation — activité |
+| `CommercialActivityTable`, `ServiceActivityTable`, `ClotureReport` | Clôture d'exercice |
+| `UserManagementTable`, `JournalModifications` | Paramètres |
+| `IGSInformation` | Outils |
+| `DataImportButton` | Partagé (aperçu d'import) |
+
+Déjà traités : `CollaborateurList`, `ClientList`, `ClientsList`,
+`FactureTable`, `ExpiringFiscalAttestations`, `MissionCard`, et `RecentTasks`
+(§ 2.7, mais mort).
 
 ---
 

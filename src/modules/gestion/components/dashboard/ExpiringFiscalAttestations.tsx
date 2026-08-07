@@ -65,7 +65,7 @@ const ExpiringFiscalAttestations = ({ attestations, isLoading }: ExpiringFiscalA
           variant="ghost" 
           size="sm" 
           onClick={handleManualRefresh}
-          className="h-8 w-8 p-0"
+          className="cible-tactile h-11 w-11 justify-center p-0"
         >
           <RefreshCw className="h-4 w-4" />
           <span className="sr-only">Actualiser</span>
@@ -123,7 +123,7 @@ const ExpiringFiscalAttestations = ({ attestations, isLoading }: ExpiringFiscalA
               >
                 <div className="flex items-start justify-between gap-2 mb-2">
                   <p className="font-medium text-sm leading-tight">{attestation.name}</p>
-                  <Button variant="outline" size="sm" className="h-7 px-2 text-xs shrink-0" onClick={() => handleNavigateToFiscal(attestation.id)}>
+                  <Button variant="outline" size="sm" className="cible-tactile shrink-0 px-3 text-xs" onClick={() => handleNavigateToFiscal(attestation.id)}>
                     Gérer
                   </Button>
                 </div>
