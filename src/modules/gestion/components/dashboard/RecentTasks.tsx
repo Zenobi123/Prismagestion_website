@@ -1,12 +1,24 @@
 import { useQuery } from "@tanstack/react-query";
-import { getTasks } from "@gestion/services/taskService";
-import { AlertTriangle, Clock, Flame } from "lucide-react";
+import { getTasks, type TacheAffichee } from "@gestion/services/taskService";
+import { Clock, Flame, User } from "lucide-react";
 import { Badge } from "@gestion/components/ui/badge";
 import { useExercice } from "@gestion/contexts/ExerciceContext";
+import { useIsMobile } from "@gestion/hooks/use-mobile";
 import { LIBELLES_STATUT_TACHE, type StatutAffiche } from "@gestion/lib/spec/statutTache";
+
+/**
+ * Accent de la ligne ou de la carte, selon le statut affiché. Une seule
+ * définition pour les deux rendus : le tableau et les cartes ne peuvent pas
+ * diverger.
+ */
+const ACCENT_STATUT: Partial<Record<StatutAffiche, string>> = {
+  en_retard: "bg-[#fff1f2] border-[#ea384c]",
+  planifie: "bg-purple-50 border-purple-500",
+};
 
 const RecentTasks = () => {
   const { isVisibleByDate } = useExercice();
+  const isMobile = useIsMobile();
   const { data: tasks = [], isLoading } = useQuery({
     queryKey: ["tasks"],
     queryFn: getTasks,
@@ -52,6 +64,19 @@ const RecentTasks = () => {
     }
   };
 
+  const nomClient = (task: TacheAffichee) =>
+    task.clients && task.clients.type === "physique"
+      ? task.clients.nom
+      : task.clients?.raisonsociale || "Client inconnu";
+
+  const nomCollaborateur = (task: TacheAffichee) =>
+    task.collaborateurs
+      ? `${task.collaborateurs.prenom} ${task.collaborateurs.nom}`
+      : "Non assigné";
+
+  const echeance = (task: TacheAffichee) =>
+    task.end_date ? new Date(task.end_date).toLocaleDateString() : "Non définie";
+
   if (isLoading) {
     return (
       <div className="animate-pulse">
@@ -62,6 +87,52 @@ const RecentTasks = () => {
     );
   }
 
+  if (activeTasks.length === 0) {
+    return (
+      <div className="rounded-lg border border-neutral-200 py-6 text-center text-gray-500">
+        Aucune tâche active n'a été trouvée.
+      </div>
+    );
+  }
+
+  // Mobile : cartes. Le tableau à cinq colonnes laissait 73 px au titre de la
+  // tâche en 375 px, soit une poignée de caractères par ligne — illisible sur
+  // l'écran par lequel arrive la quasi-totalité du trafic.
+  if (isMobile) {
+    return (
+      <ul className="space-y-2">
+        {activeTasks.map((task) => (
+          <li
+            key={task.id}
+            className={`rounded-lg border border-l-4 p-3 transition-colors ${
+              ACCENT_STATUT[task.statut_affiche] ?? "border-neutral-200 bg-white"
+            }`}
+          >
+            <div className="flex items-start justify-between gap-2">
+              <p className="min-w-0 flex-1 font-medium leading-snug">{task.title}</p>
+              <div className="shrink-0">{getStatusBadge(task.statut_affiche)}</div>
+            </div>
+
+            <p className="mt-1 truncate text-sm text-neutral-600">{nomClient(task)}</p>
+
+            <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-neutral-500">
+              <span className="inline-flex items-center gap-1">
+                <User size={13} />
+                {nomCollaborateur(task)}
+              </span>
+              <span className="inline-flex items-center gap-1">
+                <Clock
+                  size={13}
+                  className={task.statut_affiche === "en_retard" ? "text-[#ea384c]" : ""}
+                />
+                {echeance(task)}
+              </span>
+            </div>
+          </li>
+        ))}
+      </ul>
+    );
+  }
 
   return (
     <div className="table-container">
@@ -76,54 +147,41 @@ const RecentTasks = () => {
           </tr>
         </thead>
         <tbody>
-          {activeTasks.length > 0 ? (
-            activeTasks.map((task) => {
-              const isOverdue = task.statut_affiche === "en_retard";
-              const isPlanned = task.statut_affiche === "planifie";
+          {activeTasks.map((task) => {
+            const isOverdue = task.statut_affiche === "en_retard";
+            const accent = ACCENT_STATUT[task.statut_affiche];
 
-              return (
-                <tr 
-                  key={task.id} 
-                  className={isOverdue 
-                    ? "bg-[#fff1f2] border-l-4 border-[#ea384c] text-[#ea384c] hover:bg-[#ffe6e8] transition-colors" 
-                    : isPlanned
-                      ? "bg-purple-50 border-l-4 border-purple-500 hover:bg-purple-100 transition-colors"
-                      : "hover:bg-neutral-50 transition-colors"
-                  }
-                >
-                  <td className="font-medium">{task.title}</td>
-                  <td>
-                    {task.clients && task.clients.type === "physique"
-                      ? task.clients.nom
-                      : task.clients?.raisonsociale || "Client inconnu"}
-                  </td>
-                  <td>
-                    {task.collaborateurs ? `${task.collaborateurs.prenom} ${task.collaborateurs.nom}` : "Non assigné"}
-                  </td>
-                  <td>{getStatusBadge(task.statut_affiche)}</td>
-                  <td className="flex items-center gap-1">
-                    {task.end_date ? (
-                      <>
-                        <Clock 
-                          size={14} 
-                          className={isOverdue ? "text-[#ea384c] animate-pulse-slow" : ""} 
-                        />
-                        {new Date(task.end_date).toLocaleDateString()}
-                      </>
-                    ) : (
-                      "Non définie"
-                    )}
-                  </td>
-                </tr>
-              );
-            })
-          ) : (
-            <tr>
-              <td colSpan={5} className="text-center py-4 text-gray-500">
-                Aucune tâche active n'a été trouvée.
-              </td>
-            </tr>
-          )}
+            return (
+              <tr
+                key={task.id}
+                className={
+                  accent
+                    ? `${accent} border-l-4 transition-colors ${
+                        isOverdue ? "text-[#ea384c] hover:bg-[#ffe6e8]" : "hover:bg-purple-100"
+                      }`
+                    : "hover:bg-neutral-50 transition-colors"
+                }
+              >
+                <td className="font-medium">{task.title}</td>
+                <td>{nomClient(task)}</td>
+                <td>{nomCollaborateur(task)}</td>
+                <td>{getStatusBadge(task.statut_affiche)}</td>
+                <td className="flex items-center gap-1">
+                  {task.end_date ? (
+                    <>
+                      <Clock
+                        size={14}
+                        className={isOverdue ? "text-[#ea384c] animate-pulse-slow" : ""}
+                      />
+                      {echeance(task)}
+                    </>
+                  ) : (
+                    "Non définie"
+                  )}
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>

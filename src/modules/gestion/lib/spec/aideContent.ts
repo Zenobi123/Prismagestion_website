@@ -40,7 +40,7 @@ export interface ChangelogEntry {
 }
 
 /** Version courante de l'application telle qu'affichée dans l'aide. */
-export const APP_VERSION = "1.11.0";
+export const APP_VERSION = "1.12.0";
 
 /** Date de la dernière mise à jour de l'aide (AAAA-MM-JJ). */
 export const LAST_UPDATED = "2026-08-07";
@@ -50,6 +50,17 @@ export const LAST_UPDATED = "2026-08-07";
  * Ajoutez une entrée à chaque changement majeur.
  */
 export const changelog: ChangelogEntry[] = [
+  {
+    version: "1.12.0",
+    date: "2026-08-07",
+    title: "Les tâches et les missions se lisent enfin correctement sur téléphone",
+    changes: [
+      "Sur le tableau de bord, la liste des tâches était un tableau à cinq colonnes. Sur un écran de téléphone, il ne restait que 73 pixels au titre de la tâche, soit quelques caractères par ligne. Elle s'affiche désormais en fiches : le titre dispose de 267 pixels et tient sur une ligne.",
+      "Sur les cartes de mission, les boutons Ordre, Rapport, Statut et Supprimer mesuraient 36 pixels de haut, et deux d'entre eux moins de 30 pixels de large — difficiles à viser au doigt. Ils occupent maintenant une rangée complète sous la mission, à 44 pixels de haut, la taille recommandée pour une cible tactile.",
+      "Le titre de la mission gagne au passage 68 % de largeur sur téléphone : il n'est plus coupé au bout de quelques mots.",
+      "Rien ne change sur ordinateur : les deux écrans y gardent leur présentation en tableau et en colonnes.",
+    ],
+  },
   {
     version: "1.11.0",
     date: "2026-08-07",
@@ -564,6 +575,11 @@ export const aideSections: AideSection[] = [
         question: "Quels documents peut-on rattacher à une mission ?",
         answer:
           "Chaque carte propose de générer un « Ordre de mission » et de téléverser un « Rapport de mission ». La suppression d'une mission est irréversible et supprime ses documents associés (une confirmation est demandée).",
+      },
+      {
+        question: "L'affichage change-t-il sur téléphone ?",
+        answer:
+          "Oui. Sur téléphone, chaque mission occupe une fiche pleine largeur : le titre, le client et les dates s'affichent en clair, et les quatre actions (Ordre de mission, Rapport de mission, Statut, Supprimer) se rangent sur une ligne dédiée sous la mission, à une taille confortable pour le doigt. Sur ordinateur, la présentation en deux colonnes est conservée. Il en va de même pour la liste des tâches du tableau de bord, qui passe du tableau à des fiches.",
       },
       {
         question: "Quel lien avec le Planning et le Dashboard ?",

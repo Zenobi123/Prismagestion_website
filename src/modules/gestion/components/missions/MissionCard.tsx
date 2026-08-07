@@ -119,9 +119,18 @@ const MissionCard = ({ mission }: MissionCardProps) => {
 
   return (
     <div className="p-3 sm:p-4 border rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow">
-      <div className="flex justify-between items-start gap-3">
+      {/*
+        Mobile : le titre occupe toute la largeur et les actions passent sur
+        leur propre rangée en dessous. En colonne latérale, quatre boutons à
+        44 px de haut ne laissaient que ~130 px au titre en 375 px.
+        À partir de `sm`, la disposition en deux colonnes reprend.
+      */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-start">
         <div className="min-w-0 flex-1">
-          <h3 className="font-semibold text-base sm:text-lg truncate">{mission.title}</h3>
+          <div className="flex items-start justify-between gap-2">
+            <h3 className="font-semibold text-base sm:text-lg truncate">{mission.title}</h3>
+            <div className="shrink-0 sm:hidden">{getStatusBadge(mission.status)}</div>
+          </div>
           <p className="text-gray-600 text-sm truncate">{mission.client}</p>
           <p className="text-xs sm:text-sm text-gray-500 truncate">Assigné à : {mission.assignedTo}</p>
           <div className="flex gap-2 mt-1.5">
@@ -131,11 +140,11 @@ const MissionCard = ({ mission }: MissionCardProps) => {
           </div>
         </div>
 
-        <div className="flex flex-col items-end gap-2 shrink-0">
-          {getStatusBadge(mission.status)}
+        <div className="flex flex-col items-stretch gap-2 sm:items-end sm:shrink-0">
+          <div className="hidden sm:block">{getStatusBadge(mission.status)}</div>
 
           {/* Actions principales */}
-          <div className="flex flex-wrap gap-1.5 justify-end">
+          <div className="grid grid-cols-4 gap-1.5 sm:flex sm:flex-wrap sm:justify-end">
             {/* Ordre de mission */}
             <OrdreMissionDialog mission={missionInfo} missionTitle={mission.title} />
 
@@ -145,9 +154,12 @@ const MissionCard = ({ mission }: MissionCardProps) => {
             {/* Changer le statut */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="text-xs px-2 sm:px-3">
-                  <span className="hidden sm:inline">Statut</span>
-                  <span className="sm:hidden">…</span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="cible-tactile w-full justify-center px-3 text-xs sm:w-auto"
+                >
+                  Statut
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
@@ -181,7 +193,8 @@ const MissionCard = ({ mission }: MissionCardProps) => {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="text-red-500 hover:bg-red-50 hover:text-red-600 px-2"
+                  aria-label="Supprimer la mission"
+                  className="cible-tactile w-full justify-center px-3 text-red-500 hover:bg-red-50 hover:text-red-600 sm:w-auto"
                 >
                   <Trash className="h-4 w-4" />
                 </Button>

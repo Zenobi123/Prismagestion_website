@@ -171,6 +171,36 @@ maintenait seul en vie `cacheService`, `fetchService`, `verifyService`,
 `obligations: { [fiscalYear]: … }`, écrasant **toutes les autres années** du
 client. Mort, donc jamais déclenché — mais à ne surtout pas ressusciter.
 
+### 2.7 Lisibilité mobile des tâches et des missions
+
+97 % du trafic arrive sur mobile ; les deux écrans les plus consultés de la
+console y étaient mal servis. Mesures réelles en 375 px, CSS de production
+chargé.
+
+| Écran | Avant | Après |
+|---|---|---|
+| Titre de tâche (`RecentTasks`) | 73 px, tableau à 5 colonnes | **267 px**, fiches |
+| Titre de mission (`MissionCard`) | 161 px | **270 px** |
+| Boutons de mission | 36 px de haut, 26–28 px de large pour deux d'entre eux | **44 × 83 px**, les quatre |
+
+- `RecentTasks` bascule en fiches sous `sm:` via `useIsMobile()`, comme
+  `CollaborateurList`. L'accent de statut (`ACCENT_STATUT`) est **partagé**
+  entre les deux rendus : le tableau et les fiches ne peuvent pas diverger.
+- `MissionCard` passe en colonne unique sous `sm:` — titre pleine largeur,
+  badge à sa droite, quatre actions en `grid-cols-4` sur leur propre rangée.
+  En colonne latérale, quatre boutons à 44 px n'auraient laissé que ~130 px
+  au titre : élargir les cibles imposait de revoir la disposition.
+- Les quatre boutons portent `.cible-tactile` (`min-height: 2.75rem`,
+  `touch-action: manipulation`), la classe posée le 05/08/2026 et jusqu'ici
+  utilisée dans seulement deux fichiers de la console.
+- Non-régression bureau vérifiée en 900 px : disposition en ligne, badge
+  unique, libellés longs restitués.
+
+**Le reste du code mort est parti** : `useFiscalDataLoader`,
+`useBulkFiscalUpdate`, `useObligationStatus`, `useStableStatusChange`,
+`utils/dateUtils`. `hooks/fiscal/` ne contient plus que 8 fichiers, tous
+atteignables depuis `ObligationsFiscales.tsx`.
+
 ---
 
 ## 3. Décisions de cadrage à ne pas rouvrir
@@ -260,7 +290,9 @@ Par ordre de valeur décroissante à l'intérieur de chaque plan.
 |---|---|
 | ~~Correctif `getTasks()`~~ — **fait**, voir § 2.6 | — |
 | ~~Retirer le code mort~~ — **fait**, 24 fichiers, voir § 2.6 | — |
-| Retirer les 5 orphelins restants de `hooks/fiscal/` repérés au passage, hors périmètre du jour : `useFiscalDataLoader`, `useBulkFiscalUpdate`, `useObligationStatus`, `useStableStatusChange`, `utils/dateUtils` — aucun importateur | ¼ j |
+| ~~Retirer les 5 orphelins restants de `hooks/fiscal/`~~ — **fait**, voir § 2.7 | — |
+| Convertir en cartes les listes mobiles restantes du tableau de bord : `ExpiringClientDocuments`, `ExpiringFiscalAttestations`, `UnpaidPatenteList`, `UnfiledDsfList` — tableaux sans variante mobile, sur l'écran d'accueil | 1 j |
+| Balayer les cibles tactiles du reste de la console (`.cible-tactile` n'est posée que dans les missions, le journal et la génération de tâches) | ½ j |
 | Registre de courrier : référence séquentielle (aujourd'hui un timestamp base 36), PDF archivé, insertion non « best-effort » | 1–2 j |
 | Enrichir les tâches (description, priorité, type de mission, charge) | 1 j |
 | Décider du module RH/paie : le compléter (IRPP, CNPS, DIPE) ou le retirer de l'interface | décision |

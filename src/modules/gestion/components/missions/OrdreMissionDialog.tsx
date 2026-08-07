@@ -67,7 +67,7 @@ export function OrdreMissionDialog({ mission, missionTitle }: OrdreMissionDialog
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="gap-1.5 text-xs">
+        <Button variant="outline" size="sm" className="cible-tactile w-full justify-center gap-1.5 text-xs sm:w-auto">
           <FileText className="h-3.5 w-3.5" />
           <span className="hidden sm:inline">Ordre de mission</span>
           <span className="sm:hidden">OM</span>
