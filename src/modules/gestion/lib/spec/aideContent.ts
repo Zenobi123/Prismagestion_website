@@ -40,7 +40,7 @@ export interface ChangelogEntry {
 }
 
 /** Version courante de l'application telle qu'affichée dans l'aide. */
-export const APP_VERSION = "1.12.0";
+export const APP_VERSION = "1.13.0";
 
 /** Date de la dernière mise à jour de l'aide (AAAA-MM-JJ). */
 export const LAST_UPDATED = "2026-08-07";
@@ -50,6 +50,17 @@ export const LAST_UPDATED = "2026-08-07";
  * Ajoutez une entrée à chaque changement majeur.
  */
 export const changelog: ChangelogEntry[] = [
+  {
+    version: "1.13.0",
+    date: "2026-08-07",
+    title: "Les paiements et les factures clients se consultent sur téléphone",
+    changes: [
+      "La liste des paiements était un tableau de huit colonnes : sur téléphone, chaque cellule ne recevait que quelques caractères. Chaque paiement s'affiche désormais en fiche, montant et client en tête, avec la référence, la date, le mode et le solde restant en dessous.",
+      "Dans la situation d'un client, l'onglet Factures présente les trois montants — total, payé, restant — côte à côte dans des encadrés lisibles, le restant en ambre lorsqu'il n'est pas soldé. L'onglet Paiements passe lui aussi en fiches.",
+      "Les boutons d'action de ces écrans passent à la taille recommandée pour une cible tactile.",
+      "Rien ne change sur ordinateur : les tableaux y sont conservés à l'identique.",
+    ],
+  },
   {
     version: "1.12.0",
     date: "2026-08-07",

@@ -300,7 +300,7 @@ Par ordre de valeur décroissante à l'intérieur de chaque plan.
 | ~~Correctif `getTasks()`~~ — **fait**, voir § 2.6 | — |
 | ~~Retirer le code mort~~ — **fait**, 24 fichiers, voir § 2.6 | — |
 | ~~Retirer les 5 orphelins restants de `hooks/fiscal/`~~ — **fait**, voir § 2.7 | — |
-| **19 écrans vivants portent encore un tableau sans variante mobile** — inventaire ci-dessous. Avec 97 % de trafic mobile, c'est le plus gros reste d'interface de la console | 3–4 j |
+| **16 écrans vivants portent encore un tableau sans variante mobile** — inventaire au § 5 bis. Traitement **par lots** décidé avec Nathan ; le lot Facturation-cœur est fait | 3 j |
 | ~~Trancher le sort des 7 composants morts du tableau de bord~~ — **supprimés** le 07/08/2026 sur décision de Nathan, avec la chaîne `useExpiringClients` + `hooks/expiring/` qu'ils maintenaient seuls en vie. Acté : le tableau de bord n'affichera ni liste de tâches, ni documents clients expirants | — |
 | Balayer les cibles tactiles du reste de la console — `.cible-tactile` est désormais posée dans les missions, les attestations, le journal et la génération de tâches, mais pas ailleurs | ½ j |
 | Registre de courrier : référence séquentielle (aujourd'hui un timestamp base 36), PDF archivé, insertion non « best-effort » | 1–2 j |
@@ -337,10 +337,18 @@ diagnostic. `ExpiringFiscalAttestations` gère parfaitement le mobile avec
 `hidden sm:block` / `sm:hidden`, sans le hook — et c'est même préférable,
 puisque rien ne dépend alors de JavaScript.
 
-| Écran | Module |
+**Lot 1 (Facturation, cœur) — fait le 07/08/2026.** `PaiementsList`,
+`PaymentsTable` et `InvoicesTable` passent en fiches sous `sm:`. Le menu
+d'actions d'un paiement est extrait dans `PaiementActionsMenu`, **partagé**
+par la ligne et la carte : les deux rendus ne peuvent pas proposer des actions
+différentes. `formatDatePaiement` est extrait de même — il était dupliqué
+dans trois composants. `PaiementTable` et `PaiementTableHeader`, morts, sont
+supprimés.
+
+| Écran restant | Module |
 |---|---|
 | `CourrierHistorique` | Courrier |
-| `PaiementsList`, `InvoicesTable`, `PaymentsTable`, `RapportEcheances` | Facturation |
+| `RapportEcheances` | Facturation |
 | `AnalyseParFacture`, `DetailsTabContent`, `DerivedPrestationsTab` | Facturation — analyse |
 | `ResteAFaire`, `SituationPaiements`, `SuiviPrestations`, `SyntheseGlobale` | Facturation — activité |
 | `CommercialActivityTable`, `ServiceActivityTable`, `ClotureReport` | Clôture d'exercice |

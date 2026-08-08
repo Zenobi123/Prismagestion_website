@@ -7,6 +7,7 @@ import useFactureViewActions from "@gestion/hooks/facturation/factureActions/use
 import InvoiceTableHeader from "./invoice-table/InvoiceTableHeader";
 import InvoiceTableRow from "./invoice-table/InvoiceTableRow";
 import InvoiceTableEmpty from "./invoice-table/InvoiceTableEmpty";
+import InvoiceCard from "./invoice-table/InvoiceCard";
 
 interface InvoicesTableProps {
   invoices: ClientInvoice[];
@@ -60,7 +61,30 @@ const InvoicesTable = ({
 
   return (
     <>
-      <div className="overflow-x-auto">
+      {/* Mobile : cartes. Huit colonnes dont trois montants ne tiennent pas
+          en 375 px, et la comparaison payé / restant devient illisible. */}
+      <div className="space-y-2 sm:hidden">
+        {invoices.length === 0 ? (
+          <div className="rounded-lg border py-6 text-center text-gray-500">
+            Aucune facture trouvée pour ce client
+          </div>
+        ) : (
+          invoices.map((invoice) => (
+            <InvoiceCard
+              key={invoice.id}
+              invoice={invoice}
+              availableCredits={hasCreditAvailable}
+              clientName={clientName}
+              onPreviewClick={handlePreviewClick}
+              onDownloadClick={handleDownloadClick}
+              onOpenApplyCreditDialog={onOpenApplyCreditDialog}
+              onOpenReminderDialog={onOpenReminderDialog}
+            />
+          ))
+        )}
+      </div>
+
+      <div className="hidden overflow-x-auto sm:block">
       <Table>
         <InvoiceTableHeader />
         <TableBody>

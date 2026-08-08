@@ -1,6 +1,7 @@
 
 import { Table, TableHeader, TableRow, TableHead, TableBody } from "@gestion/components/ui/table";
 import PaiementTableRow from "./PaiementTableRow";
+import PaiementCard from "./PaiementCard";
 import { Card, CardContent } from "@gestion/components/ui/card";
 import { Paiement } from "@gestion/types/paiement";
 import { useReceiptPreview } from "@gestion/hooks/facturation/factureActions/hooks/useReceiptPreview";
@@ -18,7 +19,25 @@ const PaiementsList = ({ paiements, onDelete }: PaiementsListProps) => {
 
   return (
     <>
-      <Card>
+      {/* Mobile : cartes. Le tableau compte huit colonnes — illisible en 375 px. */}
+      <div className="space-y-2 sm:hidden">
+        {paiements.length === 0 ? (
+          <div className="rounded-lg border bg-white py-6 text-center text-neutral-500">
+            Aucun paiement trouvé
+          </div>
+        ) : (
+          paiements.map((paiement) => (
+            <PaiementCard
+              key={paiement.id}
+              paiement={paiement}
+              onDelete={onDelete}
+              onViewReceipt={handleVoirRecu}
+            />
+          ))
+        )}
+      </div>
+
+      <Card className="hidden sm:block">
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <Table>
