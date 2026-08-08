@@ -300,8 +300,7 @@ Par ordre de valeur décroissante à l'intérieur de chaque plan.
 | ~~Correctif `getTasks()`~~ — **fait**, voir § 2.6 | — |
 | ~~Retirer le code mort~~ — **fait**, 24 fichiers, voir § 2.6 | — |
 | ~~Retirer les 5 orphelins restants de `hooks/fiscal/`~~ — **fait**, voir § 2.7 | — |
-| **8 écrans vivants portent encore un tableau sans variante mobile** — inventaire au § 5 bis. Lots 1 et 2 (Facturation) faits ; restent Courrier, Clôture, Paramètres, Outils | 1–2 j |
-| **Trancher le sort de 33 fichiers morts en Facturation** : le module « Analyse des factures et paiements » (`components/facturation/analyse/`, 26 fichiers, 1 761 lignes) et la « Vue d'activité » (`VueActivite.tsx` + `activite/` + `hooks/facturation/useVueActivite.ts`, 7 fichiers, ~550 lignes). Deux fonctionnalités métier entières que rien ne monte — les rebrancher ou les supprimer est une décision produit | décision |
+| **3 écrans vivants portent encore un tableau sans variante mobile** : `CommercialActivityTable` et `ServiceActivityTable` (clôture d'exercice, consultées une fois l'an), `IGSInformation` (barème de référence, où le défilement horizontal se défend). `ClotureReport` vise l'impression et sort du périmètre | ½ j |
 | **Test instable** : `src/components/contact/__tests__/ContactForm.test.tsx` › « laisse le navigateur bloquer une adresse sans arobase » échoue par intermittence en suite complète, passe systématiquement seul. Un `pre-push` qui refuse au hasard finit par être contourné au `--no-verify` | ¼ j |
 | ~~Trancher le sort des 7 composants morts du tableau de bord~~ — **supprimés** le 07/08/2026 sur décision de Nathan, avec la chaîne `useExpiringClients` + `hooks/expiring/` qu'ils maintenaient seuls en vie. Acté : le tableau de bord n'affichera ni liste de tâches, ni documents clients expirants | — |
 | Balayer les cibles tactiles du reste de la console — `.cible-tactile` est désormais posée dans les missions, les attestations, le journal et la génération de tâches, mais pas ailleurs | ½ j |
@@ -361,9 +360,19 @@ forme `from`. Et se méfier des cycles : `VueActivite` ↔ `ActiviteKPIs`
 s'importent mutuellement, ce qui donne des compteurs d'importateurs non nuls
 alors que la poche entière est morte.
 
+**Lot 3 — fait le 07/08/2026.** `CourrierHistorique` (six colonnes, et des
+boutons d'action de **24 px**) et le différentiel de `JournalModifications`
+passent en fiches. Deux faux positifs de plus écartés : `UserManagementTable`
+et `DataImportButton` géraient déjà le mobile par une variable `isMobile`,
+que le motif de recherche `useIsMobile` ne voyait pas.
+
+Les deux poches mortes de la Facturation ont été supprimées sur décision de
+Nathan : `components/facturation/analyse/` (26 fichiers) et
+`VueActivite.tsx` + `activite/` + `hooks/facturation/useVueActivite.ts`
+(7 fichiers) — soit ~2 300 lignes.
+
 | Écran restant | Module |
 |---|---|
-| `CourrierHistorique` | Courrier |
 | `ResteAFaire`, `SituationPaiements`, `SuiviPrestations`, `SyntheseGlobale` | Facturation — activité |
 | `CommercialActivityTable`, `ServiceActivityTable`, `ClotureReport` | Clôture d'exercice |
 | `UserManagementTable`, `JournalModifications` | Paramètres |

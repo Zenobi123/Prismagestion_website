@@ -117,7 +117,73 @@ const CourrierHistorique = () => {
           Aucun courrier trouvé
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-md border border-gray-100">
+        <>
+        {/* Mobile : fiches. Six colonnes ne tiennent pas en 375 px, et les
+            actions y étaient des boutons de 24 px — impossibles à viser. */}
+        <ul className="space-y-2 sm:hidden">
+          {records.map((r: CourrierRecord) => (
+            <li key={r.id} className="rounded-md border border-gray-100 bg-white p-3">
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium text-gray-800">
+                    {r.client_nom || "—"}
+                  </p>
+                  <p className="truncate text-xs text-gray-600">{r.template_titre}</p>
+                </div>
+                <Badge className={`shrink-0 text-xs px-1.5 py-0 ${STATUS_COLORS[r.statut]}`}>
+                  {STATUS_LABELS[r.statut]}
+                </Badge>
+              </div>
+
+              <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
+                <span className="font-mono">{r.reference}</span>
+                <span>{formatDate(r.date_envoi)}</span>
+                {r.mission_doc_type && (
+                  <Badge className="text-xs px-1.5 py-0 bg-indigo-100 text-indigo-800">
+                    {MISSION_DOC_LABEL[r.mission_doc_type] ?? "Mission"}
+                  </Badge>
+                )}
+              </div>
+
+              <div className="mt-2 flex items-center justify-end gap-1 border-t border-gray-50 pt-2">
+                <CourrierPrintButton courrier={r} variant="icon" />
+                {r.statut === "envoye" && (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    aria-label="Marquer accusé réception"
+                    className="cible-tactile h-11 px-3 text-green-600 hover:text-green-700"
+                    onClick={() => updateMutation.mutate({ id: r.id, statut: "accuse" })}
+                  >
+                    <CheckCircle className="w-4 h-4" />
+                  </Button>
+                )}
+                {r.statut !== "classe" && (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    aria-label="Classer le courrier"
+                    className="cible-tactile h-11 px-3 text-amber-600 hover:text-amber-700"
+                    onClick={() => updateMutation.mutate({ id: r.id, statut: "classe" })}
+                  >
+                    <Archive className="w-4 h-4" />
+                  </Button>
+                )}
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  aria-label="Supprimer le courrier"
+                  className="cible-tactile h-11 px-3 text-red-500 hover:text-red-600"
+                  onClick={() => deleteMutation.mutate(r.id)}
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
+            </li>
+          ))}
+        </ul>
+
+        <div className="hidden overflow-x-auto rounded-md border border-gray-100 sm:block">
           <table className="w-full text-xs">
             <thead className="bg-gray-50 border-b border-gray-100">
               <tr>
@@ -193,6 +259,7 @@ const CourrierHistorique = () => {
             </tbody>
           </table>
         </div>
+        </>
       )}
     </div>
   );

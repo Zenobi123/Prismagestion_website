@@ -59,7 +59,27 @@ function DetailChangements({ entree }: { entree: EntreeJournal }) {
   }
 
   return (
-    <div className="overflow-x-auto">
+    <>
+      {/* Mobile : avant/après empilés. Côte à côte, deux valeurs longues
+          (un JSONB fiscal, une adresse) se réduisaient à quelques caractères
+          par ligne et le différentiel devenait illisible. */}
+      <ul className="space-y-2 sm:hidden">
+        {changements.map((c) => (
+          <li key={c.colonne} className="rounded border p-2 text-xs">
+            <p className="font-mono font-medium">{c.colonne}</p>
+            <p className="mt-1 break-all text-muted-foreground">
+              <span className="mr-1 font-medium uppercase tracking-wide">Avant</span>
+              {c.avant}
+            </p>
+            <p className="mt-0.5 break-all">
+              <span className="mr-1 font-medium uppercase tracking-wide text-muted-foreground">Après</span>
+              {c.apres}
+            </p>
+          </li>
+        ))}
+      </ul>
+
+      <div className="hidden overflow-x-auto sm:block">
       <table className="w-full text-xs">
         <thead>
           <tr className="text-left text-muted-foreground">
@@ -78,7 +98,8 @@ function DetailChangements({ entree }: { entree: EntreeJournal }) {
           ))}
         </tbody>
       </table>
-    </div>
+      </div>
+    </>
   );
 }
 

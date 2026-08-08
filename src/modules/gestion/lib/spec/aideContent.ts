@@ -40,7 +40,7 @@ export interface ChangelogEntry {
 }
 
 /** Version courante de l'application telle qu'affichée dans l'aide. */
-export const APP_VERSION = "1.14.0";
+export const APP_VERSION = "1.15.0";
 
 /** Date de la dernière mise à jour de l'aide (AAAA-MM-JJ). */
 export const LAST_UPDATED = "2026-08-07";
@@ -50,6 +50,16 @@ export const LAST_UPDATED = "2026-08-07";
  * Ajoutez une entrée à chaque changement majeur.
  */
 export const changelog: ChangelogEntry[] = [
+  {
+    version: "1.15.0",
+    date: "2026-08-07",
+    title: "Historique du courrier et journal des modifications sur téléphone",
+    changes: [
+      "L'historique du courrier passe en fiches : client et modèle en clair, référence, date et statut en dessous. Ses boutons d'action mesuraient 24 pixels de haut — la moitié de ce qu'un doigt peut viser ; ils passent à 44.",
+      "Dans le journal des modifications, le comparatif avant/après s'empile au lieu de tenir sur deux colonnes étroites : une valeur longue reste lisible.",
+      "Rien ne change sur ordinateur.",
+    ],
+  },
   {
     version: "1.14.0",
     date: "2026-08-07",
