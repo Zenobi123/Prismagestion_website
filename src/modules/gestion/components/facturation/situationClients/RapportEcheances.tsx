@@ -134,8 +134,37 @@ const RapportEcheances = () => {
         )}
       </div>
 
+      {/* Mobile : fiches. Cinq colonnes dont un montant et deux badges ne
+          tiennent pas en 375 px — le nom du client y perdait toute lisibilité. */}
       {obligations.length > 0 && (
-        <div className="overflow-x-auto rounded-md border border-gray-100">
+        <ul className="space-y-2 sm:hidden">
+          {obligations.map((o, i) => {
+            const cls = urgenceBadgeClass(getUrgenceLevel(o.echeance));
+            return (
+              <li key={i} className="rounded-md border border-gray-100 bg-white p-3">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium text-gray-800">{o.client_nom}</p>
+                    <p className="truncate text-xs text-gray-600">{o.designation}</p>
+                  </div>
+                  <Badge className={`shrink-0 border text-xs font-semibold ${cls}`}>
+                    {urgenceBadgeText(o.echeance)}
+                  </Badge>
+                </div>
+                <div className="mt-2 flex items-baseline justify-between gap-2">
+                  <span className="text-xs text-gray-500">{o.echeance.label}</span>
+                  <span className="text-sm font-semibold text-red-700">
+                    {fmt(o.montant_reste)} F CFA
+                  </span>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+
+      {obligations.length > 0 && (
+        <div className="hidden overflow-x-auto rounded-md border border-gray-100 sm:block">
           <table className="w-full text-xs">
             <thead className="bg-orange-50 border-b border-orange-100">
               <tr>

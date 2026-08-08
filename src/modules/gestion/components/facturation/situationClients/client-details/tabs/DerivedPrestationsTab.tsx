@@ -88,7 +88,36 @@ const DerivedPrestationsTab = ({ type }: DerivedPrestationsTabProps) => {
 
   return (
     <div className="space-y-3">
-      <Table>
+      {/* Mobile : fiches. La désignation d'une prestation est longue et se
+          retrouvait écrasée entre quatre autres colonnes en 375 px. */}
+      <ul className="space-y-2 sm:hidden">
+        {rows.map((r) => {
+          const st = STATUT_LABEL[r.statutPaiement] || { label: r.statutPaiement, variant: "outline" as const };
+          return (
+            <li key={r.key} className="rounded-lg border bg-white p-3">
+              <div className="flex items-start justify-between gap-2">
+                <p className="min-w-0 flex-1 text-sm leading-snug">{r.designation}</p>
+                <Badge variant={st.variant} className="shrink-0">{st.label}</Badge>
+              </div>
+              <div className="mt-2 flex items-baseline justify-between gap-2 text-xs text-neutral-500">
+                <span className="truncate">
+                  {r.numero}
+                  {r.date ? ` · ${new Date(r.date).toLocaleDateString("fr-FR")}` : ""}
+                </span>
+                <span className="shrink-0 text-sm font-semibold text-neutral-900">
+                  {fmt(r.montant)}
+                </span>
+              </div>
+            </li>
+          );
+        })}
+        <li className="flex items-baseline justify-between rounded-lg border bg-neutral-50 p-3">
+          <span className="text-sm font-semibold">Total</span>
+          <span className="text-sm font-semibold">{fmt(total)}</span>
+        </li>
+      </ul>
+
+      <Table className="hidden sm:table">
         <TableHeader>
           <TableRow>
             <TableHead>Facture</TableHead>

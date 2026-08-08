@@ -40,7 +40,7 @@ export interface ChangelogEntry {
 }
 
 /** Version courante de l'application telle qu'affichée dans l'aide. */
-export const APP_VERSION = "1.13.0";
+export const APP_VERSION = "1.14.0";
 
 /** Date de la dernière mise à jour de l'aide (AAAA-MM-JJ). */
 export const LAST_UPDATED = "2026-08-07";
@@ -50,6 +50,16 @@ export const LAST_UPDATED = "2026-08-07";
  * Ajoutez une entrée à chaque changement majeur.
  */
 export const changelog: ChangelogEntry[] = [
+  {
+    version: "1.14.0",
+    date: "2026-08-07",
+    title: "Échéances fiscales et prestations facturées lisibles sur téléphone",
+    changes: [
+      "Dans la situation clients, le rapport des échéances fiscales impayées passe en fiches sur téléphone : le nom du client et l'obligation s'affichent en clair, avec le montant restant et le délai.",
+      "Dans le dossier d'un client, les onglets « Dossier fiscal annuel » et « Honoraires cabinet » présentent chaque prestation en fiche, désignation complète en tête, avec le total en pied de liste.",
+      "Rien ne change sur ordinateur.",
+    ],
+  },
   {
     version: "1.13.0",
     date: "2026-08-07",

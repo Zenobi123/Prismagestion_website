@@ -300,7 +300,9 @@ Par ordre de valeur décroissante à l'intérieur de chaque plan.
 | ~~Correctif `getTasks()`~~ — **fait**, voir § 2.6 | — |
 | ~~Retirer le code mort~~ — **fait**, 24 fichiers, voir § 2.6 | — |
 | ~~Retirer les 5 orphelins restants de `hooks/fiscal/`~~ — **fait**, voir § 2.7 | — |
-| **16 écrans vivants portent encore un tableau sans variante mobile** — inventaire au § 5 bis. Traitement **par lots** décidé avec Nathan ; le lot Facturation-cœur est fait | 3 j |
+| **8 écrans vivants portent encore un tableau sans variante mobile** — inventaire au § 5 bis. Lots 1 et 2 (Facturation) faits ; restent Courrier, Clôture, Paramètres, Outils | 1–2 j |
+| **Trancher le sort de 33 fichiers morts en Facturation** : le module « Analyse des factures et paiements » (`components/facturation/analyse/`, 26 fichiers, 1 761 lignes) et la « Vue d'activité » (`VueActivite.tsx` + `activite/` + `hooks/facturation/useVueActivite.ts`, 7 fichiers, ~550 lignes). Deux fonctionnalités métier entières que rien ne monte — les rebrancher ou les supprimer est une décision produit | décision |
+| **Test instable** : `src/components/contact/__tests__/ContactForm.test.tsx` › « laisse le navigateur bloquer une adresse sans arobase » échoue par intermittence en suite complète, passe systématiquement seul. Un `pre-push` qui refuse au hasard finit par être contourné au `--no-verify` | ¼ j |
 | ~~Trancher le sort des 7 composants morts du tableau de bord~~ — **supprimés** le 07/08/2026 sur décision de Nathan, avec la chaîne `useExpiringClients` + `hooks/expiring/` qu'ils maintenaient seuls en vie. Acté : le tableau de bord n'affichera ni liste de tâches, ni documents clients expirants | — |
 | Balayer les cibles tactiles du reste de la console — `.cible-tactile` est désormais posée dans les missions, les attestations, le journal et la génération de tâches, mais pas ailleurs | ½ j |
 | Registre de courrier : référence séquentielle (aujourd'hui un timestamp base 36), PDF archivé, insertion non « best-effort » | 1–2 j |
@@ -345,11 +347,23 @@ différentes. `formatDatePaiement` est extrait de même — il était dupliqué
 dans trois composants. `PaiementTable` et `PaiementTableHeader`, morts, sont
 supprimés.
 
+**Lot 2 (Facturation, fin) — fait le 07/08/2026.** Sur les 8 écrans prévus,
+**6 étaient morts** : `AnalyseParFacture` et `DetailsTabContent` dépendaient
+de `AnalyseFacturesPaiements`, jamais importé ; `ResteAFaire`,
+`SituationPaiements`, `SuiviPrestations` et `SyntheseGlobale` dépendaient de
+`VueActivite.tsx`, jamais importé non plus. Seuls `RapportEcheances` et
+`DerivedPrestationsTab` sont vivants — tous deux passés en fiches.
+
+**Piège de méthode, deuxième prise.** `grep "from '…/X'"` ne voit pas les
+`lazy(() => import("…/X"))` : `SituationClients` avait été classé mort à tort.
+Chercher le **chemin du module** (`facturation/SituationClients`), pas la
+forme `from`. Et se méfier des cycles : `VueActivite` ↔ `ActiviteKPIs`
+s'importent mutuellement, ce qui donne des compteurs d'importateurs non nuls
+alors que la poche entière est morte.
+
 | Écran restant | Module |
 |---|---|
 | `CourrierHistorique` | Courrier |
-| `RapportEcheances` | Facturation |
-| `AnalyseParFacture`, `DetailsTabContent`, `DerivedPrestationsTab` | Facturation — analyse |
 | `ResteAFaire`, `SituationPaiements`, `SuiviPrestations`, `SyntheseGlobale` | Facturation — activité |
 | `CommercialActivityTable`, `ServiceActivityTable`, `ClotureReport` | Clôture d'exercice |
 | `UserManagementTable`, `JournalModifications` | Paramètres |
