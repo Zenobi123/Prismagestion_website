@@ -40,7 +40,7 @@ export interface ChangelogEntry {
 }
 
 /** Version courante de l'application telle qu'affichée dans l'aide. */
-export const APP_VERSION = "1.15.0";
+export const APP_VERSION = "1.16.0";
 
 /** Date de la dernière mise à jour de l'aide (AAAA-MM-JJ). */
 export const LAST_UPDATED = "2026-08-07";
@@ -50,6 +50,16 @@ export const LAST_UPDATED = "2026-08-07";
  * Ajoutez une entrée à chaque changement majeur.
  */
 export const changelog: ChangelogEntry[] = [
+  {
+    version: "1.16.0",
+    date: "2026-08-07",
+    title: "Toute la console se consulte et se saisit sur téléphone",
+    changes: [
+      "Les deux grilles de la clôture d'exercice — activité commerciale mois par mois, activité de service marché par marché — passent en fiches sur téléphone. La seconde comptait onze colonnes dont quatre champs de saisie : chaque champ recevait une trentaine de pixels, la saisie y était impossible. Les champs mesurent désormais 44 pixels de haut.",
+      "Le barème IGS de la page Outils s'affiche classe par classe au lieu d'un tableau où la fourchette de chiffre d'affaires se repliait sur quatre lignes.",
+      "Avec cette version, plus aucun écran de la console n'impose de faire défiler un tableau latéralement sur téléphone.",
+    ],
+  },
   {
     version: "1.15.0",
     date: "2026-08-07",

@@ -35,7 +35,67 @@ export const CommercialActivityTable = ({
   );
 
   return (
-    <div className="rounded-md border overflow-x-auto">
+    <>
+      {/* Mobile : une fiche par mois. Cinq colonnes dont un champ de saisie ne
+          tiennent pas en 375 px — et saisir un montant dans une cellule large
+          de quelques dizaines de pixels est intenable. */}
+      <div className="space-y-2 sm:hidden">
+        {commercialActivityData.map((row, index) => (
+          <div key={index} className="rounded-md border bg-white p-3">
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-medium">{row.month}</span>
+              <span className="text-xs text-neutral-500">
+                CA HT {formatNumberWithSeparator(row.caHT)}
+              </span>
+            </div>
+
+            <label className="mt-2 block">
+              <span className="text-xs text-neutral-600">Acompte sur IR (Principal)</span>
+              <Input
+                type="text"
+                inputMode="numeric"
+                value={row.irPrincipal ? formatNumberWithSeparator(row.irPrincipal) : ''}
+                onChange={(e) => handleIRPrincipalChange(index, e.target.value)}
+                className="mt-1 h-11 w-full"
+              />
+            </label>
+
+            <dl className="mt-2 grid grid-cols-2 gap-2 text-xs">
+              <div className="flex justify-between gap-2">
+                <dt className="text-neutral-500">CAC</dt>
+                <dd className="font-medium">{formatNumberWithSeparator(row.irCAC)}</dd>
+              </div>
+              <div className="flex justify-between gap-2">
+                <dt className="text-neutral-500">Total</dt>
+                <dd className="font-medium">{formatNumberWithSeparator(row.irTotal)}</dd>
+              </div>
+            </dl>
+          </div>
+        ))}
+
+        <div className="rounded-md border bg-slate-50 p-3 text-sm font-medium">
+          <div className="flex items-center justify-between">
+            <span>{totals.month}</span>
+            <span>CA HT {formatNumberWithSeparator(totals.caHT)}</span>
+          </div>
+          <dl className="mt-1 grid grid-cols-3 gap-2 text-xs">
+            <div className="flex justify-between gap-1">
+              <dt className="text-neutral-500">Principal</dt>
+              <dd>{formatNumberWithSeparator(totals.irPrincipal)}</dd>
+            </div>
+            <div className="flex justify-between gap-1">
+              <dt className="text-neutral-500">CAC</dt>
+              <dd>{formatNumberWithSeparator(totals.irCAC)}</dd>
+            </div>
+            <div className="flex justify-between gap-1">
+              <dt className="text-neutral-500">Total</dt>
+              <dd>{formatNumberWithSeparator(totals.irTotal)}</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+
+      <div className="hidden rounded-md border overflow-x-auto sm:block">
       <Table>
         <TableHeader>
           <TableRow>
@@ -72,6 +132,7 @@ export const CommercialActivityTable = ({
           </TableRow>
         </TableBody>
       </Table>
-    </div>
+      </div>
+    </>
   );
 };

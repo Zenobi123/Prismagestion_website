@@ -300,7 +300,7 @@ Par ordre de valeur décroissante à l'intérieur de chaque plan.
 | ~~Correctif `getTasks()`~~ — **fait**, voir § 2.6 | — |
 | ~~Retirer le code mort~~ — **fait**, 24 fichiers, voir § 2.6 | — |
 | ~~Retirer les 5 orphelins restants de `hooks/fiscal/`~~ — **fait**, voir § 2.7 | — |
-| **3 écrans vivants portent encore un tableau sans variante mobile** : `CommercialActivityTable` et `ServiceActivityTable` (clôture d'exercice, consultées une fois l'an), `IGSInformation` (barème de référence, où le défilement horizontal se défend). `ClotureReport` vise l'impression et sort du périmètre | ½ j |
+| ~~3 écrans sans variante mobile~~ — **faits** le 07/08/2026 (§ 5 bis, lot 4). Seul `ClotureReport` conserve son tableau : il vise l'impression papier | — |
 | **Test instable** : `src/components/contact/__tests__/ContactForm.test.tsx` › « laisse le navigateur bloquer une adresse sans arobase » échoue par intermittence en suite complète, passe systématiquement seul. Un `pre-push` qui refuse au hasard finit par être contourné au `--no-verify` | ¼ j |
 | ~~Trancher le sort des 7 composants morts du tableau de bord~~ — **supprimés** le 07/08/2026 sur décision de Nathan, avec la chaîne `useExpiringClients` + `hooks/expiring/` qu'ils maintenaient seuls en vie. Acté : le tableau de bord n'affichera ni liste de tâches, ni documents clients expirants | — |
 | Balayer les cibles tactiles du reste de la console — `.cible-tactile` est désormais posée dans les missions, les attestations, le journal et la génération de tâches, mais pas ailleurs | ½ j |
@@ -370,6 +370,15 @@ Les deux poches mortes de la Facturation ont été supprimées sur décision de
 Nathan : `components/facturation/analyse/` (26 fichiers) et
 `VueActivite.tsx` + `activite/` + `hooks/facturation/useVueActivite.ts`
 (7 fichiers) — soit ~2 300 lignes.
+
+**Lot 4 — fait le 07/08/2026, chantier mobile clos.**
+`CommercialActivityTable` (grille mensuelle) et `ServiceActivityTable`
+(11 colonnes dont 4 champs de saisie, ~30 px par champ en 375 px) passent en
+fiches, champs à 44 px. Les deux barèmes d'`IGSInformation` s'affichent classe
+par classe.
+
+**Aucun écran vivant de la console n'impose plus de défilement horizontal sur
+téléphone.** Seul `ClotureReport` conserve son tableau : il vise l'impression.
 
 | Écran restant | Module |
 |---|---|

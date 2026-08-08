@@ -92,7 +92,21 @@ const IGSInformation = () => {
         un montant d'impôt fixe à payer pour chaque classe.
       </p>
       <p className="font-semibold mt-4 mb-2">Barème officiel :</p>
-      <div className="overflow-x-auto mb-4">
+      {/* Mobile : une fiche par classe. La fourchette de chiffre d'affaires est
+          longue ; dans une colonne de tableau en 375 px, elle se repliait sur
+          quatre lignes et le barème devenait impraticable à lire. */}
+      <ul className="mb-4 space-y-1.5 sm:hidden">
+        {BAREME_IGS.map((t) => (
+          <li key={t.classe} className="rounded border border-neutral-300 p-2 text-xs">
+            <div className="flex items-baseline justify-between gap-2">
+              <span className="font-semibold">Classe {t.classe}</span>
+              <span className="font-semibold">{formatMoney(t.montant)}</span>
+            </div>
+            <p className="mt-0.5 text-neutral-600">{formatRange(t.classe, t.min, t.max)}</p>
+          </li>
+        ))}
+      </ul>
+      <div className="hidden overflow-x-auto mb-4 sm:block">
         <table className="min-w-full border border-neutral-300 text-xs sm:text-sm">
           <thead>
             <tr className="bg-neutral-100">
@@ -128,7 +142,23 @@ const IGSInformation = () => {
       <p className="font-semibold mt-4 mb-2">
         Barème réduit pour les membres des centres de gestion agréés :
       </p>
-      <div className="overflow-x-auto mb-4">
+      <ul className="mb-4 space-y-1.5 sm:hidden">
+        {BAREME_IGS.map((t) => (
+          <li key={t.classe} className="rounded border border-neutral-300 p-2 text-xs">
+            <p className="font-semibold">Classe {t.classe}</p>
+            <p className="mt-0.5 text-neutral-600">{formatRange(t.classe, t.min, t.max)}</p>
+            <div className="mt-1 flex justify-between gap-2">
+              <span className="text-neutral-500">Standard</span>
+              <span>{formatMoney(t.montant)}</span>
+            </div>
+            <div className="flex justify-between gap-2 font-semibold">
+              <span>Réduit CGA</span>
+              <span>{formatMoney(t.montant * CGA_REDUCTION)}</span>
+            </div>
+          </li>
+        ))}
+      </ul>
+      <div className="hidden overflow-x-auto mb-4 sm:block">
         <table className="min-w-full border border-neutral-300 text-xs sm:text-sm">
           <thead>
             <tr className="bg-neutral-100">
