@@ -5,17 +5,24 @@ import DatePickerSelector from "./DatePickerSelector";
 import { Label } from "@gestion/components/ui/label";
 import { Badge } from "@gestion/components/ui/badge";
 import { parse, isValid, differenceInDays, addDays, format } from "date-fns";
+import { AttestationDocumentField } from "./AttestationDocumentField";
+import {
+  DOC_ATTESTATION_IMMATRICULATION,
+  VALIDITE_IMMATRICULATION_JOURS,
+} from "@gestion/lib/spec/documentsClient";
 
 interface RegistrationAttestationSectionProps {
+  clientId: string;
   registrationDate: string;
   setRegistrationDate: (date: string) => void;
 }
 
 export function RegistrationAttestationSection({
+  clientId,
   registrationDate,
   setRegistrationDate,
 }: RegistrationAttestationSectionProps) {
-  const VALIDITY_DAYS = 30;
+  const VALIDITY_DAYS = VALIDITE_IMMATRICULATION_JOURS;
 
   const parseDate = (dateStr: string): Date | null => {
     if (!dateStr) return null;
@@ -97,6 +104,12 @@ export function RegistrationAttestationSection({
             )}
           </div>
         </div>
+
+        <AttestationDocumentField
+          clientId={clientId}
+          documentName={DOC_ATTESTATION_IMMATRICULATION}
+          expirationDate={expiryDateStr}
+        />
       </CardContent>
     </Card>
   );

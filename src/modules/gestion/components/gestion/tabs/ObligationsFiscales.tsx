@@ -104,6 +104,7 @@ export const ObligationsFiscales: React.FC<ObligationsFiscalesProps> = ({ select
 
       {/* Section Attestation de Conformité Fiscale */}
       <FiscalAttestationSection
+        clientId={selectedClient.id}
         creationDate={creationDate}
         validityEndDate={validityEndDate}
         setCreationDate={(date) => {
@@ -133,6 +134,7 @@ export const ObligationsFiscales: React.FC<ObligationsFiscalesProps> = ({ select
 
       {/* Section Attestation d'Immatriculation */}
       <RegistrationAttestationSection
+        clientId={selectedClient.id}
         registrationDate={registrationDate}
         setRegistrationDate={(date) => {
           setRegistrationDate(date);

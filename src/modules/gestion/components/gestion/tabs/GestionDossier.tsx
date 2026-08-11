@@ -8,7 +8,11 @@ import { Button } from "@gestion/components/ui/button";
 import { Input } from "@gestion/components/ui/input";
 import { Textarea } from "@gestion/components/ui/textarea";
 import { Client } from "@gestion/types/client";
-import { useDocumentMutations, getDocumentUrl } from "./hooks/useDocumentMutations";
+import { useDocumentMutations, getDocumentUrl, telechargerDocument } from "./hooks/useDocumentMutations";
+import {
+  DOC_ATTESTATION_CONFORMITE_FISCALE,
+  DOC_ATTESTATION_IMMATRICULATION,
+} from "@gestion/lib/spec/documentsClient";
 import { useInteractionMutations } from "./hooks/useInteractionMutations";
 import { v4 as uuidv4 } from "uuid";
 import { toast } from "sonner";
@@ -61,8 +65,8 @@ function getChecklistSections(client: Client): DocumentSection[] {
   sections.push({
     title: "Attestations (à jour)",
     items: [
-      { name: "Attestation d'immatriculation", required: true, status: "manquant" },
-      { name: "Attestation de conformité fiscale", required: true, status: "manquant" },
+      { name: DOC_ATTESTATION_IMMATRICULATION, required: true, status: "manquant" },
+      { name: DOC_ATTESTATION_CONFORMITE_FISCALE, required: true, status: "manquant" },
     ],
   });
 
@@ -334,20 +338,7 @@ export function GestionDossier({ selectedClient }: GestionDossierProps) {
 
   const handleDownload = async (docName: string, filePath: string) => {
     try {
-      const downloadUrl = await getDocumentUrl(filePath, { download: true });
-      if (!downloadUrl) throw new Error("Téléchargement impossible");
-      const res = await fetch(downloadUrl);
-      if (!res.ok) throw new Error("Téléchargement impossible");
-      const blob = await res.blob();
-      const objUrl = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = objUrl;
-      const ext = filePath.split(".").pop() || "pdf";
-      a.download = `${docName}.${ext}`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(objUrl);
+      await telechargerDocument(docName, filePath);
     } catch (e) {
       toast.error("Impossible de télécharger le document");
     }

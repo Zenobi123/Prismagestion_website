@@ -40,16 +40,27 @@ export interface ChangelogEntry {
 }
 
 /** Version courante de l'application telle qu'affichée dans l'aide. */
-export const APP_VERSION = "1.16.0";
+export const APP_VERSION = "1.17.0";
 
 /** Date de la dernière mise à jour de l'aide (AAAA-MM-JJ). */
-export const LAST_UPDATED = "2026-08-07";
+export const LAST_UPDATED = "2026-08-11";
 
 /**
  * Journal des nouveautés : la première entrée est la plus récente.
  * Ajoutez une entrée à chaque changement majeur.
  */
 export const changelog: ChangelogEntry[] = [
+  {
+    version: "1.17.0",
+    date: "2026-08-11",
+    title: "Les deux attestations se conservent et se téléchargent depuis l'onglet Fiscal",
+    changes: [
+      "L'Attestation de Conformité Fiscale et l'Attestation d'Immatriculation acceptent désormais leur pièce scannée directement dans l'onglet Fiscal : « Ajouter la pièce », puis « Consulter », « Télécharger » et « Remplacer ». Jusqu'ici seules les dates s'y saisissaient, et le document lui-même devait être rangé depuis l'onglet Dossier.",
+      "La pièce est enregistrée dès qu'elle est choisie, sans attendre le bouton « Enregistrer » de l'onglet : un fichier envoyé puis abandonné ne se perd plus.",
+      "C'est le même document des deux côtés : une attestation ajoutée depuis l'onglet Fiscal apparaît aussitôt « Fournie » dans la checklist de l'onglet Dossier, et inversement. La date de fin de validité — 30 jours pour l'immatriculation, 90 jours pour l'ACF — est enregistrée avec le fichier.",
+      "Le téléchargement rend enfin un nom lisible. Le fichier arrivait sous son identifiant de stockage ; il s'enregistre maintenant sous « Attestation de conformité fiscale.pdf », accents et apostrophe compris.",
+    ],
+  },
   {
     version: "1.16.0",
     date: "2026-08-07",
@@ -453,7 +464,7 @@ export const aideSections: AideSection[] = [
       {
         question: "Onglet Dossier — téléverser, consulter et télécharger une pièce",
         answer:
-          "Pour chaque document de la checklist, le bouton « Parcourir » permet de choisir un fichier puis « Uploader » l'enregistre (le statut passe automatiquement à « Fourni »). Une fois la pièce enregistrée, deux boutons apparaissent : l'œil ouvre le document dans un nouvel onglet pour le consulter, et la flèche verte le télécharge sur votre appareil sous son nom de checklist.",
+          "Pour chaque document de la checklist, le bouton « Parcourir » permet de choisir un fichier puis « Uploader » l'enregistre (le statut passe automatiquement à « Fourni »). Une fois la pièce enregistrée, deux boutons apparaissent : l'œil ouvre le document dans un nouvel onglet pour le consulter, et la flèche verte le télécharge sur votre appareil sous son nom de checklist. Les deux attestations — immatriculation et conformité fiscale — se rangent indifféremment d'ici ou depuis l'onglet Fiscal : c'est le même document, et il n'en existe qu'un exemplaire.",
       },
       {
         question: "Onglet Dossier — interactions et historique",
@@ -468,12 +479,12 @@ export const aideSections: AideSection[] = [
       {
         question: "Onglet Fiscal — Attestation de Conformité Fiscale (ACF)",
         answer:
-          "Vous saisissez la date de création ; la date de fin de validité est calculée automatiquement. Le champ change de couleur selon l'échéance (rouge si expirée, orange si elle expire sous 4 jours, vert sinon) et un message invite au renouvellement si besoin. Trois interrupteurs pilotent la remontée d'alertes : « Situation fiscale conforme », « Afficher dans les alertes d'expiration » et « Masquer du tableau de bord ».",
+          "Vous saisissez la date de création ; la date de fin de validité est calculée automatiquement (90 jours). Le champ change de couleur selon l'échéance (rouge si expirée, orange si elle expire sous 4 jours, vert sinon) et un message invite au renouvellement si besoin. Sous les dates, « Ajouter la pièce » enregistre l'attestation scannée ; une fois en place, elle se consulte, se télécharge et se remplace. Trois interrupteurs pilotent la remontée d'alertes : « Situation fiscale conforme », « Afficher dans les alertes d'expiration » et « Masquer du tableau de bord ».",
       },
       {
         question: "Onglet Fiscal — Attestation d'Immatriculation",
         answer:
-          "Sa validité est de 30 jours : à partir de la date de délivrance, la date d'expiration est calculée automatiquement. Un badge indique le statut (« Expirée » ou nombre de jours restants), avec un code couleur (rouge si expirée, orange à 7 jours ou moins, vert au-delà).",
+          "Sa validité est de 30 jours : à partir de la date de délivrance, la date d'expiration est calculée automatiquement. Un badge indique le statut (« Expirée » ou nombre de jours restants), avec un code couleur (rouge si expirée, orange à 7 jours ou moins, vert au-delà). Comme pour l'ACF, l'attestation scannée s'ajoute sous les dates, puis se consulte, se télécharge et se remplace.",
       },
       {
         question: "Onglet Fiscal — Impôts directs et calcul de l'IGS",

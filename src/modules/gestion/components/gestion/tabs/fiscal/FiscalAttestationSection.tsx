@@ -6,8 +6,11 @@ import { Switch } from "@gestion/components/ui/switch";
 import { Label } from "@gestion/components/ui/label";
 import { addDays, format, parse, isValid, differenceInDays } from "date-fns";
 import { fr } from "date-fns/locale";
+import { AttestationDocumentField } from "./AttestationDocumentField";
+import { DOC_ATTESTATION_CONFORMITE_FISCALE } from "@gestion/lib/spec/documentsClient";
 
 interface FiscalAttestationSectionProps {
+  clientId: string;
   creationDate: string;
   validityEndDate: string;
   setCreationDate: (date: string) => void;
@@ -21,6 +24,7 @@ interface FiscalAttestationSectionProps {
 }
 
 export function FiscalAttestationSection({
+  clientId,
   creationDate,
   validityEndDate,
   setCreationDate,
@@ -118,6 +122,12 @@ export function FiscalAttestationSection({
             )}
           </div>
         </div>
+
+        <AttestationDocumentField
+          clientId={clientId}
+          documentName={DOC_ATTESTATION_CONFORMITE_FISCALE}
+          expirationDate={validityEndDate}
+        />
 
         <div className="flex items-center space-x-2">
           <Switch
