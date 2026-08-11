@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@gestion/integrations/supabase/client";
 import { useToast } from "@gestion/components/ui/use-toast";
+import { nomFichierTelechargement } from "@gestion/lib/spec/documentsClient";
 
 const BUCKET = "documents";
 
@@ -35,6 +36,32 @@ export async function getDocumentUrl(
 
   if (error || !data?.signedUrl) return null;
   return data.signedUrl;
+}
+
+/**
+ * Télécharge le document sur l'appareil sous un nom lisible.
+ *
+ * Ouvrir l'URL signée (`window.open`) se contente d'afficher le fichier, et
+ * l'enregistrer depuis le navigateur le nomme d'après l'UUID de stockage. Le
+ * détour par un blob est ce qui permet d'imposer « Attestation de conformité
+ * fiscale.pdf ».
+ */
+export async function telechargerDocument(nomDocument: string, chemin: string): Promise<void> {
+  const url = await getDocumentUrl(chemin, { download: true });
+  if (!url) throw new Error("Téléchargement impossible");
+
+  const reponse = await fetch(url);
+  if (!reponse.ok) throw new Error("Téléchargement impossible");
+
+  const blob = await reponse.blob();
+  const objectUrl = URL.createObjectURL(blob);
+  const lien = document.createElement("a");
+  lien.href = objectUrl;
+  lien.download = nomFichierTelechargement(nomDocument, chemin);
+  document.body.appendChild(lien);
+  lien.click();
+  lien.remove();
+  URL.revokeObjectURL(objectUrl);
 }
 
 export function useDocumentMutations(clientId: string) {
@@ -91,7 +118,7 @@ export function useDocumentMutations(clientId: string) {
   };
 
   const saveDocument = useMutation({
-    mutationFn: async ({ nom, type, statut, file }: { nom: string, type: string, statut: string, file?: File }) => {
+    mutationFn: async ({ nom, type, statut, file, date_expiration }: { nom: string, type: string, statut: string, file?: File, date_expiration?: string | null }) => {
       let fichier_path: string | null = null;
       if (file) {
         fichier_path = await uploadFile(file);
@@ -105,6 +132,7 @@ export function useDocumentMutations(clientId: string) {
           type,
           statut,
           fichier_path,
+          ...(date_expiration !== undefined ? { date_expiration } : {}),
         }])
         .select()
         .single();
@@ -157,7 +185,7 @@ export function useDocumentMutations(clientId: string) {
   });
 
   const updateDocumentFile = useMutation({
-    mutationFn: async ({ id, file }: { id: string, file: File }) => {
+    mutationFn: async ({ id, file, date_expiration }: { id: string, file: File, date_expiration?: string | null }) => {
       // Le chemin remplacé est lu avant l'écriture : sans versionnage en base,
       // l'ancien objet ne serait plus atteignable depuis l'application — un
       // fichier client orphelin dans un bucket privé, pas un historique.
@@ -171,7 +199,10 @@ export function useDocumentMutations(clientId: string) {
 
       const { data, error } = await supabase
         .from("documents_administratifs")
-        .update({ fichier_path })
+        .update({
+          fichier_path,
+          ...(date_expiration !== undefined ? { date_expiration } : {}),
+        })
         .eq("id", id)
         .select()
         .single();
