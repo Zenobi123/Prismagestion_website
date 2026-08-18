@@ -20,8 +20,8 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@gestion/components/ui/sheet";
-import { supabase } from "@gestion/integrations/supabase/client";
 import { useIsMobile } from "@gestion/hooks/use-mobile";
+import { useRoleUtilisateur } from "@gestion/hooks/useRoleUtilisateur";
 import { cn } from "@gestion/lib/utils";
 import { gestionPath } from "@gestion/routes";
 
@@ -65,29 +65,8 @@ const allItems: NavItem[] = [
 const MobileBottomNav = () => {
   const isMobile = useIsMobile();
   const location = useLocation();
-  const [userRole, setUserRole] = useState<string | null>(null);
   const [isMoreOpen, setIsMoreOpen] = useState(false);
-
-  useEffect(() => {
-    let active = true;
-    const fetchRole = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        const { data } = await supabase
-          .from("users")
-          .select("role")
-          .eq("id", session.user.id)
-          .single();
-        if (active && data) {
-          setUserRole(data.role);
-        }
-      }
-    };
-    fetchRole();
-    return () => {
-      active = false;
-    };
-  }, []);
+  const { role: userRole } = useRoleUtilisateur();
 
   // Réserve l'espace bas pour que le contenu ne passe pas sous la barre fixe.
   useEffect(() => {

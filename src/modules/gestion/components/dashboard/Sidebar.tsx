@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -18,8 +18,8 @@ import {
   HelpCircle
 } from "lucide-react";
 import { gestionPath } from "@gestion/routes";
-import { supabase } from "@gestion/integrations/supabase/client";
 import { useIsMobile } from "@gestion/hooks/use-mobile";
+import { useRoleUtilisateur } from "@gestion/hooks/useRoleUtilisateur";
 
 type MenuItem = {
   path: string;
@@ -46,26 +46,9 @@ const menuItems: MenuItem[] = [
 
 const Sidebar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [userRole, setUserRole] = useState<string | null>(null);
   const location = useLocation();
   const isMobile = useIsMobile();
-
-  useEffect(() => {
-    const fetchRole = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        const { data } = await supabase
-          .from('users')
-          .select('role')
-          .eq('id', session.user.id)
-          .single();
-        if (data) {
-          setUserRole(data.role);
-        }
-      }
-    };
-    fetchRole();
-  }, []);
+  const { role: userRole } = useRoleUtilisateur();
 
   // Les chemins sont déclarés relativement à la console ; c'est ici qu'ils
   // sont résolus sous /admin/gestion.

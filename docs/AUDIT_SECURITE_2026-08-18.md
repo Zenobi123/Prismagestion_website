@@ -1,4 +1,4 @@
-# Audit de sécurité approfondi — 11 août 2026
+# Audit de sécurité approfondi — 18 août 2026
 
 Périmètre : site vitrine, console de gestion, base Supabase `xkwqgxqmwxxpzrsurchk`
 (RLS, politiques, fonctions), trois fonctions edge, stockage, dépendances,
@@ -7,6 +7,22 @@ en-têtes HTTP, secrets et historique git.
 Méthode : lecture du code, inspection de la base de production, et **vérification
 par simulation de rôle** (`set local role` + `request.jwt.claims`, en transaction
 annulée) pour distinguer le risque théorique du risque réel.
+
+---
+
+## État des correctifs
+
+**Constats 1, 2 et 3 corrigés le 18/08/2026** — migration
+`20260818205432_unifier_roles_et_verrouiller_pieces_fiscales.sql`, appliquée en
+production, et bascule du code dans le même lot. Vérifié après application :
+
+| Vérification | Avant | Après |
+|---|---|---|
+| `update users set role='admin'` sur sa propre ligne | 1 ligne modifiée | `permission denied for table users` |
+| `update users set email=…` sur sa propre ligne | 1 ligne modifiée | 1 ligne modifiée (inchangé) |
+| Lecture de `fiscal_attachments` par un compte non-admin | autorisée | refusée (`private.has_role`) |
+
+Les constats 4 à 10 restent ouverts.
 
 ---
 
@@ -22,11 +38,11 @@ en découlent. Aucun n'est exploitable en l'état — parce qu'il n'existe
 aujourd'hui qu'un seul compte, déjà administrateur. Tous le deviennent **au
 moment où un deuxième collaborateur reçoit un accès**.
 
-| # | Gravité | Constat | Exploitable aujourd'hui |
+| # | Gravité | Constat | État |
 |---|---|---|---|
-| 1 | Élevée | Auto-promotion `users.role` → admin | Non (1 seul compte) |
-| 2 | Élevée | Deux systèmes d'autorisation concurrents | — (cause racine) |
-| 3 | Élevée | Bucket `fiscal_attachments` en lecture pour tout compte | Non (bucket vide) |
+| 1 | Élevée | Auto-promotion `users.role` → admin | **Corrigé** |
+| 2 | Élevée | Deux systèmes d'autorisation concurrents | **Corrigé** |
+| 3 | Élevée | Bucket `fiscal_attachments` en lecture pour tout compte | **Corrigé** |
 | 4 | Moyenne | `collaborateurs` : auto-écriture des permissions | Non (`user_id` nuls) |
 | 5 | Moyenne | CSP réduite à `frame-ancestors` | Oui |
 | 6 | Moyenne | `send-email` appelable sans en-tête `Origin` | Oui |
@@ -37,7 +53,7 @@ moment où un deuxième collaborateur reçoit un accès**.
 
 ---
 
-## 1. [Élevée] Auto-promotion sur `public.users.role` — **vérifiée**
+## 1. [Élevée] ~~Auto-promotion sur `public.users.role`~~ — **corrigé le 18/08/2026**
 
 Les deux politiques UPDATE de `public.users` (« Users can update their own data »
 et « Users can update their own profile ») s'écrivent `USING (auth.uid() = id)`
@@ -78,7 +94,7 @@ create policy users_update_self on public.users
 
 Et supprimer la ligne orpheline `4e301340-…`.
 
-## 2. [Élevée] Deux systèmes d'autorisation concurrents — cause racine
+## 2. [Élevée] ~~Deux systèmes d'autorisation concurrents~~ — **corrigé le 18/08/2026**
 
 | Source de vérité | Qui l'utilise | Solidité |
 |---|---|---|
@@ -93,7 +109,7 @@ C'est donc le second circuit qu'il faut supprimer, pas renforcer. Faire pointer
 la console et les deux fonctions edge sur `private.has_role()`, puis retirer
 `users.role`.
 
-## 3. [Élevée] Bucket `fiscal_attachments` lisible par tout compte authentifié
+## 3. [Élevée] ~~Bucket `fiscal_attachments` lisible par tout compte~~ — **corrigé le 18/08/2026**
 
 ```
 "Anyone can view fiscal attachments"  SELECT  {authenticated}
@@ -213,8 +229,9 @@ build plutôt que basculer silencieusement.
 
 ## Ordre d'attaque suggéré
 
-1. **Avant de créer le moindre second compte** : constats 1, 2 et 3. Ce sont les
-   trois qui basculent de « théorique » à « réel » à ce moment précis.
+1. ~~Avant de créer le moindre second compte : constats 1, 2 et 3.~~ **Fait le
+   18/08/2026.** Un second compte peut désormais être créé sans rouvrir ces trois
+   portes.
 2. **Cette semaine** : activer la MFA (9), corriger `send-email` (6).
 3. **Ce mois** : CSP complète (5), montée de `react-router` et `dompurify` (7),
    ménage des politiques `collaborateurs` (4), build bruyant (10).

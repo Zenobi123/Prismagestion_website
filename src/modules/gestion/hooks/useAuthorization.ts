@@ -39,19 +39,23 @@ export const useAuthorization = (
           return;
         }
 
-        // Vérifier le rôle côté serveur
-        const { data: userData, error } = await supabase
-          .from('users')
+        // Le rôle est lu dans `user_roles`, la seule source d'autorisation :
+        // c'est celle sur laquelle s'appuient toutes les politiques RLS. La
+        // console interrogeait auparavant `users.role`, que son propriétaire
+        // pouvait réécrire (audit du 18/08/2026, constats 1 et 2).
+        const { data: roleData, error } = await supabase
+          .from('user_roles')
           .select('role')
-          .eq('id', session.user.id)
-          .single();
+          .eq('user_id', session.user.id)
+          .maybeSingle();
 
-        if (error || !userData) {
+        // Sans rôle attribué, aucun module n'est accessible.
+        if (error || !roleData) {
           navigate(redirectTo);
           return;
         }
 
-        const role = userData.role;
+        const role = roleData.role;
         setUserRole(role);
         const authorized = authorizedRoles.includes(role);
         setIsAuthorized(authorized);

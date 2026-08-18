@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@gestion/components/ui/use-toast";
 import { NouveauCollaborateur } from "@gestion/types/collaborateur";
 import { getCollaborateurs, createCollaborateur, deleteCollaborateur, updateCollaborateur } from "@gestion/services/collaborateurService";
-import { supabase } from "@gestion/integrations/supabase/client";
+import { useRoleUtilisateur } from "@gestion/hooks/useRoleUtilisateur";
 
 export const useCollaborateurs = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -15,22 +15,7 @@ export const useCollaborateurs = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const [userRole, setUserRole] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchRole = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        const { data } = await supabase
-          .from('users')
-          .select('role')
-          .eq('id', session.user.id)
-          .single();
-        setUserRole(data?.role ?? null);
-      }
-    };
-    fetchRole();
-  }, []);
+  const { role: userRole } = useRoleUtilisateur();
 
   const [newCollaborateur, setNewCollaborateur] = useState<NouveauCollaborateur>({
     nom: "",

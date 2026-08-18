@@ -3,6 +3,10 @@ import { serve } from 'https://deno.land/std@0.177.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.7.1'
 
 const ALLOWED_ORIGINS = (Deno.env.get('ALLOWED_ORIGINS') || '').split(',').filter(Boolean)
+// Roles habilites. Ils sont cherches dans public.user_roles, ou seul 'admin'
+// est defini a ce jour : les deux autres sont sans effet tant qu'ils n'y sont
+// pas ajoutes. C'est voulu — les donnees manipulees ici sont de toute facon
+// reservees aux administrateurs par la RLS.
 const ALLOWED_ROLES = ['admin', 'comptable', 'expert-comptable']
 
 function getCorsHeaders(req: Request) {
@@ -66,17 +70,22 @@ async function verifyUserRole(authHeader: string): Promise<{ userId: string; rol
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
   )
 
-  const { data: userData, error: userError } = await serviceClient
-    .from('users')
+  // Le role est lu dans `user_roles`, la seule source d'autorisation : c'est
+  // celle sur laquelle s'appuient toutes les politiques RLS. Cette fonction
+  // interrogeait auparavant `users.role`, que son proprietaire pouvait
+  // reecrire — et elle opere ensuite avec la cle service_role, qui contourne
+  // la RLS (audit du 18/08/2026, constats 1 et 2).
+  const { data: roleData, error: roleError } = await serviceClient
+    .from('user_roles')
     .select('role')
-    .eq('id', user.id)
-    .single()
+    .eq('user_id', user.id)
+    .maybeSingle()
 
-  if (userError || !userData) {
+  if (roleError || !roleData) {
     return null
   }
 
-  return { userId: user.id, role: userData.role }
+  return { userId: user.id, role: roleData.role }
 }
 
 serve(async (req) => {
