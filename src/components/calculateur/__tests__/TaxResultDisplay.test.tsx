@@ -107,7 +107,7 @@ describe('blocs conditionnels', () => {
 describe('mode « montant et détail »', () => {
   it('affiche le montant calculé et le bouton de détail', () => {
     render(<TaxResultDisplay amount={125_000} details="Détail du calcul" />);
-    expect(screen.getByText(/125[  ]000 F CFA/)).toBeInTheDocument();
+    expect(screen.getByText(/125\s000 F CFA/)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /voir le détail/i })).toBeInTheDocument();
   });
 

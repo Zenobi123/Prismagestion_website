@@ -143,7 +143,7 @@ const TaxResultDisplay = ({ result, amount, details }: TaxResultProps) => {
           <div>
             <span className="text-sm text-gray-500">Montant calculé:</span>
             <div className="text-xl font-bold text-green-600">
-              {amount.toLocaleString()} F CFA
+              {Math.round(amount || 0).toLocaleString('fr-FR')} F CFA
             </div>
           </div>
           <button
