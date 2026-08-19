@@ -5,6 +5,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useUserRole } from '@/hooks/useUserRole';
 import { Loader2, AlertTriangle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { secondFacteurAttendu, useNiveauAssurance } from '@/hooks/useMfa';
+import { MfaChallenge } from '@/components/auth/MfaChallenge';
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -14,9 +16,10 @@ interface ProtectedRouteProps {
 const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRouteProps) => {
   const { user, loading: authLoading } = useAuth();
   const { isAdmin, loading: roleLoading, error } = useUserRole();
+  const assurance = useNiveauAssurance();
   const location = useLocation();
 
-  if (authLoading || roleLoading) {
+  if (authLoading || roleLoading || assurance.chargement) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -32,6 +35,14 @@ const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRouteProps)
   if (!user) {
     // On mémorise la page demandée pour y revenir après connexion.
     return <Navigate to="/auth" state={{ from: location }} replace />;
+  }
+
+  // Le compte a inscrit un second facteur mais ne l'a pas encore présenté sur
+  // cette session : on réclame le code avant toute page protégée. Un compte
+  // sans facteur inscrit passe sans rien voir de tout ceci — l'activation
+  // reste volontaire, depuis l'onglet Sécurité de l'administration.
+  if (secondFacteurAttendu(assurance)) {
+    return <MfaChallenge onReussite={assurance.rafraichir} />;
   }
 
   if (requireAdmin) {

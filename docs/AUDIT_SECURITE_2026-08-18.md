@@ -22,6 +22,10 @@ production, et bascule du code dans le même lot. Vérifié après application :
 | `update users set email=…` sur sa propre ligne | 1 ligne modifiée | 1 ligne modifiée (inchangé) |
 | Lecture de `fiscal_attachments` par un compte non-admin | autorisée | refusée (`private.has_role`) |
 
+**Constat 9 partiellement corrigé le 18/08/2026** — l'application sait désormais
+inscrire et exiger un second facteur (voir le détail du constat). Restent deux
+réglages du tableau de bord Supabase, hors de portée du dépôt.
+
 **Constat 11 corrigé le 18/08/2026** — relevé pendant le déploiement des
 fonctions edge, il ne figurait pas dans la première passe.
 
@@ -51,7 +55,7 @@ moment où un deuxième collaborateur reçoit un accès**.
 | 6 | Moyenne | `send-email` appelable sans en-tête `Origin` | Oui |
 | 7 | Moyenne | 14 vulnérabilités « high » en dépendances de production | Oui |
 | 8 | Faible | Données clients réelles versionnées | Latent |
-| 9 | Faible | Mots de passe compromis et MFA désactivés | Oui |
+| 9 | Faible | Mots de passe compromis et MFA désactivés | **Partiel** |
 | 10 | Faible | Repli `localStorage` silencieux | Latent |
 | 11 | Faible | `verify_jwt` désactivé sur deux fonctions edge | **Corrigé** |
 
@@ -196,13 +200,38 @@ Ces fichiers sont dans l'historique git : un `git rm` ne les retirerait pas.
 Tant qu'ils y sont, le dépôt ne peut être ni ouvert, ni forké, ni confié à un
 prestataire sans réécriture d'historique préalable.
 
-## 9. [Faible] Protections d'authentification Supabase désactivées
+## 9. [Faible] Protections d'authentification Supabase — **partiellement corrigé le 18/08/2026**
 
 Les advisors du projet signalent deux points, tous deux côté configuration :
 protection contre les mots de passe compromis (HaveIBeenPwned) désactivée, et
 trop peu de méthodes MFA activées. Pour un compte unique qui ouvre l'accès à
-l'ensemble des données clients, **activer la MFA est le meilleur rapport
-effort/gain de tout ce rapport.**
+l'ensemble des données clients, la MFA est le meilleur rapport effort/gain de
+tout ce rapport.
+
+**Fait — côté application.** Activer le facteur au niveau du projet ne protège
+rien tant que l'application ne sait ni inscrire un facteur ni réclamer le code ;
+c'était le vrai manque, et il est comblé :
+
+- onglet **Sécurité** de l'administration : activation par QR code, saisie du
+  code de confirmation, désactivation ;
+- `ProtectedRoute` réclame le code dès qu'un facteur vérifié existe sur le
+  compte et que la session ne l'a pas encore présenté.
+
+L'activation est **volontaire** : un compte sans facteur inscrit se connecte
+comme avant. C'est le compromis retenu — il protège le compte sans risquer
+d'enfermer dehors l'unique administrateur si l'inscription échoue à mi-parcours.
+Un échec de lecture du niveau d'assurance ne bloque jamais l'accès, pour la même
+raison.
+
+**Reste à faire — au tableau de bord Supabase**, hors de portée du dépôt et des
+outils disponibles ici (Authentication → Providers / Policies) :
+
+1. vérifier que le facteur **TOTP** est activé pour le projet, sans quoi
+   l'inscription échouera avec un message explicite ;
+2. activer la **protection contre les mots de passe compromis**.
+
+Puis inscrire réellement le compte administrateur depuis l'onglet Sécurité —
+tant que ce n'est pas fait, rien ne change pour personne.
 
 ## 10. [Faible] Repli `localStorage` silencieux
 
@@ -259,8 +288,9 @@ le navigateur par des visiteurs **anonymes** sur les formulaires publics.
 1. ~~Avant de créer le moindre second compte : constats 1, 2 et 3.~~ **Fait le
    18/08/2026.** Un second compte peut désormais être créé sans rouvrir ces trois
    portes.
-2. **Cette semaine** : activer la MFA (9), corriger `send-email` (6). Le
-   constat 11 est déjà fermé.
+2. **Cette semaine** : inscrire le compte administrateur depuis l'onglet
+   Sécurité et activer les deux réglages Supabase du constat 9 ; corriger
+   `send-email` (6). Les constats 9 (partie applicative) et 11 sont fermés.
 3. **Ce mois** : CSP complète (5), montée de `react-router` et `dompurify` (7),
    ménage des politiques `collaborateurs` (4), build bruyant (10).
 4. **À décider** : purge de l'historique pour `facturation/` (8) — opération

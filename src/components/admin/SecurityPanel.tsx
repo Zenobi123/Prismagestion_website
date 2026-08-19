@@ -1,6 +1,7 @@
 
 import { useState } from 'react';
 import { useSecurityMonitoring } from '@/hooks/useSecurityMonitoring';
+import { MfaEnrollment } from '@/components/auth/MfaEnrollment';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -43,16 +44,25 @@ const SecurityPanel = () => {
   };
 
   if (loading) {
+    // La protection du compte reste affichée pendant le chargement des
+    // indicateurs : c'est le seul réglage agissant de cette page, il n'a pas à
+    // attendre un tableau de bord qui ne le concerne pas.
     return (
-      <div className="flex items-center justify-center p-8">
-        <RefreshCw className="h-8 w-8 animate-spin" />
-        <span className="ml-2">Chargement du tableau de bord sécurité...</span>
+      <div className="space-y-6">
+        <MfaEnrollment />
+        <div className="flex items-center justify-center p-8">
+          <RefreshCw className="h-8 w-8 animate-spin" />
+          <span className="ml-2">Chargement du tableau de bord sécurité...</span>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
+      {/* Protection du compte : réglage réel, avant les indicateurs. */}
+      <MfaEnrollment />
+
       {/* En-tête avec statistiques */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>

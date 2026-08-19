@@ -40,16 +40,27 @@ export interface ChangelogEntry {
 }
 
 /** Version courante de l'application telle qu'affichée dans l'aide. */
-export const APP_VERSION = "1.17.0";
+export const APP_VERSION = "1.18.0";
 
 /** Date de la dernière mise à jour de l'aide (AAAA-MM-JJ). */
-export const LAST_UPDATED = "2026-08-11";
+export const LAST_UPDATED = "2026-08-18";
 
 /**
  * Journal des nouveautés : la première entrée est la plus récente.
  * Ajoutez une entrée à chaque changement majeur.
  */
 export const changelog: ChangelogEntry[] = [
+  {
+    version: "1.18.0",
+    date: "2026-08-18",
+    title: "La connexion peut demander un code à usage unique",
+    changes: [
+      "L'onglet Sécurité de l'administration du site permet d'activer la vérification en deux étapes : vous scannez un QR code avec une application d'authentification (Google Authenticator, Authy, 1Password…), vous confirmez avec le code affiché, et c'est en place.",
+      "Une fois activée, chaque connexion demande ce code après le mot de passe — pour le site comme pour la console de gestion. Le même écran propose toujours de se déconnecter, pour ne jamais rester bloqué.",
+      "L'activation reste volontaire : tant que vous ne l'avez pas activée, la connexion ne change pas. Elle se désactive au même endroit.",
+      "C'est la protection la plus utile pour ce compte : il ouvre l'accès à l'ensemble des données de vos clients.",
+    ],
+  },
   {
     version: "1.17.0",
     date: "2026-08-11",
