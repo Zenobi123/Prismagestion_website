@@ -136,11 +136,49 @@ const cspPlugin = (env: Record<string, string>): Plugin => ({
   },
 });
 
+// Sans `VITE_SUPABASE_URL` ni `VITE_SUPABASE_PUBLISHABLE_KEY`, le site bascule
+// sans le moindre signal sur le backend local (`src/lib/localBackend/`), qui
+// crée un administrateur par défaut avec un mot de passe en clair. C'est le
+// comportement voulu hors ligne ; mis en production, ce serait une console
+// « admin » sans authentification réelle, ouverte à qui connaît l'adresse.
+//
+// Le build échoue donc plutôt que de produire ce paquet-là (audit du
+// 18/08/2026, constat 10). Deux échappatoires, toutes deux explicites :
+//   - `npm run build:dev`, prévu pour une démonstration hors ligne ;
+//   - `VITE_ALLOW_LOCAL_BACKEND=true`, contournement assumé en production.
+const garderContreLeBackendLocalEnProduction = (mode: string, env: Record<string, string>) => {
+  if (mode !== "production" || env.VITE_ALLOW_LOCAL_BACKEND) return;
+
+  const manquantes = ["VITE_SUPABASE_URL", "VITE_SUPABASE_PUBLISHABLE_KEY"].filter(
+    (nom) => !env[nom],
+  );
+  if (manquantes.length === 0) return;
+
+  throw new Error(
+    [
+      "",
+      "Build de production interrompu : " + manquantes.join(" et ") + " manque" +
+        (manquantes.length > 1 ? "nt" : "") + ".",
+      "",
+      "Sans ces variables, le site se rabat sur le backend local (localStorage),",
+      "qui crée un administrateur par défaut avec un mot de passe en clair.",
+      "Déployé tel quel, il donnerait une console « admin » sans authentification.",
+      "",
+      "  • Déploiement réel   : définir ces variables dans l'hébergeur (Vercel).",
+      "  • Démonstration      : npm run build:dev",
+      "  • Contournement assumé : VITE_ALLOW_LOCAL_BACKEND=true npm run build",
+      "",
+    ].join("\n"),
+  );
+};
+
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   // Les variables VITE_* sont nécessaires dès la configuration pour ajuster
   // la CSP aux services d'analytique réellement activés.
   const env = loadEnv(mode, process.cwd(), "");
+
+  garderContreLeBackendLocalEnProduction(mode, env);
 
   return {
     server: {

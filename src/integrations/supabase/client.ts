@@ -20,6 +20,20 @@ const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
 export const isSupabaseConfigured = Boolean(SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY);
 
+// Le build de production refuse désormais de produire un paquet dans cet état
+// (voir `garderContreLeBackendLocalEnProduction` dans vite.config.ts). Le
+// signal reste utile pour les deux échappatoires assumées : il rappelle que
+// l'authentification affichée n'en est pas une.
+//
+// `console.error` et non `console.warn` : la configuration esbuild retire les
+// seconds du bundle de production, précisément là où l'avertissement compte.
+if (!isSupabaseConfigured) {
+  console.error(
+    "[supabase] Aucune configuration détectée : backend local (localStorage) actif. " +
+      "Les comptes et les rôles sont factices — ne jamais servir cet état en production.",
+  );
+}
+
 export const supabase = (isSupabaseConfigured
   ? createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
       auth: {

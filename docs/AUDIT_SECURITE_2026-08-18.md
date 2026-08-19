@@ -22,7 +22,7 @@ production, et bascule du code dans le même lot. Vérifié après application :
 | `update users set email=…` sur sa propre ligne | 1 ligne modifiée | 1 ligne modifiée (inchangé) |
 | Lecture de `fiscal_attachments` par un compte non-admin | autorisée | refusée (`private.has_role`) |
 
-**Constats 4 et 6 corrigés le 18/08/2026.** **Constat 7 partiellement corrigé** —
+**Constats 4, 6 et 10 corrigés le 18/08/2026.** **Constat 7 partiellement corrigé** —
 les deux dépendances qui s'exécutent chez le visiteur sont traitées. **Constat 5 retiré : il était faux** — voir
 le détail, la CSP complète existait déjà.
 
@@ -60,7 +60,7 @@ moment où un deuxième collaborateur reçoit un accès**.
 | 7 | Moyenne | 14 vulnérabilités « high » en dépendances de production | **Partiel** |
 | 8 | Faible | Données clients réelles versionnées | Latent |
 | 9 | Faible | Mots de passe compromis et MFA désactivés | **Partiel** |
-| 10 | Faible | Repli `localStorage` silencieux | Latent |
+| 10 | Faible | Repli `localStorage` silencieux | **Corrigé** |
 | 11 | Faible | `verify_jwt` désactivé sur deux fonctions edge | **Corrigé** |
 
 ---
@@ -329,14 +329,35 @@ outils disponibles ici (Authentication → Providers / Policies) :
 Puis inscrire réellement le compte administrateur depuis l'onglet Sécurité —
 tant que ce n'est pas fait, rien ne change pour personne.
 
-## 10. [Faible] Repli `localStorage` silencieux
+## 10. ~~[Faible] Repli `localStorage` silencieux~~ — **corrigé le 18/08/2026**
 
 Si `VITE_SUPABASE_URL` ou `VITE_SUPABASE_PUBLISHABLE_KEY` manquent au build, le
-site bascule sans bruit sur `src/lib/localBackend/`, qui crée un administrateur
+site basculait sans bruit sur `src/lib/localBackend/`, qui crée un administrateur
 par défaut (mot de passe en clair) et un `user_roles` local. Inoffensif tant que
 les variables sont définies — mais une variable oubliée sur un déploiement
-donnerait une console « admin » sans authentification réelle. Faire échouer le
-build plutôt que basculer silencieusement.
+donnait une console « admin » sans authentification réelle.
+
+**Corrigé.** `vite.config.ts` interrompt désormais le build de production quand
+l'une des deux manque, avec un message qui nomme la variable absente, la
+conséquence, et les issues. Le repli reste disponible là où il a du sens, par
+deux chemins explicites :
+
+| Chemin | Variables absentes | Résultat |
+|---|---|---|
+| `npm run build` | oui | **échec**, message explicite |
+| `npm run build` | non | succès |
+| `npm run build:dev` | oui | succès — mode prévu pour une démonstration hors ligne |
+| `VITE_ALLOW_LOCAL_BACKEND=true npm run build` | oui | succès — contournement assumé |
+
+Les quatre chemins ont été vérifiés. À l'exécution, `client.ts` émet en plus un
+`console.error` lorsque le backend local est actif : `console.warn` aurait été
+retiré du bundle de production par la configuration esbuild, précisément là où
+l'avertissement compte.
+
+Effet de bord voulu : si les variables venaient à manquer chez l'hébergeur, le
+déploiement échouerait au lieu de mettre en ligne une console sans
+authentification — et la production resterait sur la version précédente, ce qui
+est la propriété de sécurité sur laquelle ce dépôt s'appuie déjà.
 
 ## 11. [Faible] ~~`verify_jwt` désactivé sur deux fonctions edge~~ — **corrigé le 18/08/2026**
 
@@ -387,7 +408,7 @@ le navigateur par des visiteurs **anonymes** sur les formulaires publics.
 2. **Cette semaine** : inscrire le compte administrateur depuis l'onglet
    Sécurité et activer les deux réglages Supabase du constat 9 ; corriger
    `send-email` (6). Les constats 9 (partie applicative) et 11 sont fermés.
-3. **Ce mois** : build bruyant en l'absence de variables (10).
+3. **Ce mois** : plus rien de planifié à cette échéance.
 4. **À décider** : purge de l'historique pour `facturation/` (8) — opération
    lourde, à faire une seule fois, au bon moment. Et la migration de
    react-router vers la v7 (7), chantier à part entière.
