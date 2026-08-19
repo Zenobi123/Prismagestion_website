@@ -22,7 +22,7 @@ production, et bascule du code dans le même lot. Vérifié après application :
 | `update users set email=…` sur sa propre ligne | 1 ligne modifiée | 1 ligne modifiée (inchangé) |
 | Lecture de `fiscal_attachments` par un compte non-admin | autorisée | refusée (`private.has_role`) |
 
-**Constat 6 corrigé le 18/08/2026.** **Constat 5 retiré : il était faux** — voir
+**Constats 4 et 6 corrigés le 18/08/2026.** **Constat 5 retiré : il était faux** — voir
 le détail, la CSP complète existait déjà.
 
 **Constat 9 partiellement corrigé le 18/08/2026** — l'application sait désormais
@@ -53,7 +53,7 @@ moment où un deuxième collaborateur reçoit un accès**.
 | 1 | Élevée | Auto-promotion `users.role` → admin | **Corrigé** |
 | 2 | Élevée | Deux systèmes d'autorisation concurrents | **Corrigé** |
 | 3 | Élevée | Bucket `fiscal_attachments` en lecture pour tout compte | **Corrigé** |
-| 4 | Moyenne | `collaborateurs` : auto-écriture des permissions | Non (`user_id` nuls) |
+| 4 | Moyenne | `collaborateurs` : auto-écriture des permissions | **Corrigé** |
 | 5 | Moyenne | ~~CSP réduite à `frame-ancestors`~~ — **constat erroné** | **Retiré** |
 | 6 | Moyenne | `send-email` appelable sans en-tête `Origin` | **Corrigé** |
 | 7 | Moyenne | 14 vulnérabilités « high » en dépendances de production | Oui |
@@ -146,7 +146,7 @@ create policy fiscal_attachments_select on storage.objects
 ```
 (même traitement pour INSERT/UPDATE/DELETE, et poser les plafonds serveur sur le bucket)
 
-## 4. [Moyenne] `collaborateurs` : 15 politiques, dont une boucle d'auto-attribution
+## 4. ~~[Moyenne] `collaborateurs` : 15 politiques, dont une boucle d'auto-attribution~~ — **corrigé le 18/08/2026**
 
 « Enable update for users on their own collaborateur profile » (`user_id = auth.uid()`)
 autorise la réécriture de toute la ligne, **`permissions` comprise**. Or
@@ -159,9 +159,33 @@ permissions @> '[{"module":"collaborateurs","niveau":"administration"}]'
 Un collaborateur pourrait donc s'octroyer le niveau administration puis créer
 des collaborateurs. Non exploitable aujourd'hui : les 4 lignes ont `user_id = null`.
 
-Les 15 politiques se recouvrent très largement (trois politiques SELECT
-identiques, quatre INSERT, …), héritage de migrations successives. Un ménage
-réduirait la surface autant que le risque de s'y perdre.
+Les 15 politiques se recouvraient très largement (trois SELECT identiques,
+quatre INSERT, …), héritage de migrations successives. Douze n'accordaient rien
+que la politique `ALL` n'accordait déjà — les politiques RLS se combinent en OU
+— mais elles rendaient l'ensemble illisible, et c'est dans ce bruit que les deux
+autres passaient inaperçues.
+
+**Corrigé.** Les 15 politiques sont remplacées par une seule,
+`collaborateurs_admin_all`, alignée sur `employes`, `paie` et
+`documents_administratifs`. La politique d'auto-modification disparaît : aucun
+écran n'édite son propre profil, la console entière est derrière
+`ProtectedRoute requireAdmin`, et toutes les écritures passent par
+`collaborateurService`, ciblé par `id`.
+
+Vérifié après application, par simulation de rôle :
+
+| Vérification | Résultat |
+|---|---|
+| Compte non-admin : lignes modifiables | 0 |
+| Compte administrateur : lignes modifiables | 4 (inchangé) |
+| Politiques restantes sur la table | 1 |
+
+Une précision relevée au passage, qui nuance le risque initial :
+`collaborateurs.user_id` porte une clé étrangère vers **`auth.users`**, pas vers
+`public.users`. Rattacher un collaborateur supposait donc un vrai compte
+d'authentification — une marche plus haute que ce que le constat laissait
+entendre. Le commentaire de la colonne `permissions` rappelle désormais qu'elle
+est purement descriptive et ne doit pas redevenir une source d'autorisation.
 
 ## 5. ~~[Moyenne] CSP réduite à une seule directive~~ — **constat erroné, retiré le 18/08/2026**
 
@@ -332,7 +356,6 @@ le navigateur par des visiteurs **anonymes** sur les formulaires publics.
 2. **Cette semaine** : inscrire le compte administrateur depuis l'onglet
    Sécurité et activer les deux réglages Supabase du constat 9 ; corriger
    `send-email` (6). Les constats 9 (partie applicative) et 11 sont fermés.
-3. **Ce mois** : montée de `react-router` et `dompurify` (7), ménage des
-   politiques `collaborateurs` (4), build bruyant (10).
+3. **Ce mois** : montée de `react-router` et `dompurify` (7), build bruyant (10).
 4. **À décider** : purge de l'historique pour `facturation/` (8) — opération
    lourde, à faire une seule fois, au bon moment.
