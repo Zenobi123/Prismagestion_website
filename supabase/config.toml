@@ -1,1 +1,19 @@
 project_id = "xkwqgxqmwxxpzrsurchk"
+
+# Verification du jeton au niveau de la plateforme, avant que la fonction ne
+# soit invoquee. Les trois fonctions verifient deja l'appelant dans leur code ;
+# ce reglage ajoute une couche en amont (audit du 18/08/2026, constat 11).
+#
+# Il est declare ici parce qu'il vit cote plateforme et non dans le code : sans
+# cette declaration, un `supabase functions deploy` le reinitialiserait
+# silencieusement. Les requetes preliminaires CORS (OPTIONS) restent acceptees,
+# comme le montre `send-email`, appelee depuis le navigateur par des visiteurs
+# anonymes avec ce meme reglage depuis toujours.
+[functions.send-email]
+verify_jwt = true
+
+[functions.apply-credit]
+verify_jwt = true
+
+[functions.send-payment-reminders]
+verify_jwt = true

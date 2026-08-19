@@ -22,6 +22,9 @@ production, et bascule du code dans le même lot. Vérifié après application :
 | `update users set email=…` sur sa propre ligne | 1 ligne modifiée | 1 ligne modifiée (inchangé) |
 | Lecture de `fiscal_attachments` par un compte non-admin | autorisée | refusée (`private.has_role`) |
 
+**Constat 11 corrigé le 18/08/2026** — relevé pendant le déploiement des
+fonctions edge, il ne figurait pas dans la première passe.
+
 Les constats 4 à 10 restent ouverts.
 
 ---
@@ -50,6 +53,7 @@ moment où un deuxième collaborateur reçoit un accès**.
 | 8 | Faible | Données clients réelles versionnées | Latent |
 | 9 | Faible | Mots de passe compromis et MFA désactivés | Oui |
 | 10 | Faible | Repli `localStorage` silencieux | Latent |
+| 11 | Faible | `verify_jwt` désactivé sur deux fonctions edge | **Corrigé** |
 
 ---
 
@@ -209,6 +213,29 @@ les variables sont définies — mais une variable oubliée sur un déploiement
 donnerait une console « admin » sans authentification réelle. Faire échouer le
 build plutôt que basculer silencieusement.
 
+## 11. [Faible] ~~`verify_jwt` désactivé sur deux fonctions edge~~ — **corrigé le 18/08/2026**
+
+Relevé en déployant les correctifs 1 à 3, donc absent de la première passe :
+`apply-credit` et `send-payment-reminders` tournaient avec `verify_jwt: false`.
+La plateforme n'examinait pas le jeton et invoquait la fonction quoi qu'il
+arrive ; seul le code vérifiait ensuite l'appelant (`Authorization` →
+`auth.getUser()` → rôle).
+
+Ce n'était pas un trou — l'authentification était bel et bien appliquée — mais
+une couche de défense en moins devant deux fonctions qui opèrent avec la clé
+`service_role`. Un jeton expiré ou forgé atteignait le code de la fonction au
+lieu d'être rejeté à la porte.
+
+Les trois fonctions sont désormais en `verify_jwt: true`. Le réglage vit côté
+plateforme et non dans le code : il est déclaré dans `supabase/config.toml`,
+faute de quoi un `supabase functions deploy` le réinitialiserait sans bruit.
+
+La crainte légitime était que la requête préliminaire CORS (`OPTIONS`), qui ne
+porte pas d'en-tête `Authorization`, soit rejetée et casse les deux écrans de
+la console. Elle est levée par la configuration du projet elle-même :
+`send-email` tourne en `verify_jwt: true` depuis toujours et est appelée depuis
+le navigateur par des visiteurs **anonymes** sur les formulaires publics.
+
 ---
 
 ## Ce qui est déjà solide
@@ -232,7 +259,8 @@ build plutôt que basculer silencieusement.
 1. ~~Avant de créer le moindre second compte : constats 1, 2 et 3.~~ **Fait le
    18/08/2026.** Un second compte peut désormais être créé sans rouvrir ces trois
    portes.
-2. **Cette semaine** : activer la MFA (9), corriger `send-email` (6).
+2. **Cette semaine** : activer la MFA (9), corriger `send-email` (6). Le
+   constat 11 est déjà fermé.
 3. **Ce mois** : CSP complète (5), montée de `react-router` et `dompurify` (7),
    ménage des politiques `collaborateurs` (4), build bruyant (10).
 4. **À décider** : purge de l'historique pour `facturation/` (8) — opération
