@@ -305,10 +305,20 @@ Deno.serve(async (req) => {
     return new Response('ok', { headers: corsHeaders })
   }
 
-  // Défense en profondeur : un navigateur qui envoie un Origin non autorisé
-  // est rejeté côté serveur (le CORS seul ne bloque que la lecture de la
-  // réponse, pas la requête elle-même).
-  if (origin && !isOriginAllowed(origin)) {
+  // Défense en profondeur : le CORS seul empêche le navigateur de *lire* la
+  // réponse, il n'empêche pas la requête d'arriver. L'origine est donc
+  // vérifiée ici, côté serveur.
+  //
+  // L'absence d'en-tête vaut refus, et c'est le correctif du 18/08/2026
+  // (audit, constat 6) : la condition portait auparavant sur `origin &&`,
+  // si bien qu'une requête sans Origin — ce qu'aucun navigateur n'émet en
+  // cross-origine, mais que produit n'importe quel script — traversait le
+  // contrôle. Le destinataire étant figé, ce n'était pas un relais ouvert,
+  // mais de quoi noyer la boîte du cabinet et épuiser le quota Resend.
+  //
+  // Tous les appels légitimes viennent du navigateur, du site vers
+  // supabase.co : ils sont cross-origine, donc toujours porteurs d'un Origin.
+  if (!origin || !isOriginAllowed(origin)) {
     return jsonResponse({ error: 'Origine non autorisée' }, 403, {})
   }
 

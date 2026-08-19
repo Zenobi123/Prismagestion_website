@@ -22,6 +22,9 @@ production, et bascule du code dans le même lot. Vérifié après application :
 | `update users set email=…` sur sa propre ligne | 1 ligne modifiée | 1 ligne modifiée (inchangé) |
 | Lecture de `fiscal_attachments` par un compte non-admin | autorisée | refusée (`private.has_role`) |
 
+**Constat 6 corrigé le 18/08/2026.** **Constat 5 retiré : il était faux** — voir
+le détail, la CSP complète existait déjà.
+
 **Constat 9 partiellement corrigé le 18/08/2026** — l'application sait désormais
 inscrire et exiger un second facteur (voir le détail du constat). Restent deux
 réglages du tableau de bord Supabase, hors de portée du dépôt.
@@ -51,8 +54,8 @@ moment où un deuxième collaborateur reçoit un accès**.
 | 2 | Élevée | Deux systèmes d'autorisation concurrents | **Corrigé** |
 | 3 | Élevée | Bucket `fiscal_attachments` en lecture pour tout compte | **Corrigé** |
 | 4 | Moyenne | `collaborateurs` : auto-écriture des permissions | Non (`user_id` nuls) |
-| 5 | Moyenne | CSP réduite à `frame-ancestors` | Oui |
-| 6 | Moyenne | `send-email` appelable sans en-tête `Origin` | Oui |
+| 5 | Moyenne | ~~CSP réduite à `frame-ancestors`~~ — **constat erroné** | **Retiré** |
+| 6 | Moyenne | `send-email` appelable sans en-tête `Origin` | **Corrigé** |
 | 7 | Moyenne | 14 vulnérabilités « high » en dépendances de production | Oui |
 | 8 | Faible | Données clients réelles versionnées | Latent |
 | 9 | Faible | Mots de passe compromis et MFA désactivés | **Partiel** |
@@ -160,14 +163,43 @@ Les 15 politiques se recouvrent très largement (trois politiques SELECT
 identiques, quatre INSERT, …), héritage de migrations successives. Un ménage
 réduirait la surface autant que le risque de s'y perdre.
 
-## 5. [Moyenne] CSP réduite à une seule directive
+## 5. ~~[Moyenne] CSP réduite à une seule directive~~ — **constat erroné, retiré le 18/08/2026**
 
-`vercel.json` pose `Content-Security-Policy: frame-ancestors 'none'` — et rien
-d'autre. Pas de `default-src`, pas de `script-src` : aucun filet si une XSS
-passait. Les autres en-têtes sont en place et corrects (HSTS, X-Frame-Options,
-nosniff, Referrer-Policy, Permissions-Policy, COOP).
+**Ce constat était faux, et l'erreur est de méthode : je n'avais regardé que
+`vercel.json`.** La CSP complète existe, elle est simplement ailleurs.
 
-## 6. [Moyenne] `send-email` appelable sans en-tête `Origin`
+`vite.config.ts` porte un `cspPlugin` qui injecte au build une balise
+`<meta http-equiv="Content-Security-Policy">` :
+
+```
+default-src 'self'; script-src 'self' 'sha256-…' 'sha256-…';
+style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:;
+connect-src 'self' https://<projet>.supabase.co wss://<projet>.supabase.co;
+worker-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'self';
+form-action 'self'; upgrade-insecure-requests
+```
+
+C'est une politique stricte : pas de `'unsafe-inline'` sur `script-src`, les
+deux blocs JSON-LD sont autorisés par empreinte sha256 calculée au build.
+
+Le partage est délibéré et documenté dans le code : les empreintes se calculent
+au build et ne peuvent pas vivre dans un `vercel.json` statique, tandis que
+`frame-ancestors` est ignoré en `<meta>` et doit venir d'un en-tête HTTP. D'où
+la CSP complète en meta, et `frame-ancestors` dans `vercel.json` et
+`public/_headers`.
+
+**Un seul resserrement retenu**, appliqué le 18/08/2026 : `connect-src` visait
+`https://*.supabase.co`, ce qui aurait laissé une éventuelle XSS exfiltrer vers
+n'importe quel projet Supabase, à commencer par celui de l'attaquant. L'origine
+est désormais épinglée à partir de `VITE_SUPABASE_URL`, le générique ne servant
+que de repli lorsque la variable est absente.
+
+`img-src … https:` reste large. C'est assumé : les images d'articles et de
+services proviennent d'hôtes arbitraires (Unsplash, stockage Supabase), et
+restreindre casserait le blog au premier lien collé.
+
+## 6. ~~[Moyenne] `send-email` appelable sans en-tête `Origin`~~ — **corrigé le 18/08/2026**
 
 ```ts
 if (origin && !isOriginAllowed(origin)) { … 403 }
@@ -177,7 +209,16 @@ Une requête sans `Origin` (curl, script serveur) traverse le contrôle. Le
 destinataire étant figé (`NOTIFY_EMAIL`), ce n'est **pas** un relais ouvert :
 l'abus se limite à noyer la boîte du cabinet et à consommer le quota Resend.
 La limitation de débit (5/min/IP, en mémoire d'instance) tombe par simple
-rotation d'IP. Exiger un `Origin` connu suffirait.
+rotation d'IP.
+
+**Corrigé** : la condition est passée de `origin && !isOriginAllowed(origin)` à
+`!origin || !isOriginAllowed(origin)`. L'absence d'en-tête vaut désormais refus.
+Aucun appel légitime n'en pâtit — ils viennent tous du navigateur, du site vers
+`supabase.co`, donc cross-origine et toujours porteurs d'un `Origin`.
+
+La limitation de débit, elle, **reste contournable par rotation d'IP** : la
+corriger vraiment demanderait un compteur partagé entre instances, hors de
+proportion avec l'enjeu tant que l'origine est exigée.
 
 ## 7. [Moyenne] 14 vulnérabilités « high » en dépendances de production
 
@@ -291,7 +332,7 @@ le navigateur par des visiteurs **anonymes** sur les formulaires publics.
 2. **Cette semaine** : inscrire le compte administrateur depuis l'onglet
    Sécurité et activer les deux réglages Supabase du constat 9 ; corriger
    `send-email` (6). Les constats 9 (partie applicative) et 11 sont fermés.
-3. **Ce mois** : CSP complète (5), montée de `react-router` et `dompurify` (7),
-   ménage des politiques `collaborateurs` (4), build bruyant (10).
+3. **Ce mois** : montée de `react-router` et `dompurify` (7), ménage des
+   politiques `collaborateurs` (4), build bruyant (10).
 4. **À décider** : purge de l'historique pour `facturation/` (8) — opération
    lourde, à faire une seule fois, au bon moment.

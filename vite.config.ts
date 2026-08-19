@@ -87,6 +87,21 @@ const analyticsCspOrigins = (env: Record<string, string>) => {
   return { script, connect };
 };
 
+// Origine du projet Supabase, épinglée dès qu'elle est connue au build.
+// `https://*.supabase.co` laisserait une éventuelle XSS exfiltrer vers
+// n'importe quel projet Supabase, à commencer par celui de l'attaquant : le
+// générique n'est conservé qu'en repli, faute de mieux.
+const supabaseCspOrigins = (env: Record<string, string>) => {
+  const generique = ["https://*.supabase.co", "wss://*.supabase.co"];
+  if (!env.VITE_SUPABASE_URL) return generique;
+  try {
+    const { host } = new URL(env.VITE_SUPABASE_URL);
+    return [`https://${host}`, `wss://${host}`];
+  } catch {
+    return generique;
+  }
+};
+
 const cspPlugin = (env: Record<string, string>): Plugin => ({
   name: "inject-csp",
   apply: "build",
@@ -102,7 +117,7 @@ const cspPlugin = (env: Record<string, string>): Plugin => ({
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
         "font-src 'self' data: https://fonts.gstatic.com",
         "img-src 'self' data: blob: https:",
-        `connect-src 'self' https://*.supabase.co wss://*.supabase.co ${analytics.connect.join(" ")}`.trim(),
+        `connect-src 'self' ${supabaseCspOrigins(env).join(" ")} ${analytics.connect.join(" ")}`.trim(),
         "worker-src 'self'",
         "object-src 'none'",
         "frame-src 'none'",
