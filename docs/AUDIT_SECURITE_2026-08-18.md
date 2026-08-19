@@ -22,7 +22,8 @@ production, et bascule du code dans le même lot. Vérifié après application :
 | `update users set email=…` sur sa propre ligne | 1 ligne modifiée | 1 ligne modifiée (inchangé) |
 | Lecture de `fiscal_attachments` par un compte non-admin | autorisée | refusée (`private.has_role`) |
 
-**Constats 4 et 6 corrigés le 18/08/2026.** **Constat 5 retiré : il était faux** — voir
+**Constats 4 et 6 corrigés le 18/08/2026.** **Constat 7 partiellement corrigé** —
+les deux dépendances qui s'exécutent chez le visiteur sont traitées. **Constat 5 retiré : il était faux** — voir
 le détail, la CSP complète existait déjà.
 
 **Constat 9 partiellement corrigé le 18/08/2026** — l'application sait désormais
@@ -56,7 +57,7 @@ moment où un deuxième collaborateur reçoit un accès**.
 | 4 | Moyenne | `collaborateurs` : auto-écriture des permissions | **Corrigé** |
 | 5 | Moyenne | ~~CSP réduite à `frame-ancestors`~~ — **constat erroné** | **Retiré** |
 | 6 | Moyenne | `send-email` appelable sans en-tête `Origin` | **Corrigé** |
-| 7 | Moyenne | 14 vulnérabilités « high » en dépendances de production | Oui |
+| 7 | Moyenne | 14 vulnérabilités « high » en dépendances de production | **Partiel** |
 | 8 | Faible | Données clients réelles versionnées | Latent |
 | 9 | Faible | Mots de passe compromis et MFA désactivés | **Partiel** |
 | 10 | Faible | Repli `localStorage` silencieux | Latent |
@@ -244,7 +245,7 @@ La limitation de débit, elle, **reste contournable par rotation d'IP** : la
 corriger vraiment demanderait un compteur partagé entre instances, hors de
 proportion avec l'enjeu tant que l'origine est exigée.
 
-## 7. [Moyenne] 14 vulnérabilités « high » en dépendances de production
+## 7. [Moyenne] Dépendances vulnérables — **partiellement corrigé le 18/08/2026**
 
 `npm audit` : 14 high, 5 moderate, 3 low. Les plus pertinentes ici —
 
@@ -252,8 +253,38 @@ proportion avec l'enjeu tant que l'origine est exigée.
 - `dompurify` (moderate) — contournement de `FORBID_TAGS` ; c'est la brique qui assainit le contenu du blog ;
 - `lodash` (`_.template`), `serialize-javascript`, `js-yaml` — injection de code, surtout dans la chaîne de build.
 
-Le reste est transitif (workbox, rollup, babel). Commencer par `react-router` et
-`dompurify`, les deux seuls qui s'exécutent dans le navigateur du visiteur.
+Le reste est transitif (workbox, rollup, babel).
+
+**Corrigé — les deux qui s'exécutent chez le visiteur :**
+
+| Paquet | Avant | Après | Résultat |
+|---|---|---|---|
+| `dompurify` | 3.3.3 | 3.4.14 | plus aucun avis |
+| `react-router-dom` | 6.27.0 | 6.30.6 | — |
+| `@remix-run/router` | 1.20.0 | 1.23.4 | plus aucun avis |
+
+Le total « high » passe de 14 à 11, et `react-router` de « high » à « moderate ».
+La ligne 6.x ayant continué d'être corrigée, la migration majeure vers la v7 n'a
+pas été nécessaire. `jspdf`, qui embarque aussi DOMPurify, bénéficie de la même
+montée par déduplication.
+
+**Ce qui reste, et pourquoi ce n'est pas traité ainsi.** Deux avis subsistent sur
+`react-router`, tous deux corrigés seulement en **7.18**, donc hors de portée
+sans migration majeure :
+
+1. *Arbitrary Constructor Injection via `deserializeErrors()` in SSR Hydration*
+   — **non applicable** : l'application est un SPA pur, sans le moindre import
+   de `StaticRouter`, `HydratedRouter`, `hydrateRoot` ou `createStaticHandler`.
+2. *Open redirect via backslash in `<Link>` and `useNavigate`* — **neutralisé
+   ici**. Toutes les cibles de navigation sont des littéraux, des constantes ou
+   des chemins construits par `gestionPath()`. La seule exception était la
+   redirection après connexion, bâtie sur `location.state.from.pathname` ; elle
+   passe désormais par `cheminInterneOuDefaut()`, qui refuse `//exemple.test` et
+   `/\exemple.test` (couvert par un test).
+
+Passer en v7 reste souhaitable à terme pour ne plus dépendre d'une ligne 6.x en
+fin de vie, mais c'est un chantier de migration à part entière, à mener avec une
+préversion et une relecture des routes — pas un correctif de sécurité urgent.
 
 ## 8. [Faible] Données clients réelles versionnées
 
@@ -356,6 +387,7 @@ le navigateur par des visiteurs **anonymes** sur les formulaires publics.
 2. **Cette semaine** : inscrire le compte administrateur depuis l'onglet
    Sécurité et activer les deux réglages Supabase du constat 9 ; corriger
    `send-email` (6). Les constats 9 (partie applicative) et 11 sont fermés.
-3. **Ce mois** : montée de `react-router` et `dompurify` (7), build bruyant (10).
+3. **Ce mois** : build bruyant en l'absence de variables (10).
 4. **À décider** : purge de l'historique pour `facturation/` (8) — opération
-   lourde, à faire une seule fois, au bon moment.
+   lourde, à faire une seule fois, au bon moment. Et la migration de
+   react-router vers la v7 (7), chantier à part entière.

@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, ShieldAlert } from 'lucide-react';
+import { cheminInterneOuDefaut } from '@/components/auth/redirection';
 
 // Freinage des tentatives répétées, repris de l'écran de connexion de la
 // console de gestion avant sa fusion dans le site.
@@ -49,7 +50,9 @@ const AuthPage = () => {
 
   // Après connexion, on revient à la page initialement demandée
   // (mémorisée par ProtectedRoute), ou à la console admin par défaut.
-  const from = (location.state as { from?: { pathname?: string } } | null)?.from?.pathname || '/admin';
+  const from = cheminInterneOuDefaut(
+    (location.state as { from?: { pathname?: string } } | null)?.from?.pathname,
+  );
 
   // Le verrou doit se lever tout seul à l'expiration, sans rechargement.
   useEffect(() => {
