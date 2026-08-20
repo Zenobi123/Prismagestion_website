@@ -22,7 +22,9 @@ production, et bascule du code dans le même lot. Vérifié après application :
 | `update users set email=…` sur sa propre ligne | 1 ligne modifiée | 1 ligne modifiée (inchangé) |
 | Lecture de `fiscal_attachments` par un compte non-admin | autorisée | refusée (`private.has_role`) |
 
-**Constats 4, 6 et 10 corrigés le 18/08/2026.** **Constat 7 partiellement corrigé** —
+**Constats 4, 6 et 10 corrigés le 18/08/2026.** **Constat 8 partiellement traité
+le 19/08/2026** — le code vivant est nettoyé, la réécriture d'historique reste à
+lancer par le propriétaire du dépôt (`docs/PURGE_HISTORIQUE_DONNEES_CLIENTS.md`). **Constat 7 partiellement corrigé** —
 les deux dépendances qui s'exécutent chez le visiteur sont traitées. **Constat 5 retiré : il était faux** — voir
 le détail, la CSP complète existait déjà.
 
@@ -58,7 +60,7 @@ moment où un deuxième collaborateur reçoit un accès**.
 | 5 | Moyenne | ~~CSP réduite à `frame-ancestors`~~ — **constat erroné** | **Retiré** |
 | 6 | Moyenne | `send-email` appelable sans en-tête `Origin` | **Corrigé** |
 | 7 | Moyenne | 14 vulnérabilités « high » en dépendances de production | **Partiel** |
-| 8 | Faible | Données clients réelles versionnées | Latent |
+| 8 | Faible | Données clients réelles versionnées | **Partiel** |
 | 9 | Faible | Mots de passe compromis et MFA désactivés | **Partiel** |
 | 10 | Faible | Repli `localStorage` silencieux | **Corrigé** |
 | 11 | Faible | `verify_jwt` désactivé sur deux fonctions edge | **Corrigé** |
@@ -286,7 +288,7 @@ Passer en v7 reste souhaitable à terme pour ne plus dépendre d'une ligne 6.x e
 fin de vie, mais c'est un chantier de migration à part entière, à mener avec une
 préversion et une relecture des routes — pas un correctif de sécurité urgent.
 
-## 8. [Faible] Données clients réelles versionnées
+## 8. [Faible] Données clients réelles versionnées — **partiellement traité le 19/08/2026**
 
 `facturation/clients_2026-01-28.csv` et `.json` : 29 clients avec nom, NIU,
 centre de rattachement, ville, téléphone, e-mail, n° CNPS. Le dépôt est bien
@@ -295,6 +297,30 @@ centre de rattachement, ville, téléphone, e-mail, n° CNPS. Le dépôt est bie
 Ces fichiers sont dans l'historique git : un `git rm` ne les retirerait pas.
 Tant qu'ils y sont, le dépôt ne peut être ni ouvert, ni forké, ni confié à un
 prestataire sans réécriture d'historique préalable.
+
+**Une découverte de l'inventaire, absente du constat initial.** Un essai de
+réécriture sur une copie a montré qu'un NIU **réel** survivait à la purge des
+deux exports : `vanillaTransfer.test.ts` figeait `M031912756642Y`, le nom
+`NGAH ESSAMA JACQUELINE FLORENCE` et le téléphone `699350141`. Purger les deux
+seuls fichiers d'export aurait donc laissé des données réelles dans le dépôt.
+Ces valeurs sont remplacées par des données fabriquées, et la suite de tests
+passe (379/379).
+
+À l'inverse, le reste de `facturation/` s'est révélé **sain** : ses 27 autres
+fichiers ne portent que des exemples (`M123456789012Z`, `dupont@email.cm`),
+absents de l'export réel. Le prototype est donc conservé, comme `CLAUDE.md` le
+prévoit.
+
+**Ce qui reste** est une opération du propriétaire du dépôt, décrite pas à pas
+dans `docs/PURGE_HISTORIQUE_DONNEES_CLIENTS.md` : la réécriture impose un
+`push --force` sur `main`, hors du mandat de l'assistant. La procédure a été
+éprouvée sur une copie — 60 commits réécrits, les deux fichiers absents de tout
+l'historique, les 27 autres intacts.
+
+Un point y est souligné parce qu'il est régulièrement oublié : **GitHub conserve
+les objets devenus inaccessibles**. Tant que le support GitHub n'a pas été
+sollicité pour le ramasse-miettes, les anciens commits restent atteignables par
+leur SHA et la purge est incomplète de leur côté.
 
 ## 9. [Faible] Protections d'authentification Supabase — **partiellement corrigé le 18/08/2026**
 
@@ -409,6 +435,6 @@ le navigateur par des visiteurs **anonymes** sur les formulaires publics.
    Sécurité et activer les deux réglages Supabase du constat 9 ; corriger
    `send-email` (6). Les constats 9 (partie applicative) et 11 sont fermés.
 3. **Ce mois** : plus rien de planifié à cette échéance.
-4. **À décider** : purge de l'historique pour `facturation/` (8) — opération
-   lourde, à faire une seule fois, au bon moment. Et la migration de
-   react-router vers la v7 (7), chantier à part entière.
+4. **À décider** : lancer la réécriture d'historique (8) une fois la PR #3
+   fusionnée — procédure prête et éprouvée. Et la migration de react-router
+   vers la v7 (7), chantier à part entière.

@@ -27,14 +27,14 @@ const FIXTURE: VanillaEnvelope = {
     {
       id: 1778216712363,
       type: "Personne physique",
-      name: "NGAH ESSAMA JACQUELINE FLORENCE",
-      niu: "P117614879531D",
+      name: "ESSOMBA NOAH MARIE CLAIRE",
+      niu: "P999000000002Z",
       cdi: "CFLP Yaoundé 5",
       ville: "Yaoundé",
       quartier: "Nkolbisson",
-      phone: "699350141",
+      phone: "690000001",
       email: "",
-      contact: "NGAH ESSAMA JACQUELINE FLORENCE",
+      contact: "ESSOMBA NOAH MARIE CLAIRE",
       civilite: "Mme",
       secteur: "Services",
       cnps: "",
@@ -68,7 +68,7 @@ const FIXTURE: VanillaEnvelope = {
       {
         id: 1778333626749,
         number: "N° 0005/2026/05",
-        client: "NGAH ESSAMA JACQUELINE FLORENCE",
+        client: "ESSOMBA NOAH MARIE CLAIRE",
         prestations: [
           { type: "Impôt", designation: "Impôt Général Synthétique (IGS) - Classe 7 (CGA)", qty: 1, price: 150000, total: 150000 },
           { type: "Honoraire", designation: "Montage et mise en ligne DSF", qty: 1, price: 20000, total: 20000 },
@@ -88,7 +88,7 @@ const FIXTURE: VanillaEnvelope = {
       {
         id: 1778217940347,
         number: "DEVIS-0008/2026/05",
-        client: "NGAH ESSAMA JACQUELINE FLORENCE",
+        client: "ESSOMBA NOAH MARIE CLAIRE",
         prestations: [
           { type: "Impôt", designation: "Taxe de Développement Local (TDL)", qty: 1, price: 45000, total: 45000 },
         ],
@@ -107,7 +107,7 @@ const FIXTURE: VanillaEnvelope = {
       {
         id: 1778334521101,
         number: "RECU-0004/2026",
-        client: "NGAH ESSAMA JACQUELINE FLORENCE",
+        client: "ESSOMBA NOAH MARIE CLAIRE",
         montant: 170000,
         montantImpots: 150000,
         montantHonoraires: 20000,
@@ -184,8 +184,8 @@ describe("envelope — détection et validation PRISMA-CLIENTS", () => {
   });
 
   it("slugifie le nom de fichier comme le vanilla", () => {
-    expect(slugifyClientName("NGAH ESSAMA JACQUELINE FLORENCE")).toBe(
-      "NGAH_ESSAMA_JACQUELINE_FLORENCE",
+    expect(slugifyClientName("ESSOMBA NOAH MARIE CLAIRE")).toBe(
+      "ESSOMBA_NOAH_MARIE_CLAIRE",
     );
     expect(slugifyClientName("Société Élan & Cie")).toBe("Societe_Elan_Cie");
     expect(slugifyClientName(undefined)).toBe("client");
@@ -198,9 +198,9 @@ describe("clientMapper — vanilla → PRISMA", () => {
   it("convertit la fiche du fichier d'export réel", () => {
     const c = vanillaToPrismaClient(vc);
     expect(c.type).toBe("physique");
-    expect(c.nom).toBe("NGAH ESSAMA JACQUELINE FLORENCE");
+    expect(c.nom).toBe("ESSOMBA NOAH MARIE CLAIRE");
     expect(c.raisonsociale).toBeUndefined();
-    expect(c.niu).toBe("P117614879531D");
+    expect(c.niu).toBe("P999000000002Z");
     expect(c.centrerattachement).toBe("CFLP Yaoundé 5");
     expect(c.regimefiscal).toBe("igs");
     expect(c.civilite).toBe("Mme");
@@ -211,7 +211,7 @@ describe("clientMapper — vanilla → PRISMA", () => {
     expect(c.statut).toBe("actif");
     expect(c.gestionexternalisee).toBe(false);
     expect(c.adresse).toEqual({ ville: "Yaoundé", quartier: "Nkolbisson", lieuDit: "" });
-    expect(c.contact?.telephone).toBe("699350141");
+    expect(c.contact?.telephone).toBe("690000001");
   });
 
   it("convertit la situation immobilière (propriétaire)", () => {
@@ -269,12 +269,12 @@ describe("clientMapper — PRISMA → vanilla (aller-retour)", () => {
   const prismaClient: Client = {
     id: "0bd9e64e-0000-0000-0000-000000000000",
     type: "physique",
-    nom: "NGAH ESSAMA JACQUELINE FLORENCE",
+    nom: "ESSOMBA NOAH MARIE CLAIRE",
     regimefiscal: "igs",
-    niu: "P117614879531D",
+    niu: "P999000000002Z",
     centrerattachement: "CFLP Yaoundé 5",
     adresse: { ville: "Yaoundé", quartier: "Nkolbisson", lieuDit: "" },
-    contact: { telephone: "699350141", email: "", contact_principal: "NGAH ESSAMA JACQUELINE FLORENCE" },
+    contact: { telephone: "690000001", email: "", contact_principal: "ESSOMBA NOAH MARIE CLAIRE" },
     secteuractivite: "Services",
     interactions: [],
     statut: "actif",
@@ -411,7 +411,7 @@ describe("documentMappers — factures", () => {
         { description: "IGS", type: "impot", quantite: 1, prix_unitaire: 150000, montant: 150000 },
         { description: "DSF", type: "honoraire", quantite: 1, prix_unitaire: 20000, montant: 20000 },
       ],
-      { name: "NGAH" } as VanillaClient,
+      { name: "ESSOMBA" } as VanillaClient,
       { id: "DEV-x", numero: "DEVIS-0008/2026/05" },
     );
     expect(v.number).toBe("N° 0005/2026/05");
@@ -456,7 +456,7 @@ describe("documentMappers — devis", () => {
         facture_id: null,
       },
       [],
-      { name: "NGAH" } as VanillaClient,
+      { name: "ESSOMBA" } as VanillaClient,
     );
     expect(v.status).toBe("accepté");
     expect(v.convertedToFacture).toBeUndefined();
@@ -496,7 +496,7 @@ describe("documentMappers — reçus ↔ paiements", () => {
         est_credit: false,
         elements_specifiques: null,
       },
-      { name: "NGAH" } as VanillaClient,
+      { name: "ESSOMBA" } as VanillaClient,
       { id: "N° 0005/2026/05", montant: 170000 },
       [
         { description: "IGS", type: "impot", quantite: 1, prix_unitaire: 150000, montant: 150000 },
@@ -519,7 +519,7 @@ describe("documentMappers — propositions & courriers", () => {
     const row = vanillaPropositionToRow(
       {
         id: 1778000000000,
-        client: "NGAH",
+        client: "ESSOMBA",
         lignes: [{ type: "Impôt", designation: "IGS T1", base: 150000, fraction: 0.25, amount: 37500 }],
         total: 37500,
         totalImpots: 37500,
@@ -544,7 +544,7 @@ describe("documentMappers — propositions & courriers", () => {
       {
         id: 1778000000001,
         ref: "CRR-0001/2026/05",
-        client: "NGAH",
+        client: "ESSOMBA",
         objet: "Relance IGS",
         corps: "Madame, …",
         statut: "envoyé",
@@ -603,7 +603,7 @@ describe("transit complet — fiche client", () => {
     datecreation: "2020-03-01",
     lieucreation: "Yaoundé",
     regimefiscal: "reel",
-    niu: "M031912756642Y",
+    niu: "M999000000001Z",
     centrerattachement: "CIME Yaoundé Ouest",
     adresse: { ville: "Yaoundé", quartier: "Bastos", lieuDit: "Face ambassade" },
     contact: { telephone: "675807543", email: "contact@triphase.cm", contact_principal: "M. OBIANG" },
